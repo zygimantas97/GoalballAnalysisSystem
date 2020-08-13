@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_1
 C:\Users\Zygimantas\Documents\Repositories\GoalballAnalysisSystem\GoalballAnalysisSystem\GoalballAnalysisSystem\App.xaml
-11151548125
+3-1032079964
 
-3-917710711
+11-1236319388
 1921654412462
-MainWindow.xaml;
+View\LoginView.xaml;View\MainWindow.xaml;View\RegistrationView.xaml;
 
 False
 

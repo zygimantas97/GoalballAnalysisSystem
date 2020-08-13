@@ -8,9 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Model\" />
-    <Folder Include="ViewModel\Commands\" />
-    <Folder Include="View\Pages\" />
-    <Folder Include="View\UserControls\" />
   </ItemGroup>
 
 </Project>

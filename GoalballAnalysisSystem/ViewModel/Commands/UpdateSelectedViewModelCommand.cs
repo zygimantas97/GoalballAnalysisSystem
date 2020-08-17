@@ -30,6 +30,12 @@ namespace GoalballAnalysisSystem.ViewModel.Commands
                     _mainViewModel.SelectedViewModel = new RegistrationViewModel();
                 if(viewModelName == "LoginViewModel")
                     _mainViewModel.SelectedViewModel = new LoginViewModel();
+                if (viewModelName == "HomeViewModel")
+                    _mainViewModel.SelectedViewModel = new HomeViewModel();
+                if (viewModelName == "CalibrationViewModel")
+                    _mainViewModel.SelectedViewModel = new CalibrationViewModel();
+                if (viewModelName == "ScoutingMainViewModel")
+                    _mainViewModel.SelectedViewModel = new ScoutingMainViewModel();
             }
         }
     }

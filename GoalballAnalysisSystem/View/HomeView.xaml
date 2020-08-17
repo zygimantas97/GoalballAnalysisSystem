@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="GoalballAnalysisSystem.View.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GoalballAnalysisSystem"
+             xmlns:view="clr-namespace:GoalballAnalysisSystem.View"
+             xmlns:viewmodel="clr-namespace:GoalballAnalysisSystem.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="350" d:DesignWidth="600"
+             Background ="{StaticResource backgroundColor}">
+    <UserControl.Resources>
+        <viewmodel:HomeViewModel x:Key="vm"/>
+    </UserControl.Resources>
+
+    <Grid DataContext="{StaticResource vm}">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock x:Name="TitleTextBlock"
+                   Text="GoallBall Analysis System"
+                   Grid.Column="1"
+                   Margin="30"
+                   HorizontalAlignment="Center"
+                   Style="{StaticResource HeadTitleStyle}"/>
+
+        <Grid Grid.Row="1"
+              Grid.Column="1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
+            
+            <Button x:Name="FromFileButton"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Content="From File"
+                    Command="{Binding UpdateSelectedViewModelCommand}"
+                    CommandParameter="CalibrationViewModel"/>
+            <Button x:Name="LiveButton"
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Content="Live"/>
+
+        </Grid>
+    </Grid>
+</UserControl>

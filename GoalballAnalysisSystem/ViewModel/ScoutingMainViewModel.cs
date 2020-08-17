@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GoalballAnalysisSystem.ViewModel
 {
-    class HomeViewModel: BaseViewModel
+    class ScoutingMainViewModel :BaseViewModel
     {
     }
 }

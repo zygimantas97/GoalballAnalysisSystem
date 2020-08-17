@@ -7,7 +7,7 @@
              xmlns:viewmodel="clr-namespace:GoalballAnalysisSystem.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="White">
+             Background ="{StaticResource backgroundColor}">
     <UserControl.Resources>
         <viewmodel:LoginViewModel x:Key="vm"/>
     </UserControl.Resources>
@@ -25,5 +25,9 @@
                 x:Name="noAccountButton"
                 Command="{Binding UpdateSelectedViewModelCommand}"
                 CommandParameter="RegistrationViewModel"/>
+        <Button Content="Home"
+                x:Name="Home"
+                Command="{Binding UpdateSelectedViewModelCommand}"
+                CommandParameter="HomeViewModel"/>
     </StackPanel>
 </UserControl>

@@ -12,5 +12,36 @@
         <DataTemplate DataType="{x:Type viewmodel:RegistrationViewModel}">
             <view:RegistrationView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodel:HomeViewModel}">
+            <view:HomeView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodel:CalibrationViewModel}">
+            <view:CalibrationView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodel:ScoutingMainViewModel}">
+            <view:ScoutingMainView/>
+        </DataTemplate>
+
+        <SolidColorBrush x:Key="buttonsColor" Color="Blue"/>
+        <SolidColorBrush x:Key="lableColor" Color="Red"/>
+        <SolidColorBrush x:Key="backgroundColor" Color="White"/>
+
+        <LinearGradientBrush x:Key="GradientBlue" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#C4DDFE" Offset="0" />
+            <GradientStop Color="#DDE8FF" Offset="0.5" />
+            <GradientStop Color="#C4DDFE" Offset="1" />
+        </LinearGradientBrush>
+
+        
+        <Style TargetType="TextBlock" x:Key="HeadTitleStyle">
+            <Setter Property="FontSize" Value ="20"/>
+            <Setter Property="FontFamily" Value="Lucida Sans"/>
+        </Style>
+    
+        
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource GradientBlue}" />
+        </Style>
+
     </Application.Resources>
 </Application>

@@ -15,5 +15,7 @@ namespace GoalballAnalysisSystem
     public partial class App : Application
     {
         public static ICommand NavigationCommand { get; set; }
+        public static string Message = "";
+        public static int userId;
     }
 }

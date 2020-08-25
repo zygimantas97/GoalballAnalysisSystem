@@ -16,11 +16,17 @@
         <TextBlock Text="Login"
                    FontSize="50"/>
         <TextBlock Text="Email"/>
-        <TextBox x:Name="emailTextBox"/>
+        <TextBox x:Name="emailTextBox"
+                 Text="{Binding ActiveUser.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Text="Password"/>
-        <TextBox x:Name="passwordTextBox"/>
+        <TextBox x:Name="passwordTextBox"
+                 Text="{Binding ActiveUser.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <PasswordBox x:Name="passwordBox"
+                     Password="{Binding ActiveUser.Password}"/>
         <Button Content="Login"
-                x:Name="loginButton"/>
+                x:Name="loginButton"
+                CommandParameter="{Binding ActiveUser}"
+                Command="{Binding LoginCommand}"/>
         <Button Content="I don't have an account"
                 x:Name="noAccountButton"
                 Command="{Binding UpdateSelectedViewModelCommand}"

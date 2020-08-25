@@ -45,7 +45,7 @@ namespace GoalballAnalysisSystem.Model
         }
 
         private string email;
-
+        [Unique]
         public string Email
         {
             get { return email; }

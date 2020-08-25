@@ -16,14 +16,20 @@
         <TextBlock Text="Registration"
                    FontSize="50"/>
         <TextBlock Text="Name"/>
-        <TextBox x:Name="nameTextBox"/>
-        <TextBlock Text="Lastname"/>
-        <TextBox x:Name="lastnameTextBox"/>
+        <TextBox x:Name="nameTextBox"
+                 Text="{Binding ActiveUser.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Text="Surname"/>
+        <TextBox x:Name="surnameTextBox"
+                 Text="{Binding ActiveUser.Surname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Text="Email"/>
-        <TextBox x:Name="emailTextBox"/>
+        <TextBox x:Name="emailTextBox"
+                 Text="{Binding ActiveUser.Email, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Text="Password"/>
-        <TextBox x:Name="passwordTextBox"/>
+        <TextBox x:Name="passwordTextBox"
+                 Text="{Binding ActiveUser.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <Button Content="Register"
+                CommandParameter="{Binding ActiveUser}"
+                Command="{Binding RegisterCommand}"
                 x:Name="registrationButton"/>
         <Button Content="I have an account"
                 x:Name="haveAnAccountButton"

@@ -1,4 +1,5 @@
 ﻿using GoalballAnalysisSystem.ViewModel.Commands;
+using GoalballAnalysisSystem.WPF.State.Navigators;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -10,9 +11,10 @@ using System.Windows.Input;
 
 namespace GoalballAnalysisSystem.ViewModel
 {
-    class MainViewModel : INotifyPropertyChanged
+    class MainViewModel : BaseViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public INavigator Navigator { get; set; } = new Navigator();
+        /*
         public ICommand UpdateSelectedViewModelCommand { get; private set; }
 
         private BaseViewModel _selectedViewModel;
@@ -33,12 +35,6 @@ namespace GoalballAnalysisSystem.ViewModel
             UpdateSelectedViewModelCommand = new UpdateSelectedViewModelCommand(this);
             App.NavigationCommand = UpdateSelectedViewModelCommand;
         }
-
-        public void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        
+        */
     }
 }

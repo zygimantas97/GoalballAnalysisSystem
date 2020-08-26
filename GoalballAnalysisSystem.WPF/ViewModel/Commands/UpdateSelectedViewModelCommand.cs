@@ -26,6 +26,7 @@ namespace GoalballAnalysisSystem.ViewModel.Commands
             string viewModelName = parameter as string;
             if (!string.IsNullOrEmpty(viewModelName))
             {
+                /*
                 if (viewModelName == "RegistrationViewModel")
                     _mainViewModel.SelectedViewModel = new RegistrationViewModel();
                 if(viewModelName == "LoginViewModel")
@@ -36,6 +37,7 @@ namespace GoalballAnalysisSystem.ViewModel.Commands
                     _mainViewModel.SelectedViewModel = new CalibrationViewModel();
                 if (viewModelName == "ScoutingMainViewModel")
                     _mainViewModel.SelectedViewModel = new ScoutingMainViewModel();
+                */
             }
         }
     }

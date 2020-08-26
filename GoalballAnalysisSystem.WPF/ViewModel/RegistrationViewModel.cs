@@ -10,11 +10,11 @@ using System.Windows.Input;
 
 namespace GoalballAnalysisSystem.ViewModel
 {
-    public class LoginViewModel : BaseViewModel
+    public class RegistrationViewModel : BaseViewModel
     {
-        public LoginCommand LoginCommand { get; private set; }
+        public RegisterCommand RegisterCommand { get; private set; }
 
-        private User activeUser;        
+        private User activeUser;
 
         public User ActiveUser
         {
@@ -22,24 +22,25 @@ namespace GoalballAnalysisSystem.ViewModel
             set
             {
                 activeUser = value;
-                OnPropertyChanged("ActiveUser");
+                //OnPropertyChanged("ActiveUser");
             }
         }
 
-        public LoginViewModel()
+
+        public RegistrationViewModel()
             :base()
         {
             ActiveUser = new User();
-            LoginCommand = new LoginCommand(this);
+            RegisterCommand = new RegisterCommand(this);
         }
 
-        public void Login()
+        public void Register()
         {
-            var user = SQLiteDatabaseService.GetUser(ActiveUser.Email);
-            if(user != null && user.Password == ActiveUser.Password)
+            bool result = SQLiteDatabaseService.Insert(ActiveUser);
+            if (result)
             {
-                App.userId = user.Id;
-                App.NavigationCommand.Execute("HomeViewModel");
+                App.Message = "Registration was successful.";
+                App.NavigationCommand.Execute("LoginViewModel");
             }
         }
     }

@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:GoalballAnalysisSystem.WPF.Styles">
+    <!--Colors-->
+    <Color x:Key="PrimaryColor">#777777</Color>
+    <Color x:Key="SecondaryColor">#444444</Color>
+    
+    <!--Brushes-->
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource SecondaryColor}"/>
+</ResourceDictionary>

@@ -4,22 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GoalballAnalysisSystem.View"
+        xmlns:controls="clr-namespace:GoalballAnalysisSystem.WPF.Controls"
         mc:Ignorable="d"
         Title="Goalball Analysis System" Height="450" Width="800"
-        Background="DarkGray">
+        Background="{StaticResource PrimaryBrush}">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="10*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
-        <TextBlock Text="Content before page"
-                   Grid.Row="0"/>
-        <ContentControl Content="{Binding SelectedViewModel}"
+        
+        <controls:NavigationBar DataContext="{Binding Navigator}"
+                               Grid.Row="0"/>
+        <ContentControl Content="{Binding Navigator.CurrentViewModel}"
                         Grid.Row="1"/>
-        <TextBlock Text="Content after page"
-                   Grid.Row="2"/>
-      
     </Grid>
 </Window>

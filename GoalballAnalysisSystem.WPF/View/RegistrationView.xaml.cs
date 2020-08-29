@@ -1,4 +1,4 @@
-﻿using GoalballAnalysisSystem.ViewModel;
+﻿using GoalballAnalysisSystem.WPF.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GoalballAnalysisSystem.View
+namespace GoalballAnalysisSystem.WPF.View
 {
     /// <summary>
     /// Interaction logic for RegistrationView.xaml

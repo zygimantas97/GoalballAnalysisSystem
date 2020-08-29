@@ -1,4 +1,4 @@
-﻿using GoalballAnalysisSystem.ViewModel.Commands;
+﻿using GoalballAnalysisSystem.WPF.ViewModel.Commands;
 using GoalballAnalysisSystem.WPF.State.Navigators;
 using System;
 using System.Collections.Generic;
@@ -9,11 +9,16 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace GoalballAnalysisSystem.ViewModel
+namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     class MainViewModel : BaseViewModel
     {
         public INavigator Navigator { get; set; } = new Navigator();
+
+        public MainViewModel()
+        {
+            Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Home);
+        }
         /*
         public ICommand UpdateSelectedViewModelCommand { get; private set; }
 

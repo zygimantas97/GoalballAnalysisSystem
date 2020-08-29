@@ -1,5 +1,5 @@
-﻿using GoalballAnalysisSystem.Model;
-using GoalballAnalysisSystem.View;
+﻿using GoalballAnalysisSystem.WPF.Model;
+using GoalballAnalysisSystem.WPF.View;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 
-namespace GoalballAnalysisSystem.ViewModel.Commands
+namespace GoalballAnalysisSystem.WPF.ViewModel.Commands
 {
     public class RegisterCommand : ICommand
     {

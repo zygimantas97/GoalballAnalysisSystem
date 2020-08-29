@@ -1,10 +1,10 @@
-﻿using GoalballAnalysisSystem.Model;
+﻿using GoalballAnalysisSystem.WPF.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 
-namespace GoalballAnalysisSystem.ViewModel.Commands
+namespace GoalballAnalysisSystem.WPF.ViewModel.Commands
 {
     public class LoginCommand : ICommand
     {

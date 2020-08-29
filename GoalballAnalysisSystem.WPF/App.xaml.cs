@@ -1,5 +1,5 @@
-﻿using GoalballAnalysisSystem.View;
-using GoalballAnalysisSystem.ViewModel;
+﻿using GoalballAnalysisSystem.WPF.View;
+using GoalballAnalysisSystem.WPF.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace GoalballAnalysisSystem
+namespace GoalballAnalysisSystem.WPF
 {
     /// <summary>
     /// Interaction logic for App.xaml

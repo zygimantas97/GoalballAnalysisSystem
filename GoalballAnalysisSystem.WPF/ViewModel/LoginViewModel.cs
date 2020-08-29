@@ -1,6 +1,6 @@
-﻿using GoalballAnalysisSystem.Model;
-using GoalballAnalysisSystem.ViewModel.Commands;
-using GoalballAnalysisSystem.ViewModel.DatabaseServices;
+﻿using GoalballAnalysisSystem.WPF.Model;
+using GoalballAnalysisSystem.WPF.ViewModel.Commands;
+using GoalballAnalysisSystem.WPF.ViewModel.DatabaseServices;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 
-namespace GoalballAnalysisSystem.ViewModel
+namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     public class LoginViewModel : BaseViewModel
     {

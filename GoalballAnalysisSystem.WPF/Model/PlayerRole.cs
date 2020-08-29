@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GoalballAnalysisSystem.Model
+namespace GoalballAnalysisSystem.WPF.Model
 {
     public enum PlayerRole
     {

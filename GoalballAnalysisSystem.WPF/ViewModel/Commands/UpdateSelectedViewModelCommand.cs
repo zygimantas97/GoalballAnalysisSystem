@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 
-namespace GoalballAnalysisSystem.ViewModel.Commands
+namespace GoalballAnalysisSystem.WPF.ViewModel.Commands
 {
     class UpdateSelectedViewModelCommand : ICommand
     {

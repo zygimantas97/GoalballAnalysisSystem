@@ -1,11 +1,11 @@
-﻿using GoalballAnalysisSystem.Model;
+﻿using GoalballAnalysisSystem.WPF.Model;
 using SQLite;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace GoalballAnalysisSystem.ViewModel.DatabaseServices
+namespace GoalballAnalysisSystem.WPF.ViewModel.DatabaseServices
 {
     public class SQLiteDatabaseService
     {

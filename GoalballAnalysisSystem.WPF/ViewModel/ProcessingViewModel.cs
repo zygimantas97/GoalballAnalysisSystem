@@ -1,4 +1,4 @@
-﻿using GoalballAnalysisSystem.ViewModel;
+﻿using GoalballAnalysisSystem.WPF.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GoalballAnalysisSystem.View
+namespace GoalballAnalysisSystem.WPF.View
 {
     /// <summary>
     /// Interaction logic for CalibrationView.xaml

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GoalballAnalysisSystem.ViewModel
+namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     class CalibrationViewModel : BaseViewModel
     {

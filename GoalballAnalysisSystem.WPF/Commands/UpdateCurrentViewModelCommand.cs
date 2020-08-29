@@ -31,7 +31,7 @@ namespace GoalballAnalysisSystem.WPF.Commands
                 switch (viewType)
                 {
                     case ViewType.Home:
-                        _navigator.CurrentViewModel = new ProcessingViewModel();
+                        _navigator.CurrentViewModel = new HomeViewModel();
                         break;
                     case ViewType.Games:
                         _navigator.CurrentViewModel = new GamesViewModel();

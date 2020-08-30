@@ -13,10 +13,11 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     class MainViewModel : BaseViewModel
     {
-        public INavigator Navigator { get; set; } = new Navigator();
+        public INavigator Navigator { get; set; }
 
-        public MainViewModel()
+        public MainViewModel(INavigator navigator)
         {
+            Navigator = navigator;
             Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Home);
         }
         /*

@@ -1,5 +1,6 @@
 ﻿using GoalballAnalysisSystem.WPF.State.Navigators;
 using GoalballAnalysisSystem.WPF.ViewModel;
+using GoalballAnalysisSystem.WPF.ViewModel.Factories;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,11 +12,13 @@ namespace GoalballAnalysisSystem.WPF.Commands
     {
         public event EventHandler CanExecuteChanged;
 
-        private INavigator _navigator;
+        private readonly INavigator _navigator;
+        private readonly IGoalballAnalysisSystemViewModelAbstractFactory _viewModelFactory;
 
-        public UpdateCurrentViewModelCommand(INavigator navigator)
+        public UpdateCurrentViewModelCommand(INavigator navigator, IGoalballAnalysisSystemViewModelAbstractFactory viewModelFactory)
         {
             _navigator = navigator;
+            _viewModelFactory = viewModelFactory;
         }
 
         public bool CanExecute(object parameter)
@@ -28,23 +31,7 @@ namespace GoalballAnalysisSystem.WPF.Commands
             if(parameter is ViewType)
             {
                 ViewType viewType = (ViewType)parameter;
-                switch (viewType)
-                {
-                    case ViewType.Home:
-                        _navigator.CurrentViewModel = new HomeViewModel();
-                        break;
-                    case ViewType.Games:
-                        _navigator.CurrentViewModel = new GamesViewModel();
-                        break;
-                    case ViewType.Teams:
-                        _navigator.CurrentViewModel = new TeamsViewModel();
-                        break;
-                    case ViewType.Players:
-                        _navigator.CurrentViewModel = new PlayersViewModel();
-                        break;
-                    default:
-                        break;
-                }
+                _navigator.CurrentViewModel = _viewModelFactory.CreateViewModel(viewType);
             }
         }
     }

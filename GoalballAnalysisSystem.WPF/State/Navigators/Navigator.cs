@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Windows.Input;
+using GoalballAnalysisSystem.WPF.ViewModel.Factories;
 
 namespace GoalballAnalysisSystem.WPF.State.Navigators
 {
@@ -25,6 +26,11 @@ namespace GoalballAnalysisSystem.WPF.State.Navigators
             }
         }
 
-        public ICommand UpdateCurrentViewModelCommand => new UpdateCurrentViewModelCommand(this);
+        public ICommand UpdateCurrentViewModelCommand { get; set; }
+
+        public Navigator(IGoalballAnalysisSystemViewModelAbstractFactory viewModelFactory)
+        {
+            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(this, viewModelFactory);
+        }
     }
 }

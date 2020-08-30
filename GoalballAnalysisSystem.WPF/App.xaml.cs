@@ -1,5 +1,13 @@
-﻿using GoalballAnalysisSystem.WPF.View;
+﻿using GoalballAnalysisSystem.Domain.Models;
+using GoalballAnalysisSystem.Domain.Services;
+using GoalballAnalysisSystem.EntityFramework;
+using GoalballAnalysisSystem.EntityFramework.Services;
+using GoalballAnalysisSystem.WPF.State.Navigators;
+using GoalballAnalysisSystem.WPF.View;
 using GoalballAnalysisSystem.WPF.ViewModel;
+using GoalballAnalysisSystem.WPF.ViewModel.Factories;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -21,13 +29,40 @@ namespace GoalballAnalysisSystem.WPF
         public static string Message = "";
         public static int userId;
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
-            Window window = new MainWindow();
-            window.DataContext = new MainViewModel();
+            IServiceProvider serviceProvider = CreateServiceProvider();
+            // Example of getting registered service
+            GoalballAnalysisSystemDbContextFactory dbContextFactory = serviceProvider.GetRequiredService<GoalballAnalysisSystemDbContextFactory>();
+
+
+            Window window = serviceProvider.GetRequiredService<MainWindow>();
             window.Show();
 
             base.OnStartup(e);
+        }
+
+        private IServiceProvider CreateServiceProvider()
+        {
+            IServiceCollection services = new ServiceCollection();
+
+            // Add all services
+            services.AddSingleton<GoalballAnalysisSystemDbContextFactory>();
+
+            // add all view model factories
+            services.AddSingleton<IGoalballAnalysisSystemViewModelAbstractFactory, GoalballAnalysisSystemViewModelAbstractFactory>();
+            services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<HomeViewModel>, HomeViewModelFactory>();
+            services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<GamesViewModel>, GamesViewModelFactory>();
+            services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<TeamsViewModel>, TeamsViewModelFactory>();
+            services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<PlayersViewModel>, PlayersViewModelFactory>();
+
+            
+            services.AddScoped<INavigator, Navigator>();
+            services.AddScoped<MainViewModel>();
+
+            services.AddScoped<MainWindow>(s => new MainWindow(s.GetRequiredService<MainViewModel>()));
+
+            return services.BuildServiceProvider();
         }
     }
 }

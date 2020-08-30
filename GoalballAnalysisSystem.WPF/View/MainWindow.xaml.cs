@@ -18,11 +18,10 @@ namespace GoalballAnalysisSystem.WPF.View
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(object dataContext)
         {
             InitializeComponent();
-
-            DataContext = new MainViewModel();
+            DataContext = dataContext;
         }
     }
 }

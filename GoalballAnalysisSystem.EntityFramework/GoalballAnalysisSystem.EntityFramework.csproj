@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GoalballAnalysisSystem.Domain\GoalballAnalysisSystem.Domain.csproj" />
-    <ProjectReference Include="..\GoalballAnalysisSystem\GoalballAnalysisSystem.WPF.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.Domain", "GoalballAnalysisSystem.Domain\GoalballAnalysisSystem.Domain.csproj", "{345A24C4-4FC6-4405-92EA-9B29C5B975FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.Domain", "GoalballAnalysisSystem.Domain\GoalballAnalysisSystem.Domain.csproj", "{86A67310-7873-42EE-99F7-9A4705C701DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.EntityFramework", "GoalballAnalysisSystem.EntityFramework\GoalballAnalysisSystem.EntityFramework.csproj", "{ABF6AB72-866F-4D2F-9F0C-C7F2620C9F86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.EntityFramework", "GoalballAnalysisSystem.EntityFramework\GoalballAnalysisSystem.EntityFramework.csproj", "{050A04E4-52EA-4B76-8469-E2439518FF2E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.WPF", "GoalballAnalysisSystem.WPF\GoalballAnalysisSystem.WPF.csproj", "{2A6768B7-09E9-4559-88AE-AF148ED8A441}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{8F742143-7796-4DD3-834B-33AE47379276}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.WPF", "GoalballAnalysisSystem.WPF\GoalballAnalysisSystem.WPF.csproj", "{B61037A3-E0AE-4291-A98D-AAA1B0D69A1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,22 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{345A24C4-4FC6-4405-92EA-9B29C5B975FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{345A24C4-4FC6-4405-92EA-9B29C5B975FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{345A24C4-4FC6-4405-92EA-9B29C5B975FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{345A24C4-4FC6-4405-92EA-9B29C5B975FD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ABF6AB72-866F-4D2F-9F0C-C7F2620C9F86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ABF6AB72-866F-4D2F-9F0C-C7F2620C9F86}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ABF6AB72-866F-4D2F-9F0C-C7F2620C9F86}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ABF6AB72-866F-4D2F-9F0C-C7F2620C9F86}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2A6768B7-09E9-4559-88AE-AF148ED8A441}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A6768B7-09E9-4559-88AE-AF148ED8A441}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A6768B7-09E9-4559-88AE-AF148ED8A441}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A6768B7-09E9-4559-88AE-AF148ED8A441}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8F742143-7796-4DD3-834B-33AE47379276}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8F742143-7796-4DD3-834B-33AE47379276}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8F742143-7796-4DD3-834B-33AE47379276}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8F742143-7796-4DD3-834B-33AE47379276}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86A67310-7873-42EE-99F7-9A4705C701DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86A67310-7873-42EE-99F7-9A4705C701DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86A67310-7873-42EE-99F7-9A4705C701DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86A67310-7873-42EE-99F7-9A4705C701DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{050A04E4-52EA-4B76-8469-E2439518FF2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{050A04E4-52EA-4B76-8469-E2439518FF2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{050A04E4-52EA-4B76-8469-E2439518FF2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{050A04E4-52EA-4B76-8469-E2439518FF2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B61037A3-E0AE-4291-A98D-AAA1B0D69A1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B61037A3-E0AE-4291-A98D-AAA1B0D69A1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B61037A3-E0AE-4291-A98D-AAA1B0D69A1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B61037A3-E0AE-4291-A98D-AAA1B0D69A1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

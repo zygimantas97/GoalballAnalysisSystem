@@ -10,8 +10,8 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            IDataService<User> userService = new DataService<User>(new GoalballAnalysisSystemDbContextFactory());
-            var users = userService.GetAll().Result;
+            
+            
 
         }
     }

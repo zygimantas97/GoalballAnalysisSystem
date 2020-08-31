@@ -5,10 +5,4 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\GoalballAnalysisSystem.Domain\GoalballAnalysisSystem.Domain.csproj" />
-    <ProjectReference Include="..\GoalballAnalysisSystem.EntityFramework\GoalballAnalysisSystem.EntityFramework.csproj" />
-    <ProjectReference Include="..\GoalballAnalysisSystem.WPF\GoalballAnalysisSystem.WPF.csproj" />
-  </ItemGroup>
-
 </Project>

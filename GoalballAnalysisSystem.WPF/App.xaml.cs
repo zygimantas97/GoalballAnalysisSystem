@@ -6,6 +6,7 @@ using GoalballAnalysisSystem.WPF.State.Navigators;
 using GoalballAnalysisSystem.WPF.View;
 using GoalballAnalysisSystem.WPF.ViewModel;
 using GoalballAnalysisSystem.WPF.ViewModel.Factories;
+using Microsoft.AspNet.Identity;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -32,9 +33,6 @@ namespace GoalballAnalysisSystem.WPF
         protected override async void OnStartup(StartupEventArgs e)
         {
             IServiceProvider serviceProvider = CreateServiceProvider();
-            // Example of getting registered service
-            GoalballAnalysisSystemDbContextFactory dbContextFactory = serviceProvider.GetRequiredService<GoalballAnalysisSystemDbContextFactory>();
-
 
             Window window = serviceProvider.GetRequiredService<MainWindow>();
             window.Show();
@@ -48,6 +46,11 @@ namespace GoalballAnalysisSystem.WPF
 
             // Add all services
             services.AddSingleton<GoalballAnalysisSystemDbContextFactory>();
+            services.AddSingleton<IAuthentificationService, AuthentificationService>();
+            services.AddSingleton<IDataService<User>, UserDataService>();
+            services.AddSingleton<IUserDataService, UserDataService>();
+
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
             // add all view model factories
             services.AddSingleton<IGoalballAnalysisSystemViewModelAbstractFactory, GoalballAnalysisSystemViewModelAbstractFactory>();

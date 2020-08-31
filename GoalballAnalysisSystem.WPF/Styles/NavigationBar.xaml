@@ -6,7 +6,7 @@
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Padding" Value="10 5"/>
         <Setter Property="FontSize" Value="18"/>
-        <Setter Property="Background" Value="{StaticResource SecondaryBrush}"/>
+        <Setter Property="Background" Value="{StaticResource SecondaryButtonBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
@@ -17,7 +17,7 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter Property="Background" Value="{StaticResource PrimaryBrush}" TargetName="gridMain"/>
+                            <Setter Property="Background" Value="{StaticResource PrimaryButtonBrush}" TargetName="gridMain"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -27,14 +27,14 @@
             <EventTrigger RoutedEvent="MouseEnter">
                 <BeginStoryboard>
                     <Storyboard>
-                        <ColorAnimation To="{StaticResource PrimaryColor}" Duration="0:0:0.1" Storyboard.TargetProperty="Background.Color"/>
+                        <ColorAnimation To="{StaticResource PrimaryButtonColor}" Duration="0:0:0.1" Storyboard.TargetProperty="Background.Color"/>
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>
             <EventTrigger RoutedEvent="MouseLeave">
                 <BeginStoryboard>
                     <Storyboard>
-                        <ColorAnimation To="{StaticResource SecondaryColor}" Duration="0:0:0.1" Storyboard.TargetProperty="Background.Color"/>
+                        <ColorAnimation To="{StaticResource SecondaryButtonColor}" Duration="0:0:0.1" Storyboard.TargetProperty="Background.Color"/>
                     </Storyboard>
                 </BeginStoryboard>
             </EventTrigger>

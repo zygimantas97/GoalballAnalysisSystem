@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GoalballAnalysisSystem.Domain.Services
 {
-    public interface IAuthentificationService
+    public interface IAuthenticationService
     {
         Task<RegistrationResult> Register(string name, string surname, string email, string password, string confirmPassword);
         Task<User> Login(string email, string password);

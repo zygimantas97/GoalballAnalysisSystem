@@ -46,7 +46,7 @@ namespace GoalballAnalysisSystem.WPF
 
             // Add all services
             services.AddSingleton<GoalballAnalysisSystemDbContextFactory>();
-            services.AddSingleton<IAuthentificationService, AuthentificationService>();
+            services.AddSingleton<IAuthenticationService, AuthenticationService>();
             services.AddSingleton<IDataService<User>, UserDataService>();
             services.AddSingleton<IUserDataService, UserDataService>();
 

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace GoalballAnalysisSystem.Domain.Services
 {
-    public class AuthentificationService : IAuthentificationService
+    public class AuthenticationService : IAuthenticationService
     {
         private readonly IUserDataService _userDataService;
         private readonly IPasswordHasher _passwordHasher;
 
-        public AuthentificationService(IUserDataService userDataService, IPasswordHasher passwordHasher)
+        public AuthenticationService(IUserDataService userDataService, IPasswordHasher passwordHasher)
         {
             _userDataService = userDataService;
             _passwordHasher = passwordHasher;
@@ -22,6 +22,10 @@ namespace GoalballAnalysisSystem.Domain.Services
         public async Task<User> Login(string email, string password)
         {
             User storedUser = await _userDataService.GetByEmail(email);
+            if(storedUser == null)
+            {
+                throw new UserNotFoundException(email);
+            }
             PasswordVerificationResult passwordResult = _passwordHasher.VerifyHashedPassword(storedUser.PasswordHash, password);
             if(passwordResult != PasswordVerificationResult.Success)
             {

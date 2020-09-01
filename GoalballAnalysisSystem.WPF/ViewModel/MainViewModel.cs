@@ -1,4 +1,5 @@
-﻿using GoalballAnalysisSystem.WPF.State.Navigators;
+﻿using GoalballAnalysisSystem.WPF.State.Authenticators;
+using GoalballAnalysisSystem.WPF.State.Navigators;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -13,10 +14,12 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
     class MainViewModel : BaseViewModel
     {
         public INavigator Navigator { get; set; }
+        public IAuthenticator Authenticator { get; }
 
-        public MainViewModel(INavigator navigator)
+        public MainViewModel(INavigator navigator, IAuthenticator authenticator)
         {
             Navigator = navigator;
+            Authenticator = authenticator;
             Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Login);
         }
         /*

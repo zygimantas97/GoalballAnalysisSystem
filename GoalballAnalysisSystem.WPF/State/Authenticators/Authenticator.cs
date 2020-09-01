@@ -1,5 +1,6 @@
 ﻿using GoalballAnalysisSystem.Domain.Models;
 using GoalballAnalysisSystem.Domain.Services;
+using GoalballAnalysisSystem.WPF.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GoalballAnalysisSystem.WPF.State.Authenticators
 {
-    public class Authenticator : IAuthenticator
+    public class Authenticator : ObservableObject, IAuthenticator
     {
         private readonly IAuthenticationService _authenticationService;
 
@@ -16,7 +17,19 @@ namespace GoalballAnalysisSystem.WPF.State.Authenticators
             _authenticationService = authenticationService;
         }
 
-        public User CurrentUser { get; private set; }
+        private User user;
+
+        public User CurrentUser
+        {
+            get { return user; }
+            private set
+            {
+                user = value;
+                OnPropertyChanged(nameof(CurrentUser));
+                OnPropertyChanged(nameof(IsLoggedIn));
+            }
+        }
+
         public bool IsLoggedIn => CurrentUser != null;
 
         public async Task<bool> Login(string email, string password)

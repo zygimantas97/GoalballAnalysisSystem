@@ -12,19 +12,25 @@
     <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="LightGray"/>
 
     <!--Text Boxes-->
-    <Style TargetType="TextBox">
+    <Style x:Key="TextBoxBase" TargetType="Control">
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="3"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="TextBox">
-                    <Border BorderThickness="1" BorderBrush="Gray" CornerRadius="3">
+                <ControlTemplate TargetType="Control">
+                    <Border BorderThickness="1"
+                            BorderBrush="{StaticResource PrimaryBackgroundBrush}"
+                            CornerRadius="3">
                         <ScrollViewer x:Name="PART_ContentHost"/>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxBase}"/>
+    <Style TargetType="PasswordBox" BasedOn="{StaticResource TextBoxBase}"/>
+
     <!--Buttons-->
     <Style TargetType="Button">
         <Setter Property="Background" Value="{StaticResource SecondaryButtonBrush}"/>

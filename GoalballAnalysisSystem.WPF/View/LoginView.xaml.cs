@@ -1,5 +1,4 @@
-﻿using GoalballAnalysisSystem.WPF.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -19,9 +18,32 @@ namespace GoalballAnalysisSystem.WPF.View
     /// </summary>
     public partial class LoginView : UserControl
     {
+
+
+        public ICommand LoginCommand
+        {
+            get { return (ICommand)GetValue(LoginCommandProperty); }
+            set { SetValue(LoginCommandProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for LoginCommand.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty LoginCommandProperty =
+            DependencyProperty.Register("LoginCommand", typeof(ICommand), typeof(LoginView), new PropertyMetadata(null));
+
+
+
         public LoginView()
         {
             InitializeComponent();
+        }
+
+        private void Login_Click(object sender, RoutedEventArgs e)
+        {
+            if (LoginCommand != null)
+            {
+                string password = passwordBox.Password;
+                LoginCommand.Execute(password);
+            }
         }
     }
 }

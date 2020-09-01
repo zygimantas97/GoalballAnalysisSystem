@@ -1,5 +1,4 @@
 ﻿using GoalballAnalysisSystem.WPF.Model;
-using GoalballAnalysisSystem.WPF.ViewModel.Commands;
 using GoalballAnalysisSystem.WPF.ViewModel.DatabaseServices;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     public class RegistrationViewModel : BaseViewModel
     {
-        public RegisterCommand RegisterCommand { get; private set; }
+        public ICommand RegisterCommand { get; private set; }
 
         private User activeUser;
 
@@ -31,7 +30,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             :base()
         {
             ActiveUser = new User();
-            RegisterCommand = new RegisterCommand(this);
+            RegisterCommand = null;
         }
 
         public void Register()

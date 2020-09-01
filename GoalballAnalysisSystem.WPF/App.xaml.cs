@@ -2,6 +2,7 @@
 using GoalballAnalysisSystem.Domain.Services;
 using GoalballAnalysisSystem.EntityFramework;
 using GoalballAnalysisSystem.EntityFramework.Services;
+using GoalballAnalysisSystem.WPF.State.Authenticators;
 using GoalballAnalysisSystem.WPF.State.Navigators;
 using GoalballAnalysisSystem.WPF.View;
 using GoalballAnalysisSystem.WPF.ViewModel;
@@ -33,6 +34,8 @@ namespace GoalballAnalysisSystem.WPF
         protected override async void OnStartup(StartupEventArgs e)
         {
             IServiceProvider serviceProvider = CreateServiceProvider();
+            //IAuthenticationService authenticationService = serviceProvider.GetRequiredService<IAuthenticationService>();
+            //await authenticationService.Register("Zygimantas", "Matusevicius", "zygimantas1997@gmail.com", "password", "password");
 
             Window window = serviceProvider.GetRequiredService<MainWindow>();
             window.Show();
@@ -58,9 +61,11 @@ namespace GoalballAnalysisSystem.WPF
             services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<GamesViewModel>, GamesViewModelFactory>();
             services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<TeamsViewModel>, TeamsViewModelFactory>();
             services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<PlayersViewModel>, PlayersViewModelFactory>();
+            services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<LoginViewModel>, LoginViewModelFactory>();
 
-            
+
             services.AddScoped<INavigator, Navigator>();
+            services.AddScoped<IAuthenticator, Authenticator>();
             services.AddScoped<MainViewModel>();
 
             services.AddScoped<MainWindow>(s => new MainWindow(s.GetRequiredService<MainViewModel>()));

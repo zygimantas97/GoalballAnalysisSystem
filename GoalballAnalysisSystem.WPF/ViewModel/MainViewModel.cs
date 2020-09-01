@@ -1,5 +1,4 @@
-﻿using GoalballAnalysisSystem.WPF.ViewModel.Commands;
-using GoalballAnalysisSystem.WPF.State.Navigators;
+﻿using GoalballAnalysisSystem.WPF.State.Navigators;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -18,7 +17,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         public MainViewModel(INavigator navigator)
         {
             Navigator = navigator;
-            Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Home);
+            Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Login);
         }
         /*
         public ICommand UpdateSelectedViewModelCommand { get; private set; }

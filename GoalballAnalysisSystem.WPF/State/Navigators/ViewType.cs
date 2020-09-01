@@ -6,6 +6,7 @@ namespace GoalballAnalysisSystem.WPF.State.Navigators
 {
     public enum ViewType
     {
+        Login,
         Home,
         Games,
         Teams,

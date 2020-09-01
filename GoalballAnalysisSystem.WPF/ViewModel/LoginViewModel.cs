@@ -1,5 +1,6 @@
-﻿using GoalballAnalysisSystem.WPF.Model;
-using GoalballAnalysisSystem.WPF.ViewModel.Commands;
+﻿using GoalballAnalysisSystem.WPF.Commands;
+using GoalballAnalysisSystem.WPF.Model;
+using GoalballAnalysisSystem.WPF.State.Authenticators;
 using GoalballAnalysisSystem.WPF.ViewModel.DatabaseServices;
 using System;
 using System.Collections.Generic;
@@ -12,35 +13,24 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     public class LoginViewModel : BaseViewModel
     {
-        public LoginCommand LoginCommand { get; private set; }
+        private string _email;
 
-        private User activeUser;        
-
-        public User ActiveUser
+        public string Email
         {
-            get { return activeUser; }
+            get { return _email; }
             set
             {
-                activeUser = value;
-                //OnPropertyChanged("ActiveUser");
+                _email = value;
+                OnPropertyChanged(nameof(Email));
             }
         }
 
-        public LoginViewModel()
-            :base()
+        public ICommand LoginCommand { get; }
+
+        public LoginViewModel(IAuthenticator authenticator)
         {
-            ActiveUser = new User();
-            LoginCommand = new LoginCommand(this);
+            LoginCommand = new LoginCommand(this, authenticator);
         }
 
-        public void Login()
-        {
-            var user = SQLiteDatabaseService.GetUser(ActiveUser.Email);
-            if(user != null && user.Password == ActiveUser.Password)
-            {
-                App.userId = user.Id;
-                App.NavigationCommand.Execute("HomeViewModel");
-            }
-        }
     }
 }

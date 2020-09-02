@@ -9,6 +9,5 @@ namespace GoalballAnalysisSystem.WPF.State.Navigators
     public interface INavigator
     {
         BaseViewModel CurrentViewModel { get; set; }
-        ICommand UpdateCurrentViewModelCommand { get; }
     }
 }

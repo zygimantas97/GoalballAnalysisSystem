@@ -1,6 +1,7 @@
 ﻿using GoalballAnalysisSystem.WPF.Commands;
 using GoalballAnalysisSystem.WPF.Model;
 using GoalballAnalysisSystem.WPF.State.Authenticators;
+using GoalballAnalysisSystem.WPF.State.Navigators;
 using GoalballAnalysisSystem.WPF.ViewModel.DatabaseServices;
 using System;
 using System.Collections.Generic;
@@ -27,9 +28,9 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
         public ICommand LoginCommand { get; }
 
-        public LoginViewModel(IAuthenticator authenticator)
+        public LoginViewModel(IAuthenticator authenticator, IRenavigator renavigator)
         {
-            LoginCommand = new LoginCommand(this, authenticator);
+            LoginCommand = new LoginCommand(this, authenticator, renavigator);
         }
 
     }

@@ -61,7 +61,10 @@ namespace GoalballAnalysisSystem.WPF
             services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<GamesViewModel>, GamesViewModelFactory>();
             services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<TeamsViewModel>, TeamsViewModelFactory>();
             services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<PlayersViewModel>, PlayersViewModelFactory>();
-            services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<LoginViewModel>, LoginViewModelFactory>();
+            services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<LoginViewModel>>((s) =>
+                new LoginViewModelFactory(s.GetRequiredService<IAuthenticator>(),
+                new ViewModelFactoryRenavigator<HomeViewModel>(s.GetRequiredService<INavigator>(),
+                    s.GetRequiredService<IGoalballAnalysisSystemViewModelFactory<HomeViewModel>>())));
 
 
             services.AddScoped<INavigator, Navigator>();

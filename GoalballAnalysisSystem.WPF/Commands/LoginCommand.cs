@@ -1,4 +1,5 @@
 ﻿using GoalballAnalysisSystem.WPF.State.Authenticators;
+using GoalballAnalysisSystem.WPF.State.Navigators;
 using GoalballAnalysisSystem.WPF.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,13 @@ namespace GoalballAnalysisSystem.WPF.Commands
     {
         private readonly LoginViewModel _loginViewModel;
         private readonly IAuthenticator _authenticator;
+        private readonly IRenavigator _renavigator;
 
-        public LoginCommand(LoginViewModel loginViewModel, IAuthenticator authenticator)
+        public LoginCommand(LoginViewModel loginViewModel, IAuthenticator authenticator, IRenavigator renavigator)
         {
             _loginViewModel = loginViewModel;
             _authenticator = authenticator;
+            _renavigator = renavigator;
         }
 
         public event EventHandler CanExecuteChanged;
@@ -28,6 +31,10 @@ namespace GoalballAnalysisSystem.WPF.Commands
         public async void Execute(object parameter)
         {
             bool success = await _authenticator.Login(_loginViewModel.Email, parameter.ToString());
+            if (success)
+            {
+                _renavigator.Renavigate();
+            }
         }
     }
 }

@@ -25,12 +25,5 @@ namespace GoalballAnalysisSystem.WPF.State.Navigators
                 OnPropertyChanged(nameof(CurrentViewModel));
             }
         }
-
-        public ICommand UpdateCurrentViewModelCommand { get; set; }
-
-        public Navigator(IGoalballAnalysisSystemViewModelAbstractFactory viewModelFactory)
-        {
-            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(this, viewModelFactory);
-        }
     }
 }

@@ -1,5 +1,7 @@
-﻿using GoalballAnalysisSystem.WPF.State.Authenticators;
+﻿using GoalballAnalysisSystem.WPF.Commands;
+using GoalballAnalysisSystem.WPF.State.Authenticators;
 using GoalballAnalysisSystem.WPF.State.Navigators;
+using GoalballAnalysisSystem.WPF.ViewModel.Factories;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -13,14 +15,19 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     class MainViewModel : BaseViewModel
     {
+        private readonly IGoalballAnalysisSystemViewModelAbstractFactory _viewModelFactory;
+
         public INavigator Navigator { get; set; }
         public IAuthenticator Authenticator { get; }
+        public ICommand UpdateCurrentViewModelCommand { get; }
 
-        public MainViewModel(INavigator navigator, IAuthenticator authenticator)
+        public MainViewModel(INavigator navigator, IAuthenticator authenticator, IGoalballAnalysisSystemViewModelAbstractFactory viewModelFactory)
         {
             Navigator = navigator;
+            _viewModelFactory = viewModelFactory;
             Authenticator = authenticator;
-            Navigator.UpdateCurrentViewModelCommand.Execute(ViewType.Login);
+            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(navigator, _viewModelFactory);
+            UpdateCurrentViewModelCommand.Execute(ViewType.Login);
         }
         /*
         public ICommand UpdateSelectedViewModelCommand { get; private set; }

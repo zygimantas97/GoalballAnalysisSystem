@@ -12,6 +12,7 @@ namespace GoalballAnalysisSystem.WPF.State.Authenticators
     {
         User CurrentUser { get; }
         bool IsLoggedIn { get; }
+        event Action StateChanged;
 
         Task<RegistrationResult> Register(string name, string surname, string email, string password, string confirmPassword);
         Task<bool> Login(string email, string password);

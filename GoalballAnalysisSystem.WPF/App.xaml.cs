@@ -4,6 +4,7 @@ using GoalballAnalysisSystem.EntityFramework;
 using GoalballAnalysisSystem.EntityFramework.Services;
 using GoalballAnalysisSystem.WPF.State.Authenticators;
 using GoalballAnalysisSystem.WPF.State.Navigators;
+using GoalballAnalysisSystem.WPF.State.Users;
 using GoalballAnalysisSystem.WPF.View;
 using GoalballAnalysisSystem.WPF.ViewModel;
 using GoalballAnalysisSystem.WPF.ViewModel.Factories;
@@ -70,8 +71,10 @@ namespace GoalballAnalysisSystem.WPF
                     s.GetRequiredService<Renavigator<HomeViewModel>>());
             });
 
-            services.AddScoped<INavigator, Navigator>();
-            services.AddScoped<IAuthenticator, Authenticator>();
+            services.AddSingleton<INavigator, Navigator>();
+            services.AddSingleton<IAuthenticator, Authenticator>();
+            // use for updating CurrentUser object
+            services.AddSingleton<IUserStore, UserStore>();
             services.AddScoped<MainViewModel>();
 
             services.AddScoped<MainWindow>(s => new MainWindow(s.GetRequiredService<MainViewModel>()));

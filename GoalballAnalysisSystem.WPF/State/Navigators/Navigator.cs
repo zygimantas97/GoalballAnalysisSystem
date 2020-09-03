@@ -10,7 +10,7 @@ using GoalballAnalysisSystem.WPF.ViewModel.Factories;
 
 namespace GoalballAnalysisSystem.WPF.State.Navigators
 {
-    public class Navigator : ObservableObject, INavigator
+    public class Navigator : INavigator
     {
         private BaseViewModel _currentViewModel;
         public BaseViewModel CurrentViewModel
@@ -22,8 +22,10 @@ namespace GoalballAnalysisSystem.WPF.State.Navigators
             set
             {
                 _currentViewModel = value;
-                OnPropertyChanged(nameof(CurrentViewModel));
+                StateChanged?.Invoke();
             }
         }
+
+        public event Action StateChanged;
     }
 }

@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="State\Navigators\Renavigator" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="State\Navigators\Renavigator" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
   </ItemGroup>
 

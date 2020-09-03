@@ -7,15 +7,10 @@ using System.Windows.Input;
 
 namespace GoalballAnalysisSystem.WPF.ViewModel
 {
+    public delegate T CreateViewModel<T>() where T : BaseViewModel;
+
     public class BaseViewModel : ObservableObject
     {
-         /*
-        public ICommand UpdateSelectedViewModelCommand { get; private set; }
-
-        public BaseViewModel()
-        {
-            UpdateSelectedViewModelCommand = App.NavigationCommand;
-        }
-         */
+        
     }
 }

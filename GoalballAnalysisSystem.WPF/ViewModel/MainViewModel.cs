@@ -15,13 +15,13 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     class MainViewModel : BaseViewModel
     {
-        private readonly IGoalballAnalysisSystemViewModelAbstractFactory _viewModelFactory;
+        private readonly IGoalballAnalysisSystemViewModelFactory _viewModelFactory;
 
         public INavigator Navigator { get; set; }
         public IAuthenticator Authenticator { get; }
         public ICommand UpdateCurrentViewModelCommand { get; }
 
-        public MainViewModel(INavigator navigator, IAuthenticator authenticator, IGoalballAnalysisSystemViewModelAbstractFactory viewModelFactory)
+        public MainViewModel(INavigator navigator, IAuthenticator authenticator, IGoalballAnalysisSystemViewModelFactory viewModelFactory)
         {
             Navigator = navigator;
             _viewModelFactory = viewModelFactory;

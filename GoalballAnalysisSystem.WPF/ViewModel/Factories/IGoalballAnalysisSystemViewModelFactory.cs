@@ -1,11 +1,12 @@
-﻿using System;
+﻿using GoalballAnalysisSystem.WPF.State.Navigators;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace GoalballAnalysisSystem.WPF.ViewModel.Factories
 {
-    public interface IGoalballAnalysisSystemViewModelFactory<T> where T : BaseViewModel
+    public interface IGoalballAnalysisSystemViewModelFactory
     {
-        T CreateViewModel();
+        BaseViewModel CreateViewModel(ViewType viewType);
     }
 }

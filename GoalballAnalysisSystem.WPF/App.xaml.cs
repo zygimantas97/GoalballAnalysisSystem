@@ -56,22 +56,26 @@ namespace GoalballAnalysisSystem.WPF
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
             // add all view model factories
-            services.AddSingleton<IGoalballAnalysisSystemViewModelAbstractFactory, GoalballAnalysisSystemViewModelAbstractFactory>();
-            services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<HomeViewModel>, HomeViewModelFactory>();
-            services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<GamesViewModel>, GamesViewModelFactory>();
-            services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<TeamsViewModel>, TeamsViewModelFactory>();
-            services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<PlayersViewModel>, PlayersViewModelFactory>();
-            services.AddSingleton<IGoalballAnalysisSystemViewModelFactory<LoginViewModel>>((s) =>
-                new LoginViewModelFactory(s.GetRequiredService<IAuthenticator>(),
-                new ViewModelFactoryRenavigator<HomeViewModel>(s.GetRequiredService<INavigator>(),
-                    s.GetRequiredService<IGoalballAnalysisSystemViewModelFactory<HomeViewModel>>())));
+            services.AddSingleton<IGoalballAnalysisSystemViewModelFactory, GoalballAnalysisSystemViewModelFactory>();            
 
+            services.AddSingleton<CreateViewModel<HomeViewModel>>(s => { return () => new HomeViewModel(); });
+            services.AddSingleton<CreateViewModel<GamesViewModel>>(s => { return () => new GamesViewModel(); });
+            services.AddSingleton<CreateViewModel<TeamsViewModel>>(s => { return () => new TeamsViewModel(); });
+            services.AddSingleton<CreateViewModel<PlayersViewModel>>(s => { return () => new PlayersViewModel(); });
+            services.AddSingleton<Renavigator<HomeViewModel>>();
+            services.AddSingleton<CreateViewModel<LoginViewModel>>(s =>
+            {
+                return () => new LoginViewModel(
+                    s.GetRequiredService<IAuthenticator>(),
+                    s.GetRequiredService<Renavigator<HomeViewModel>>());
+            });
 
             services.AddScoped<INavigator, Navigator>();
             services.AddScoped<IAuthenticator, Authenticator>();
             services.AddScoped<MainViewModel>();
 
             services.AddScoped<MainWindow>(s => new MainWindow(s.GetRequiredService<MainViewModel>()));
+            
 
             return services.BuildServiceProvider();
         }

@@ -1,0 +1,25 @@
+﻿using GoalballAnalysisSystem.WPF.ViewModel;
+using GoalballAnalysisSystem.WPF.ViewModel.Factories;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace GoalballAnalysisSystem.WPF.State.Navigators
+{
+    public class Renavigator<T> : IRenavigator where T : BaseViewModel
+    {
+        private readonly INavigator _navigator;
+        private readonly CreateViewModel<T> _createViewModel;
+
+        public Renavigator(INavigator navigator, CreateViewModel<T> createViewModel)
+        {
+            _navigator = navigator;
+            _createViewModel = createViewModel;
+        }
+
+        public void Renavigate()
+        {
+            _navigator.CurrentViewModel = _createViewModel();
+        }
+    }
+}

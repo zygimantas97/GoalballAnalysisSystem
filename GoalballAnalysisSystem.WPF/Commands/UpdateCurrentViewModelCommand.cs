@@ -13,9 +13,9 @@ namespace GoalballAnalysisSystem.WPF.Commands
         public event EventHandler CanExecuteChanged;
 
         private readonly INavigator _navigator;
-        private readonly IGoalballAnalysisSystemViewModelAbstractFactory _viewModelFactory;
+        private readonly IGoalballAnalysisSystemViewModelFactory _viewModelFactory;
 
-        public UpdateCurrentViewModelCommand(INavigator navigator, IGoalballAnalysisSystemViewModelAbstractFactory viewModelFactory)
+        public UpdateCurrentViewModelCommand(INavigator navigator, IGoalballAnalysisSystemViewModelFactory viewModelFactory)
         {
             _navigator = navigator;
             _viewModelFactory = viewModelFactory;

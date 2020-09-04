@@ -15,7 +15,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     public class MainViewModel : BaseViewModel
     {
-        private readonly IGoalballAnalysisSystemViewModelFactory _viewModelFactory;
         private readonly INavigator _navigator;
         private readonly IAuthenticator _authenticator;
 
@@ -25,17 +24,16 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         public ICommand UpdateCurrentViewModelCommand { get; }
         public ICommand LogoutCommand { get; }
 
-        public MainViewModel(INavigator navigator, IAuthenticator authenticator, IGoalballAnalysisSystemViewModelFactory viewModelFactory)
+        public MainViewModel(INavigator navigator, IAuthenticator authenticator, IRenavigator renavigator)
         {
             _navigator = navigator;
-            _viewModelFactory = viewModelFactory;
             _authenticator = authenticator;
 
             _navigator.StateChanged += Navigator_StateChanged;
             _authenticator.StateChanged += Authenticator_StateChanged;
 
-            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(_navigator, _viewModelFactory);
-            LogoutCommand = new LogoutCommand(this, authenticator);
+            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(renavigator);
+            LogoutCommand = new LogoutCommand(authenticator, renavigator);
 
             UpdateCurrentViewModelCommand.Execute(ViewType.Login);
         }

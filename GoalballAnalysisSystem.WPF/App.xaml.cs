@@ -66,22 +66,22 @@ namespace GoalballAnalysisSystem.WPF
             services.AddSingleton<CreateViewModel<GamesViewModel>>(s => { return () => new GamesViewModel(); });
             services.AddSingleton<CreateViewModel<TeamsViewModel>>(s => { return () => new TeamsViewModel(s.GetRequiredService<IUserStore>()); });
             services.AddSingleton<CreateViewModel<PlayersViewModel>>(s => { return () => new PlayersViewModel(); });
-            services.AddSingleton<Renavigator<HomeViewModel>>();
+
             services.AddSingleton<CreateViewModel<LoginViewModel>>(s =>
             {
                 return () => new LoginViewModel(
                     s.GetRequiredService<IAuthenticator>(),
-                    s.GetRequiredService<Renavigator<HomeViewModel>>());
+                    s.GetRequiredService<IRenavigator>());
             });
-            services.AddSingleton<Renavigator<LoginViewModel>>();
             services.AddSingleton<CreateViewModel<RegistrationViewModel>>(s =>
             {
                 return () => new RegistrationViewModel(
                     s.GetRequiredService<IAuthenticator>(),
-                    s.GetRequiredService<Renavigator<LoginViewModel>>());
+                    s.GetRequiredService<IRenavigator>());
             });
 
             services.AddSingleton<INavigator, Navigator>();
+            services.AddSingleton<IRenavigator, Renavigator>();
             services.AddSingleton<IAuthenticator, Authenticator>();
             // use for updating CurrentUser object
             services.AddSingleton<IUserStore, UserStore>();

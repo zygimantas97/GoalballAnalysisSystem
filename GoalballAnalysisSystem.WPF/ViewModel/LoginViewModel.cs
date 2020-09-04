@@ -27,10 +27,12 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         }
 
         public ICommand LoginCommand { get; }
+        public ICommand UpdateCurrentViewModelCommand { get; }
 
         public LoginViewModel(IAuthenticator authenticator, IRenavigator renavigator)
         {
             LoginCommand = new LoginCommand(this, authenticator, renavigator);
+            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(renavigator);
         }
 
     }

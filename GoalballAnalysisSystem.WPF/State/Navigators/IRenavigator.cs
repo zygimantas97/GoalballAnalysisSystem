@@ -6,6 +6,6 @@ namespace GoalballAnalysisSystem.WPF.State.Navigators
 {
     public interface IRenavigator
     {
-        void Renavigate();
+        void Renavigate(ViewType viewType);
     }
 }

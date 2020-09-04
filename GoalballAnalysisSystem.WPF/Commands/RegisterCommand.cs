@@ -37,7 +37,7 @@ namespace GoalballAnalysisSystem.WPF.Commands
             RegistrationResult result = await _authenticator.Register(_registrationViewModel.Name, _registrationViewModel.Surname, _registrationViewModel.Email, passInfo[0], passInfo[1]);
             if (result == RegistrationResult.Success)
             {
-                _renavigator.Renavigate();
+                _renavigator.Renavigate(ViewType.Login);
             }
         }
     }

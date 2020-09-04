@@ -26,9 +26,12 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         private void ResetTeams()
         {
             _teams.Clear();
-            foreach (Team team in _userStore.CurrentUser.Teams)
+            if(_userStore.CurrentUser != null)
             {
-                _teams.Add(team);
+                foreach (Team team in _userStore.CurrentUser.Teams)
+                {
+                    _teams.Add(team);
+                }
             }
         }
 

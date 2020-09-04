@@ -10,15 +10,15 @@ namespace GoalballAnalysisSystem.WPF.Commands
 {
     public class LogoutCommand : ICommand
     {
-        private MainViewModel _mainVIewModel;
         private readonly IAuthenticator _authenticator;
+        private readonly IRenavigator _renavigator;
 
         public event EventHandler CanExecuteChanged;
 
-        public LogoutCommand(MainViewModel mainViewModel, IAuthenticator authenticator)
+        public LogoutCommand(IAuthenticator authenticator, IRenavigator renavigator)
         {
-            _mainVIewModel = mainViewModel;
             _authenticator = authenticator;
+            _renavigator = renavigator;
         }
 
         public bool CanExecute(object parameter)
@@ -29,7 +29,7 @@ namespace GoalballAnalysisSystem.WPF.Commands
         public void Execute(object parameter)
         {
             _authenticator.Logout();
-            _mainVIewModel.UpdateCurrentViewModelCommand.Execute(ViewType.Login);
+            _renavigator.Renavigate(ViewType.Login);
         }
     }
 }

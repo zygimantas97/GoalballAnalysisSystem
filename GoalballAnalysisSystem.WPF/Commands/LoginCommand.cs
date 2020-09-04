@@ -35,7 +35,7 @@ namespace GoalballAnalysisSystem.WPF.Commands
             bool success = await _authenticator.Login(_loginViewModel.Email, parameter.ToString());
             if (success)
             {
-                _renavigator.Renavigate();
+                _renavigator.Renavigate(ViewType.Home);
             }
         }
     }

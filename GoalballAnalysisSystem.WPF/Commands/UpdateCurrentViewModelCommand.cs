@@ -10,15 +10,13 @@ namespace GoalballAnalysisSystem.WPF.Commands
 {
     public class UpdateCurrentViewModelCommand : ICommand
     {
+        private readonly IRenavigator _renavigator;
+
         public event EventHandler CanExecuteChanged;
 
-        private readonly INavigator _navigator;
-        private readonly IGoalballAnalysisSystemViewModelFactory _viewModelFactory;
-
-        public UpdateCurrentViewModelCommand(INavigator navigator, IGoalballAnalysisSystemViewModelFactory viewModelFactory)
+        public UpdateCurrentViewModelCommand(IRenavigator renavigator)
         {
-            _navigator = navigator;
-            _viewModelFactory = viewModelFactory;
+            _renavigator = renavigator;
         }
 
         public bool CanExecute(object parameter)
@@ -31,7 +29,7 @@ namespace GoalballAnalysisSystem.WPF.Commands
             if(parameter is ViewType)
             {
                 ViewType viewType = (ViewType)parameter;
-                _navigator.CurrentViewModel = _viewModelFactory.CreateViewModel(viewType);
+                _renavigator.Renavigate(viewType);
             }
         }
     }

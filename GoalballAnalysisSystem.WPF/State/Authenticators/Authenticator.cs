@@ -1,6 +1,5 @@
 ﻿using GoalballAnalysisSystem.Domain.Models;
 using GoalballAnalysisSystem.Domain.Services;
-using GoalballAnalysisSystem.WPF.Models;
 using GoalballAnalysisSystem.WPF.State.Users;
 using System;
 using System.Collections.Generic;

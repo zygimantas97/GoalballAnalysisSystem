@@ -8,5 +8,6 @@ namespace GoalballAnalysisSystem.WPF.State.Users
     public interface IUserStore
     {
         User CurrentUser { get; set; }
+        event Action StateChanged;
     }
 }

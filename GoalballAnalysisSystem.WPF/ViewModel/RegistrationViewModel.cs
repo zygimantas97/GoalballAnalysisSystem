@@ -1,4 +1,7 @@
-﻿using GoalballAnalysisSystem.WPF.Model;
+﻿using GoalballAnalysisSystem.WPF.Commands;
+using GoalballAnalysisSystem.WPF.Model;
+using GoalballAnalysisSystem.WPF.State.Authenticators;
+using GoalballAnalysisSystem.WPF.State.Navigators;
 using GoalballAnalysisSystem.WPF.ViewModel.DatabaseServices;
 using System;
 using System.Collections.Generic;
@@ -11,36 +14,48 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     public class RegistrationViewModel : BaseViewModel
     {
-        public ICommand RegisterCommand { get; private set; }
+        private string _name;
 
-        private User activeUser;
-
-        public User ActiveUser
+        public string Name
         {
-            get { return activeUser; }
+            get { return _name; }
             set
             {
-                activeUser = value;
-                //OnPropertyChanged("ActiveUser");
+                _name = value;
+                OnPropertyChanged(nameof(Name));
             }
         }
 
+        private string _surname;
 
-        public RegistrationViewModel()
-            :base()
+        public string Surname
         {
-            ActiveUser = new User();
-            RegisterCommand = null;
-        }
-
-        public void Register()
-        {
-            bool result = SQLiteDatabaseService.Insert(ActiveUser);
-            if (result)
+            get { return _surname; }
+            set
             {
-                App.Message = "Registration was successful.";
-                App.NavigationCommand.Execute("LoginViewModel");
+                _surname = value;
+                OnPropertyChanged(nameof(Surname));
             }
         }
+
+        private string _email;
+
+        public string Email
+        {
+            get { return _email; }
+            set
+            {
+                _email = value;
+                OnPropertyChanged(nameof(Email));
+            }
+        }
+
+        public ICommand RegisterCommand { get; }
+
+        public RegistrationViewModel(IAuthenticator authenticator, IRenavigator renavigator)
+        {
+            RegisterCommand = new RegisterCommand(this, authenticator, renavigator);
+        }
+
     }
 }

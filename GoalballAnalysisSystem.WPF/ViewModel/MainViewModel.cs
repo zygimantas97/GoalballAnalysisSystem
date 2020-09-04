@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace GoalballAnalysisSystem.WPF.ViewModel
 {
-    class MainViewModel : BaseViewModel
+    public class MainViewModel : BaseViewModel
     {
         private readonly IGoalballAnalysisSystemViewModelFactory _viewModelFactory;
         private readonly INavigator _navigator;
@@ -23,6 +23,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         public BaseViewModel CurrentViewModel => _navigator.CurrentViewModel;
 
         public ICommand UpdateCurrentViewModelCommand { get; }
+        public ICommand LogoutCommand { get; }
 
         public MainViewModel(INavigator navigator, IAuthenticator authenticator, IGoalballAnalysisSystemViewModelFactory viewModelFactory)
         {
@@ -33,7 +34,9 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             _navigator.StateChanged += Navigator_StateChanged;
             _authenticator.StateChanged += Authenticator_StateChanged;
 
-            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(navigator, _viewModelFactory);
+            UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(_navigator, _viewModelFactory);
+            LogoutCommand = new LogoutCommand(this, authenticator);
+
             UpdateCurrentViewModelCommand.Execute(ViewType.Login);
         }
 
@@ -46,27 +49,5 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         {
             OnPropertyChanged(nameof(CurrentViewModel));
         }
-        /*
-public ICommand UpdateSelectedViewModelCommand { get; private set; }
-
-private BaseViewModel _selectedViewModel;
-
-public BaseViewModel SelectedViewModel
-{
-   get { return _selectedViewModel; }
-   set
-   {
-       _selectedViewModel = value;
-       OnPropertyChanged(nameof(SelectedViewModel));
-   }
-}
-
-public MainViewModel()
-{
-   SelectedViewModel = new LoginViewModel();
-   UpdateSelectedViewModelCommand = new UpdateSelectedViewModelCommand(this);
-   App.NavigationCommand = UpdateSelectedViewModelCommand;
-}
-*/
     }
 }

@@ -6,34 +6,113 @@
              xmlns:local="clr-namespace:GoalballAnalysisSystem.WPF.View"
              xmlns:viewmodel="clr-namespace:GoalballAnalysisSystem.WPF.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             Background ="{StaticResource backgroundColor}">
-    <UserControl.Resources>
-        <viewmodel:RegistrationViewModel x:Key="vm"/>
-    </UserControl.Resources>
-    <StackPanel HorizontalAlignment="Center"
-                DataContext="{StaticResource vm}">
-        <TextBlock Text="Registration"
-                   FontSize="50"/>
-        <TextBlock Text="Name"/>
-        <TextBox x:Name="nameTextBox"
-                 Text="{Binding ActiveUser.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Text="Surname"/>
-        <TextBox x:Name="surnameTextBox"
-                 Text="{Binding ActiveUser.Surname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Text="Email"/>
-        <TextBox x:Name="emailTextBox"
-                 Text="{Binding ActiveUser.Email, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Text="Password"/>
-        <TextBox x:Name="passwordTextBox"
-                 Text="{Binding ActiveUser.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <Button Content="Register"
-                CommandParameter="{Binding ActiveUser}"
-                Command="{Binding RegisterCommand}"
-                x:Name="registrationButton"/>
-        <Button Content="I have an account"
-                x:Name="haveAnAccountButton"
-                Command="{Binding UpdateSelectedViewModelCommand}"
-                CommandParameter="LoginViewModel"/>
-    </StackPanel>
+             d:DesignHeight="500" d:DesignWidth="800"
+             FontSize="16">
+    <Border HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            BorderBrush="{StaticResource PrimaryBackgroundBrush}"
+            BorderThickness="5"
+            CornerRadius="15"
+            Padding="30"
+            Margin="10">
+        <Border.Effect>
+            <DropShadowEffect  Color="Gray"
+                               BlurRadius="10"/>
+        </Border.Effect>
+        <Grid Grid.IsSharedSizeScope="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                   Text="Registration"
+                   FontSize="36"/>
+
+            <Grid Grid.Row="1" Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="Label" Width="auto"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                           Text="Name"/>
+                    <TextBox Grid.Column="1"
+                         Margin="20 0 0 0"
+                         Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="0 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="Label" Width="auto"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                           Text="Surname"/>
+                    <TextBox Grid.Column="1"
+                         Margin="20 0 0 0"
+                         Text="{Binding Surname, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+
+                <Grid Grid.Row="2" Margin="0 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="Label" Width="auto"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                           Text="Email"/>
+                    <TextBox Grid.Column="1"
+                         Margin="20 0 0 0"
+                         Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+
+                <Grid Grid.Row="3" Margin="0 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="Label" Width="auto"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                           Text="Password"/>
+                    <PasswordBox Grid.Column="1"
+                             Margin="20 0 0 0"
+                             x:Name="passwordBox"/>
+                </Grid>
+
+                <Grid Grid.Row="4" Margin="0 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="Label" Width="auto"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                           Text="Confirm password"/>
+                    <PasswordBox Grid.Column="1"
+                             Margin="20 0 0 0"
+                             x:Name="confirmPasswordBox"/>
+                </Grid>
+
+                <StackPanel Grid.Row="5"
+                            HorizontalAlignment="Center">
+                    <Button Content="Register"
+                        IsDefault="True"
+                        Margin="0 10"
+                        Click="Register_Click"/>
+                    <Button Content="Login"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Border>
 </UserControl>

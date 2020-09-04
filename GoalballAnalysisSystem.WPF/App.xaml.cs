@@ -37,6 +37,8 @@ namespace GoalballAnalysisSystem.WPF
             IServiceProvider serviceProvider = CreateServiceProvider();
             //IAuthenticationService authenticationService = serviceProvider.GetRequiredService<IAuthenticationService>();
             //await authenticationService.Register("Zygimantas", "Matusevicius", "zygimantas1997@gmail.com", "password", "password");
+            IUserDataService userDataService = serviceProvider.GetRequiredService<IUserDataService>();
+            var users = await userDataService.GetByEmail("zygimantas1997@gmail.com");
 
             Window window = serviceProvider.GetRequiredService<MainWindow>();
             window.Show();
@@ -47,6 +49,7 @@ namespace GoalballAnalysisSystem.WPF
         private IServiceProvider CreateServiceProvider()
         {
             IServiceCollection services = new ServiceCollection();
+            
 
             // Add all services
             services.AddSingleton<GoalballAnalysisSystemDbContextFactory>();
@@ -61,7 +64,7 @@ namespace GoalballAnalysisSystem.WPF
 
             services.AddSingleton<CreateViewModel<HomeViewModel>>(s => { return () => new HomeViewModel(); });
             services.AddSingleton<CreateViewModel<GamesViewModel>>(s => { return () => new GamesViewModel(); });
-            services.AddSingleton<CreateViewModel<TeamsViewModel>>(s => { return () => new TeamsViewModel(); });
+            services.AddSingleton<CreateViewModel<TeamsViewModel>>(s => { return () => new TeamsViewModel(s.GetRequiredService<IUserStore>()); });
             services.AddSingleton<CreateViewModel<PlayersViewModel>>(s => { return () => new PlayersViewModel(); });
             services.AddSingleton<Renavigator<HomeViewModel>>();
             services.AddSingleton<CreateViewModel<LoginViewModel>>(s =>
@@ -69,6 +72,13 @@ namespace GoalballAnalysisSystem.WPF
                 return () => new LoginViewModel(
                     s.GetRequiredService<IAuthenticator>(),
                     s.GetRequiredService<Renavigator<HomeViewModel>>());
+            });
+            services.AddSingleton<Renavigator<LoginViewModel>>();
+            services.AddSingleton<CreateViewModel<RegistrationViewModel>>(s =>
+            {
+                return () => new RegistrationViewModel(
+                    s.GetRequiredService<IAuthenticator>(),
+                    s.GetRequiredService<Renavigator<LoginViewModel>>());
             });
 
             services.AddSingleton<INavigator, Navigator>();

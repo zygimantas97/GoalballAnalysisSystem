@@ -1,4 +1,5 @@
-﻿using GoalballAnalysisSystem.WPF.State.Authenticators;
+﻿using GoalballAnalysisSystem.Domain.Services;
+using GoalballAnalysisSystem.WPF.State.Authenticators;
 using GoalballAnalysisSystem.WPF.State.Navigators;
 using GoalballAnalysisSystem.WPF.ViewModel;
 using System;
@@ -8,17 +9,17 @@ using System.Windows.Input;
 
 namespace GoalballAnalysisSystem.WPF.Commands
 {
-    class LoginCommand : ICommand
+    public class RegisterCommand : ICommand
     {
-        private readonly LoginViewModel _loginViewModel;
+        private readonly RegistrationViewModel _registrationViewModel;
         private readonly IAuthenticator _authenticator;
         private readonly IRenavigator _renavigator;
 
-        public LoginCommand(LoginViewModel loginViewModel,
+        public RegisterCommand(RegistrationViewModel registrationViewModel,
             IAuthenticator authenticator,
             IRenavigator renavigator)
         {
-            _loginViewModel = loginViewModel;
+            _registrationViewModel = registrationViewModel;
             _authenticator = authenticator;
             _renavigator = renavigator;
         }
@@ -32,8 +33,9 @@ namespace GoalballAnalysisSystem.WPF.Commands
 
         public async void Execute(object parameter)
         {
-            bool success = await _authenticator.Login(_loginViewModel.Email, parameter.ToString());
-            if (success)
+            string[] passInfo = (string[])parameter;
+            RegistrationResult result = await _authenticator.Register(_registrationViewModel.Name, _registrationViewModel.Surname, _registrationViewModel.Email, passInfo[0], passInfo[1]);
+            if (result == RegistrationResult.Success)
             {
                 _renavigator.Renavigate();
             }

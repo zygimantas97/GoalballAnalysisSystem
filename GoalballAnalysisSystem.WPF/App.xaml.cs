@@ -62,10 +62,11 @@ namespace GoalballAnalysisSystem.WPF
             // add all view model factories
             services.AddSingleton<IGoalballAnalysisSystemViewModelFactory, GoalballAnalysisSystemViewModelFactory>();            
 
-            services.AddSingleton<CreateViewModel<HomeViewModel>>(s => { return () => new HomeViewModel(); });
+            services.AddSingleton<CreateViewModel<HomeViewModel>>(s => { return () => new HomeViewModel(s.GetRequiredService<IRenavigator>()); });
             services.AddSingleton<CreateViewModel<GamesViewModel>>(s => { return () => new GamesViewModel(); });
             services.AddSingleton<CreateViewModel<TeamsViewModel>>(s => { return () => new TeamsViewModel(s.GetRequiredService<IUserStore>()); });
             services.AddSingleton<CreateViewModel<PlayersViewModel>>(s => { return () => new PlayersViewModel(); });
+            services.AddSingleton<CreateViewModel<CalibrationViewModel>>(s => { return () => new CalibrationViewModel(); });
 
             services.AddSingleton<CreateViewModel<LoginViewModel>>(s =>
             {

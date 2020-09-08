@@ -9,17 +9,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="800"
              FontSize="16">
-    <Border HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            BorderBrush="{StaticResource PrimaryBackgroundBrush}"
-            BorderThickness="5"
-            CornerRadius="15"
-            Padding="30"
-            Margin="10">
-        <Border.Effect>
-            <DropShadowEffect  Color="Gray"
-                               BlurRadius="10"/>
-        </Border.Effect>
+
+    <Border Style="{StaticResource BorderElement}" 
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+        
         <Grid Grid.IsSharedSizeScope="True">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>

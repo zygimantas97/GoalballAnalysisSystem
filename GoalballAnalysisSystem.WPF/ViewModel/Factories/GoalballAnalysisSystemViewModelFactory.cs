@@ -13,13 +13,15 @@ namespace GoalballAnalysisSystem.WPF.ViewModel.Factories
         private readonly CreateViewModel<PlayersViewModel> _createPlayersViewModel;
         private readonly CreateViewModel<LoginViewModel> _createLoginViewModel;
         private readonly CreateViewModel<RegistrationViewModel> _createRegistrationViewModel;
+        private readonly CreateViewModel<CalibrationViewModel> _createCalibrationViewModel;
 
         public GoalballAnalysisSystemViewModelFactory(CreateViewModel<HomeViewModel> createHomeViewModel,
             CreateViewModel<GamesViewModel> createGamesViewModel,
             CreateViewModel<TeamsViewModel> createTeamsViewModel,
             CreateViewModel<PlayersViewModel> createPlayersViewModel,
             CreateViewModel<LoginViewModel> createLoginViewModel,
-            CreateViewModel<RegistrationViewModel> createRegistrationViewModel)
+            CreateViewModel<RegistrationViewModel> createRegistrationViewModel,
+            CreateViewModel<CalibrationViewModel> createCalibrationViewModel)
         {
             _createHomeViewModel = createHomeViewModel;
             _createGamesViewModel = createGamesViewModel;
@@ -27,6 +29,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel.Factories
             _createPlayersViewModel = createPlayersViewModel;
             _createLoginViewModel = createLoginViewModel;
             _createRegistrationViewModel = createRegistrationViewModel;
+            _createCalibrationViewModel = createCalibrationViewModel;
         }
 
         public BaseViewModel CreateViewModel(ViewType viewType)
@@ -45,6 +48,8 @@ namespace GoalballAnalysisSystem.WPF.ViewModel.Factories
                     return _createTeamsViewModel();
                 case ViewType.Players:
                     return _createPlayersViewModel();
+                case ViewType.Calibration:
+                    return _createCalibrationViewModel();
                 default:
                     throw new ArgumentException("The ViewType does not have a ViewModel.", "viewType");
             }

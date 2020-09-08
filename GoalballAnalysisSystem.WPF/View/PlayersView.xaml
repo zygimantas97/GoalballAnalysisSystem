@@ -6,7 +6,37 @@
              xmlns:local="clr-namespace:GoalballAnalysisSystem.WPF.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="Players"/>
-    </Grid>
+    <Border Style="{StaticResource BorderElement}">
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="7*"/>
+                <RowDefinition Height="1*"/>
+
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="TitleTextBlock"
+                       Text="Players"
+                       Grid.Row="0"
+                       Style="{StaticResource HeaderOneText}"
+                       HorizontalAlignment="Center"
+                       />
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="10*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="1"
+                           Margin="0 10"
+                           Text="Players content"
+                           Style="{StaticResource HeaderTwoText}"/>
+
+            </Grid>
+
+        </Grid>
+    </Border>
 </UserControl>

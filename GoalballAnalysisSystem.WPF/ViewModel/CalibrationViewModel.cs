@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GoalballAnalysisSystem.WPF.ViewModel
 {
-    class CalibrationViewModel : BaseViewModel
+    public class CalibrationViewModel : BaseViewModel
     {
     }
 }

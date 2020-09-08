@@ -8,7 +8,12 @@
              xmlns:viewmodel="clr-namespace:GoalballAnalysisSystem.WPF.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Background ="{StaticResource backgroundColor}">
+             >
+
+    <UserControl.Resources>
+        <viewmodel:CalibrationViewModel x:Key="vm"/>
+    </UserControl.Resources>
+
     <Grid>
 
         <Grid.RowDefinitions>
@@ -19,11 +24,12 @@
 
         <TextBlock x:Name="TitleTextBlock"
                    Grid.Column="1"
+                   Style="{StaticResource HeaderOneText}"
                    Text="Mark game zone corners for calibration"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    Margin="10"
-                   Style="{StaticResource HeadTitleStyle}"/>
+                   />
 
 
         <Grid Grid.Row="1">

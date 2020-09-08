@@ -9,11 +9,12 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/Common.xaml"/>
                 <ResourceDictionary Source="/Styles/NavigationBar.xaml"/>
+                <ResourceDictionary Source="/Styles/Elements.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             
             <DataTemplate DataType="{x:Type viewmodel:HomeViewModel}">
-                <view:ProcessingView/>
+                <view:HomeView/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewmodel:GamesViewModel}">
                 <view:GamesView/>
@@ -23,6 +24,9 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewmodel:PlayersViewModel}">
                 <view:PlayersView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodel:CalibrationViewModel}">
+                <view:CalibrationView/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewmodel:LoginViewModel}">
                 <view:LoginView LoginCommand="{Binding LoginCommand}"/>

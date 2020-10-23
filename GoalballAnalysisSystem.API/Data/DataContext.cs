@@ -15,10 +15,31 @@ namespace GoalballAnalysisSystem.API.Data
         {
         }
 
+        public DbSet<Player> Players { get; set; }
+        public DbSet<Team> Teams { get; set; }
+
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Player>(entity =>
+            {
+                entity.HasOne(e => e.IdentityUser)
+                    .WithMany()
+                    .HasForeignKey(e => e.IdentityUserId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FKC_Player_IdentityUser");
+            });
+
+            builder.Entity<Team>(entity =>
+            {
+                entity.HasOne(e => e.IdentityUser)
+                    .WithMany()
+                    .HasForeignKey(e => e.IdentityUserId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FKC_Team_IdentityUser");
+            });
+
             builder.Entity<IdentityRole>().HasData(
                 new IdentityRole
                 {

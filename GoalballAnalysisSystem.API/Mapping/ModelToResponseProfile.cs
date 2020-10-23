@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using GoalballAnalysisSystem.API.Contracts.V1.Responses;
+using GoalballAnalysisSystem.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,5 +10,10 @@ namespace GoalballAnalysisSystem.API.Mapping
 {
     public class ModelToResponseProfile : Profile
     {
+        public ModelToResponseProfile()
+        {
+            CreateMap<Player, PlayerResponse>();
+            CreateMap<Team, TeamResponse>();
+        }
     }
 }

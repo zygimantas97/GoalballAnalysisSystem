@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 
 namespace GoalballAnalysisSystem.API.Examples.Requests
 {
-    public class UserRequestExample : IExamplesProvider<UserRequest>
+    public class GameRequestExample : IExamplesProvider<GameRequest>
     {
-        public UserRequest GetExamples()
+        public GameRequest GetExamples()
         {
-            return new UserRequest
+            return new GameRequest
             {
-                UserName = "User2",
-                Email = "user2@gas.com",
-                Password = "Password123!"
+                Title = "Rio 2016 Final",
+                Comment = "Very hard game",
+                HomeTeamId = null,
+                GuestTeamId = null
             };
         }
     }

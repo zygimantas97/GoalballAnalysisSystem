@@ -176,7 +176,7 @@ namespace GoalballAnalysisSystem.API.Services
             }
 
             //await _userManager.AddClaimAsync(newUser, new Claim("isMasterAdmin", "true"));
-            await _userManager.AddToRoleAsync(newUser, "RegularUser");
+            await _userManager.AddToRoleAsync(newUser, "PremiumUser");
 
             return await GenerateUserAuthenticationResultAsync(newUser);
         }

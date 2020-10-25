@@ -7,15 +7,14 @@ using System.Threading.Tasks;
 
 namespace GoalballAnalysisSystem.API.Examples.Requests
 {
-    public class UserRequestExample : IExamplesProvider<UserRequest>
+    public class UpdateGamePlayerRequestExample : IExamplesProvider<UpdateGamePlayerRequest>
     {
-        public UserRequest GetExamples()
+        public UpdateGamePlayerRequest GetExamples()
         {
-            return new UserRequest
+            return new UpdateGamePlayerRequest
             {
-                UserName = "User2",
-                Email = "user2@gas.com",
-                Password = "Password123!"
+                StartTime = DateTime.Now.AddMinutes(-10),
+                EndTime = DateTime.Now
             };
         }
     }

@@ -19,8 +19,9 @@ namespace GoalballAnalysisSystem.API.Models
 
         [ForeignKey(nameof(IdentityUserId))]
         public IdentityUser IdentityUser { get; set; }
-        //public IEnumerable<Game> Games1 { get; set; }
-        //public IEnumerable<Game> Games2 { get; set; }
-        //public IEnumerable<TeamPlayer> TeamPlayers { get; set; }
+
+        public ICollection<Game> HomeGames { get; set; }
+        public ICollection<Game> GuestGames { get; set; }
+        public ICollection<TeamPlayer> TeamPlayers { get; set; }
     }
 }

@@ -4,14 +4,16 @@ using GoalballAnalysisSystem.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GoalballAnalysisSystem.API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201024145859_AddedGamesTable")]
+    partial class AddedGamesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,9 +23,9 @@ namespace GoalballAnalysisSystem.API.Data.Migrations
 
             modelBuilder.Entity("GoalballAnalysisSystem.API.Models.Game", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Comment")
@@ -53,37 +55,6 @@ namespace GoalballAnalysisSystem.API.Data.Migrations
                     b.HasIndex("IdentityUserId");
 
                     b.ToTable("Games");
-                });
-
-            modelBuilder.Entity("GoalballAnalysisSystem.API.Models.GamePlayer", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("GameId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("PlayerId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("TeamId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("TeamId", "PlayerId");
-
-                    b.ToTable("GamePlayers");
                 });
 
             modelBuilder.Entity("GoalballAnalysisSystem.API.Models.Player", b =>
@@ -257,22 +228,22 @@ namespace GoalballAnalysisSystem.API.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "27e9d9c7-7ae0-4d05-b7b6-1f145a60a50f",
-                            ConcurrencyStamp = "23086020-c303-42b0-b6b0-d017b0d8f656",
+                            Id = "1981e719-6f94-4268-9a64-d9776a69cd3e",
+                            ConcurrencyStamp = "3dd6a755-376b-46f9-9dc7-247a6d85bf19",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "7624ec94-b21b-44d7-b91f-b36a740c10b6",
-                            ConcurrencyStamp = "8328f510-2c5f-4b2f-a10f-d38a59fcd7c5",
+                            Id = "075dcd53-c9dc-41a0-bd27-580a9127c1be",
+                            ConcurrencyStamp = "2bb12ab5-ba2a-48a9-9699-81882bd7cd64",
                             Name = "RegularUser",
                             NormalizedName = "REGULARUSER"
                         },
                         new
                         {
-                            Id = "ba714f97-a33c-4867-84fa-f209d442722b",
-                            ConcurrencyStamp = "38c9727e-4362-4222-baa7-810fcb520efb",
+                            Id = "da746397-9004-452d-85d3-41106635067b",
+                            ConcurrencyStamp = "a79d8cda-76f5-4698-934d-41bcc0db0b18",
                             Name = "PremiumUser",
                             NormalizedName = "PREMIUMUSER"
                         });
@@ -470,23 +441,6 @@ namespace GoalballAnalysisSystem.API.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("GoalballAnalysisSystem.API.Models.GamePlayer", b =>
-                {
-                    b.HasOne("GoalballAnalysisSystem.API.Models.Game", "Game")
-                        .WithMany("GamePlayers")
-                        .HasForeignKey("GameId")
-                        .HasConstraintName("FKC_GamePlayer_Game")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
-                    b.HasOne("GoalballAnalysisSystem.API.Models.TeamPlayer", "TeamPlayer")
-                        .WithMany("GamePlayers")
-                        .HasForeignKey("TeamId", "PlayerId")
-                        .HasConstraintName("FKC_GamePlayer_TeamPlayer")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("GoalballAnalysisSystem.API.Models.Player", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
@@ -524,14 +478,13 @@ namespace GoalballAnalysisSystem.API.Data.Migrations
                     b.HasOne("GoalballAnalysisSystem.API.Models.PlayerRole", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .HasConstraintName("FKC_TeamPlayer_PlayerRole")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasConstraintName("FKC_TeamPlayer_PlayerRole");
 
                     b.HasOne("GoalballAnalysisSystem.API.Models.Team", "Team")
                         .WithMany("TeamPlayers")
                         .HasForeignKey("TeamId")
                         .HasConstraintName("FKC_TeamPlayer_Team")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

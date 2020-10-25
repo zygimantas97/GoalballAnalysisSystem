@@ -20,6 +20,7 @@ namespace GoalballAnalysisSystem.API.Models
 
         [ForeignKey(nameof(IdentityUserId))]
         public IdentityUser IdentityUser { get; set; }
-        //public IEnumerable<TeamPlayer> TeamPlayers { get; set; }
+        
+        public ICollection<TeamPlayer> PlayerTeams { get; set; }
     }
 }

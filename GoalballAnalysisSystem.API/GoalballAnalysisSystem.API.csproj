@@ -10,6 +10,17 @@
 		<NoWarn>$(NoWarn);1591</NoWarn>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Remove="Data\Migrations\20201024054548_AddedTeamPlayersTable.cs" />
+	  <Compile Remove="Data\Migrations\20201024054548_AddedTeamPlayersTable.Designer.cs" />
+	  <Compile Remove="Data\Migrations\20201025073522_ChangedTeamOnDeleteInGame.cs" />
+	  <Compile Remove="Data\Migrations\20201025073522_ChangedTeamOnDeleteInGame.Designer.cs" />
+	  <Compile Remove="Data\Migrations\20201025074008_empty.cs" />
+	  <Compile Remove="Data\Migrations\20201025074008_empty.Designer.cs" />
+	  <Compile Remove="Data\Migrations\20201025075723_AddedGamePlayersTable.cs" />
+	  <Compile Remove="Data\Migrations\20201025075723_AddedGamePlayersTable.Designer.cs" />
+	</ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />

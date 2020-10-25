@@ -14,6 +14,10 @@ namespace GoalballAnalysisSystem.API.Mapping
         {
             CreateMap<PlayerRequest, Player>();
             CreateMap<TeamRequest, Team>();
+            CreateMap<TeamPlayerRequest, TeamPlayer>();
+            CreateMap<GameRequest, Game>();
+            CreateMap<CreateGamePlayerRequest, GamePlayer>();
+            CreateMap<UpdateGamePlayerRequest, GamePlayer>();
         }
     }
 }

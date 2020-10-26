@@ -26,7 +26,7 @@ namespace GoalballAnalysisSystem.API.Models
         [ForeignKey(nameof(GuestTeamId))]
         public Team GuestTeam { get; set; }
         
-        //public IEnumerable<Throw> Throws { get; set; }
+        public ICollection<Projection> Throws { get; set; }
         public ICollection<GamePlayer> GamePlayers { get; set; }
     }
 }

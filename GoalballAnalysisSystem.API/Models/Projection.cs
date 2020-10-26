@@ -7,20 +7,21 @@ using System.Threading.Tasks;
 
 namespace GoalballAnalysisSystem.API.Models
 {
-    public class GamePlayer
+    public class Projection
     {
         [Key]
         public long Id { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-        public long TeamId { get; set; }
-        public long PlayerId { get; set; }
+        public int X1 { get; set; }
+        public int Y1 { get; set; }
+        public int X2 { get; set; }
+        public int Y2 { get; set; }
+        public double Speed { get; set; }
         public long GameId { get; set; }
+        public long? GamePlayerId { get; set; }
 
-        public TeamPlayer TeamPlayer { get; set; }
         [ForeignKey(nameof(GameId))]
         public Game Game { get; set; }
-        
-        public ICollection<Projection> Throws { get; set; }
+        [ForeignKey(nameof(GamePlayerId))]
+        public GamePlayer GamePlayer { get; set; }
     }
 }

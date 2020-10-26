@@ -13,8 +13,8 @@ namespace GoalballAnalysisSystem.API.Examples.Requests
         {
             return new UserRequest
             {
-                UserName = "User2",
-                Email = "user2@gas.com",
+                UserName = "User1",
+                Email = "user1@gas.com",
                 Password = "Password123!"
             };
         }

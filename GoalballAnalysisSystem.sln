@@ -13,7 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.Doma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.API", "GoalballAnalysisSystem.API\GoalballAnalysisSystem.API.csproj", "{95E256F5-EFDE-40C4-80BC-2D61C1C1DCB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoalballAnalysisSystem.API.Tests", "GoalballAnalysisSystem.API.Tests\GoalballAnalysisSystem.API.Tests.csproj", "{275DC6A7-2CFA-4C2B-9F6B-13CBF461FCE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.API.Tests", "GoalballAnalysisSystem.API.Tests\GoalballAnalysisSystem.API.Tests.csproj", "{275DC6A7-2CFA-4C2B-9F6B-13CBF461FCE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoalballAnalysisSystem.Tracking", "GoalballAnalysisSystem.Tracking\GoalballAnalysisSystem.Tracking.csproj", "{37FE3248-4A89-4590-8D67-76BB5D6661F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoalballAnalysisSystem.Tracking.Tests", "GoalballAnalysisSystem.Tracking.Tests\GoalballAnalysisSystem.Tracking.Tests.csproj", "{F9F78ADC-01AF-4EDA-A1C3-E84194CFD7A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{275DC6A7-2CFA-4C2B-9F6B-13CBF461FCE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{275DC6A7-2CFA-4C2B-9F6B-13CBF461FCE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{275DC6A7-2CFA-4C2B-9F6B-13CBF461FCE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37FE3248-4A89-4590-8D67-76BB5D6661F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37FE3248-4A89-4590-8D67-76BB5D6661F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37FE3248-4A89-4590-8D67-76BB5D6661F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37FE3248-4A89-4590-8D67-76BB5D6661F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9F78ADC-01AF-4EDA-A1C3-E84194CFD7A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9F78ADC-01AF-4EDA-A1C3-E84194CFD7A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9F78ADC-01AF-4EDA-A1C3-E84194CFD7A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9F78ADC-01AF-4EDA-A1C3-E84194CFD7A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

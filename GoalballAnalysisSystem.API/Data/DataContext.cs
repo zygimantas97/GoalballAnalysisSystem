@@ -21,6 +21,7 @@ namespace GoalballAnalysisSystem.API.Data
         public DbSet<TeamPlayer> TeamPlayers { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<GamePlayer> GamePlayers { get; set; }
+        public DbSet<Projection> Projections { get; set; }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
@@ -103,7 +104,22 @@ namespace GoalballAnalysisSystem.API.Data
                     .OnDelete(DeleteBehavior.ClientCascade)
                     .HasConstraintName("FKC_GamePlayer_TeamPlayer");
             });
-        
+
+            builder.Entity<Projection>(entity =>
+            {
+                entity.HasOne(e => e.Game)
+                    .WithMany(f => f.Throws)
+                    .HasForeignKey(e => e.GameId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FKC_Throw_Game");
+
+                entity.HasOne(e => e.GamePlayer)
+                    .WithMany(f => f.Throws)
+                    .HasForeignKey(e => e.GamePlayerId)
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .HasConstraintName("FKC_Throw_GamePlayer");
+            });
+
             builder.Entity<IdentityRole>().HasData(
                 new IdentityRole
                 {
@@ -140,5 +156,7 @@ namespace GoalballAnalysisSystem.API.Data
 
             base.OnModelCreating(builder);
         }
+
+        public DbSet<GoalballAnalysisSystem.API.Models.Projection> Throw { get; set; }
     }
 }

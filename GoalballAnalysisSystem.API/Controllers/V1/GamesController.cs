@@ -90,36 +90,8 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             updateGame.Id = gameId;
             updateGame.IdentityUserId = userId;
             updateGame.Date = game.Date;
-
-            var userRole = HttpContext.GetUserRole();
-            if(userRole == "RegularUser")
-            {
-                updateGame.HomeTeamId = null;
-                updateGame.GuestTeamId = null;
-            }
-            if(userRole == "PremiumUser")
-            {
-                if(updateGame.HomeTeamId != null)
-                {
-                    var homeTeam = await _context.Teams
-                        .AsNoTracking()
-                        .SingleOrDefaultAsync(t => t.Id == updateGame.HomeTeamId && t.IdentityUserId == userId);
-                    if(homeTeam == null)
-                    {
-                        return NotFound(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to find team by given Id" } } });
-                    }
-                }
-                if(updateGame.GuestTeamId != null)
-                {
-                    var guestTeam = await _context.Teams
-                        .AsNoTracking()
-                        .SingleOrDefaultAsync(t => t.Id == updateGame.GuestTeamId && t.IdentityUserId == userId);
-                    if (guestTeam == null)
-                    {
-                        return NotFound(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to find team by given Id" } } });
-                    }
-                }
-            }
+            updateGame.HomeTeamId = game.HomeTeamId;
+            updateGame.GuestTeamId = game.GuestTeamId;
 
             _context.Games.Update(updateGame);
             var updated = await _context.SaveChangesAsync();
@@ -141,39 +113,41 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         public async Task<IActionResult> CreateGame(GameRequest request)
         {
             var userId = HttpContext.GetUserId();
-            var game = _mapper.Map<Game>(request);
-            game.IdentityUserId = userId;
-            game.Date = DateTime.Now;
-
+            
             var userRole = HttpContext.GetUserRole();
             if (userRole == "RegularUser")
             {
-                game.HomeTeamId = null;
-                game.GuestTeamId = null;
+                request.HomeTeamId = null;
+                request.GuestTeamId = null;
             }
-            if (userRole == "PremiumUser")
+            else
             {
-                if (game.HomeTeamId != null)
+                if (request.HomeTeamId != null)
                 {
                     var homeTeam = await _context.Teams
                         .AsNoTracking()
-                        .SingleOrDefaultAsync(t => t.Id == game.HomeTeamId && t.IdentityUserId == userId);
+                        .SingleOrDefaultAsync(t => t.Id == request.HomeTeamId && t.IdentityUserId == userId);
                     if (homeTeam == null)
                     {
                         return NotFound(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to find team by given Id" } } });
                     }
                 }
-                if (game.GuestTeamId != null)
+                if (request.GuestTeamId != null)
                 {
                     var guestTeam = await _context.Teams
                         .AsNoTracking()
-                        .SingleOrDefaultAsync(t => t.Id == game.GuestTeamId && t.IdentityUserId == userId);
+                        .SingleOrDefaultAsync(t => t.Id == request.GuestTeamId && t.IdentityUserId == userId);
                     if (guestTeam == null)
                     {
                         return NotFound(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to find team by given Id" } } });
                     }
                 }
             }
+
+            var game = _mapper.Map<Game>(request);
+            game.IdentityUserId = userId;
+            game.Date = DateTime.Now;
+
             _context.Games.Add(game);
             var created = await _context.SaveChangesAsync();
             if (created > 0)

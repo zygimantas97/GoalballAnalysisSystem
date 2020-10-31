@@ -12,7 +12,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class IdentityController : Controller
+    public class IdentityController : ControllerBase
     {
         private readonly IIdentityService _identityService;
 

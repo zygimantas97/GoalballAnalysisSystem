@@ -13,6 +13,7 @@ using AutoMapper;
 using GoalballAnalysisSystem.API.Extensions;
 using GoalballAnalysisSystem.API.Contracts.V1.Responses;
 using GoalballAnalysisSystem.API.Contracts.V1.Requests;
+using SQLitePCL;
 
 namespace GoalballAnalysisSystem.API.Controllers.V1
 {
@@ -20,15 +21,11 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class TeamsController : ControllerBase
+    public class TeamsController : AbstractController
     {
-        private readonly DataContext _context;
-        private readonly IMapper _mapper;
-
         public TeamsController(DataContext context, IMapper mapper)
+            : base(context, mapper)
         {
-            _context = context;
-            _mapper = mapper;
         }
 
         /// <summary>
@@ -69,10 +66,8 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         /// Updates user's team by Id
         /// </summary>
         /// <response code="204">Team was successfully updated</response>
-        /// <response code="400">Unable to update team</response>
         /// <response code="404">Unable to find team by given Id</response>
         [HttpPut("{teamId}")]
-        [ProducesResponseType(typeof(ErrorResponse), 400)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
         public async Task<IActionResult> UpdateTeam(long teamId, TeamRequest request)
         {
@@ -92,19 +87,15 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
 
             _context.Teams.Update(updateTeam);
             var updated = await _context.SaveChangesAsync();
-            if(updated > 0)
-                return NoContent();
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to update team: database error" } } });
+            return NoContent();
         }
 
         /// <summary>
         /// Creates user's team
         /// </summary>
         /// <response code="201">Team was successfully created</response>
-        /// <response code="400">Unable to create team</response>
         [HttpPost]
         [ProducesResponseType(typeof(TeamResponse), 201)]
-        [ProducesResponseType(typeof(ErrorResponse), 400)]
         public async Task<IActionResult> CreateTeam(TeamRequest request)
         {
             var team = _mapper.Map<Team>(request);
@@ -112,20 +103,16 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
 
             _context.Teams.Add(team);
             var created = await _context.SaveChangesAsync();
-            if(created > 0)
-                return CreatedAtAction("GetTeam", new { teamId = team.Id }, _mapper.Map<TeamResponse>(team));
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to create team: database error" } } });
+            return CreatedAtAction("GetTeam", new { teamId = team.Id }, _mapper.Map<TeamResponse>(team));
         }
 
         /// <summary>
         /// Deletes user's team by Id
         /// </summary>
         /// <response code="200">Team was successfully deleted</response>
-        /// <response code="400">Unable to delete team</response>
         /// <response code="404">Unable to find team by given Id</response>
         [HttpDelete("{teamId}")]
         [ProducesResponseType(typeof(TeamResponse), 200)]
-        [ProducesResponseType(typeof(ErrorResponse), 400)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
         public async Task<IActionResult> DeleteTeam(long teamId)
         {
@@ -143,9 +130,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
 
             _context.Teams.Remove(team);
             var deleted = await _context.SaveChangesAsync();
-            if(deleted > 0)
-                return Ok(_mapper.Map<TeamResponse>(team));
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to delete team: database error" } } });
+            return Ok(_mapper.Map<TeamResponse>(team));
         }
     }
 }

@@ -20,15 +20,11 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class PlayersController : ControllerBase
+    public class PlayersController : AbstractController
     {
-        private readonly DataContext _context;
-        private readonly IMapper _mapper;
-
         public PlayersController(DataContext context, IMapper mapper)
+            : base(context, mapper)
         {
-            _context = context;
-            _mapper = mapper;
         }
 
         /// <summary>
@@ -69,10 +65,8 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         /// Updates user's player by given Id
         /// </summary>
         /// <response code="204">Player was successfully updated</response>
-        /// <response code="400">Unable to update player</response>
         /// <response code="404">Unable to find player by given Id</response>
         [HttpPut("{playerId}")]
-        [ProducesResponseType(typeof(ErrorResponse), 400)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
         public async Task<IActionResult> UpdatePlayer(long playerId, PlayerRequest request)
         {
@@ -92,19 +86,15 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
 
             _context.Players.Update(updatePlayer);
             var updated = await _context.SaveChangesAsync();
-            if(updated > 0)
-                return NoContent();
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to update user's player: database error" } } });
+            return NoContent();
         }
 
         /// <summary>
         /// Creates user's player
         /// </summary>
         /// <response code="201">Player was successfully created</response>
-        /// <response code="400">Unable to create player</response>
         [HttpPost]
         [ProducesResponseType(typeof(PlayerResponse), 201)]
-        [ProducesResponseType(typeof(ErrorResponse), 400)]
         public async Task<IActionResult> CreatePlayer(PlayerRequest request)
         {
             var player = _mapper.Map<Player>(request);
@@ -112,20 +102,16 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             
             _context.Players.Add(player);
             var created = await _context.SaveChangesAsync();
-            if(created > 0)
-                return CreatedAtAction("GetPlayer", new { playerId = player.Id }, _mapper.Map<PlayerResponse>(player));
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to create player: database error" } } });
+            return CreatedAtAction("GetPlayer", new { playerId = player.Id }, _mapper.Map<PlayerResponse>(player));
         }
 
         /// <summary>
         /// Deletes user's player by Id
         /// </summary>
         /// <response code="200">Player was successfully deleted</response>
-        /// <response code="400">Unable to delete player</response>
         /// <response code="404">Unable to find player by given Id</response>
         [HttpDelete("{playerId}")]
         [ProducesResponseType(typeof(PlayerResponse), 200)]
-        [ProducesResponseType(typeof(ErrorResponse), 400)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
         public async Task<IActionResult> DeletePlayer(long playerId)
         {
@@ -141,9 +127,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
 
             _context.Players.Remove(player);
             var deleted = await _context.SaveChangesAsync();
-            if(deleted > 0)
-                return Ok(_mapper.Map<PlayerResponse>(player));
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to delete player: database error" } } });
+            return Ok(_mapper.Map<PlayerResponse>(player));
         }
     }
 }

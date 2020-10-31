@@ -14,6 +14,7 @@ namespace GoalballAnalysisSystem.Domain.Tests.Services.AuthenticationServices
     [TestFixture]
     public class AuthenticationServiceTests
     {
+        /*
         private Mock<IPasswordHasher> _mockPasswordHasher;
         private Mock<IUserDataService> _mockUserDataService;
         private AuthenticationService _authenticationService;
@@ -111,5 +112,6 @@ namespace GoalballAnalysisSystem.Domain.Tests.Services.AuthenticationServices
 
             Assert.AreEqual(expectedResult, actualResult);
         }
+        */
     }
 }

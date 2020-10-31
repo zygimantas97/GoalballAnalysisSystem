@@ -21,15 +21,11 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class TeamPlayersController : ControllerBase
+    public class TeamPlayersController : AbstractController
     {
-        private readonly DataContext _context;
-        private readonly IMapper _mapper;
-
         public TeamPlayersController(DataContext context, IMapper mapper)
+            : base(context, mapper)
         {
-            _context = context;
-            _mapper = mapper;
         }
 
         /// <summary>

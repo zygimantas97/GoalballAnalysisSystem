@@ -49,13 +49,14 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             _context.Dispose();
         }
 
-        protected T CreateController<T>() where T: AbstractController
+        protected T CreateController<T>(string userRole = "RegularUser") where T: AbstractController
         {
             var user = new ClaimsPrincipal(
                 new ClaimsIdentity(
                     new Claim[]
                     {
-                        new Claim("id", "test_user")
+                        new Claim("id", "test_user"),
+                        new Claim(ClaimTypes.Role, userRole)
                     }));
 
             var controller = (T)Activator.CreateInstance(typeof(T), _context, _mapper);

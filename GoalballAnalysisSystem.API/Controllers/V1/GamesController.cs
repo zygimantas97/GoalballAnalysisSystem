@@ -47,7 +47,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         [HttpGet("{gameId}")]
         [ProducesResponseType(typeof(GameResponse), 200)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
-        public async Task<IActionResult> GetGame(int gameId)
+        public async Task<IActionResult> GetGame(long gameId)
         {
             var userId = HttpContext.GetUserId();
             var game = await _context.Games
@@ -65,12 +65,10 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         /// Updates user's game by Id
         /// </summary>
         /// <response code="204">Game was successfully updated</response>
-        /// <response code="400">Unable to update game</response>
         /// <response code="404">Unable to find</response>
         [HttpPut("{gameId}")]
-        [ProducesResponseType(typeof(ErrorResponse), 400)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
-        public async Task<IActionResult> UpdateGame(int gameId, GameRequest request)
+        public async Task<IActionResult> UpdateGame(long gameId, GameRequest request)
         {
             var userId = HttpContext.GetUserId();
             var game = await _context.Games
@@ -90,21 +88,17 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             updateGame.GuestTeamId = game.GuestTeamId;
 
             _context.Games.Update(updateGame);
-            var updated = await _context.SaveChangesAsync();
-            if (updated > 0)
-                return NoContent();
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to update user's game: database error" } } });
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
         /// <summary>
         /// Creates user's game
         /// </summary>
         /// <response code="201">Game was successfully created</response>
-        /// <response code="400">Unable to create game</response>
         /// <response code="404">Unable to find team by given Id</response>
         [HttpPost]
         [ProducesResponseType(typeof(GameResponse), 201)]
-        [ProducesResponseType(typeof(ErrorResponse), 400)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
         public async Task<IActionResult> CreateGame(GameRequest request)
         {
@@ -145,23 +139,19 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             game.Date = DateTime.Now;
 
             _context.Games.Add(game);
-            var created = await _context.SaveChangesAsync();
-            if (created > 0)
-                return CreatedAtAction("GetGame", new { gameId = game.Id }, _mapper.Map<GameResponse>(game));
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to create game: database error" } } });
+            await _context.SaveChangesAsync();
+            return CreatedAtAction("GetGame", new { gameId = game.Id }, _mapper.Map<GameResponse>(game));
         }
 
         /// <summary>
         /// Deletes user's game by Id
         /// </summary>
         /// <response code="200">Game was successfully deleted</response>
-        /// <response code="400">Unable to delete game</response>
         /// <response code="404">Unable to find game by given Id</response>
         [HttpDelete("{gameId}")]
         [ProducesResponseType(typeof(GameResponse), 200)]
-        [ProducesResponseType(typeof(ErrorResponse), 400)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
-        public async Task<IActionResult> DeleteGame(int gameId)
+        public async Task<IActionResult> DeleteGame(long gameId)
         {
             var userId = HttpContext.GetUserId();
             var game = await _context.Games
@@ -174,10 +164,8 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             }
 
             _context.Games.Remove(game);
-            var deleted = await _context.SaveChangesAsync();
-            if (deleted > 0)
-                return Ok(_mapper.Map<GameResponse>(game));
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to delete game: database error" } } });
+            await _context.SaveChangesAsync();
+            return Ok(_mapper.Map<GameResponse>(game));
         }
     }
 }

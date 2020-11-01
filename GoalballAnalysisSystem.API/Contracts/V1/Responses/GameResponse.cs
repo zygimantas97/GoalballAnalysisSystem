@@ -7,7 +7,7 @@ namespace GoalballAnalysisSystem.API.Contracts.V1.Responses
 {
     public class GameResponse
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Title { get; set; }
         public DateTime Date { get; set; }
         public string Comment { get; set; }

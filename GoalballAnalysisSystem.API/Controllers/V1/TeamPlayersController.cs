@@ -53,8 +53,8 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         {
             var userId = HttpContext.GetUserId();
             return Ok(_mapper.Map<List<TeamPlayerResponse>>(await _context.TeamPlayers
-                .Include(tp => tp.Team)
-                .Where(tp => tp.Team.IdentityUserId == userId && tp.PlayerId == playerId)
+                .Include(tp => tp.Player)
+                .Where(tp => tp.Player.IdentityUserId == userId && tp.PlayerId == playerId)
                 .ToListAsync()));
         }
 
@@ -71,7 +71,8 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             var userId = HttpContext.GetUserId();
             var teamPlayer = await _context.TeamPlayers
                 .Include(tp => tp.Team)
-                .SingleOrDefaultAsync(tp => tp.Team.IdentityUserId == userId && tp.TeamId == teamId && tp.PlayerId == playerId);
+                .Include(tp => tp.Player)
+                .SingleOrDefaultAsync(tp => tp.Team.IdentityUserId == userId && tp.TeamId == teamId && tp.Player.IdentityUserId == userId && tp.PlayerId == playerId);
 
             if (teamPlayer == null)
             {
@@ -121,10 +122,8 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             updateTeamPlayer.PlayerId = playerId;
 
             _context.TeamPlayers.Update(updateTeamPlayer);
-            var updated = await _context.SaveChangesAsync();
-            if (updated > 0)
-                return NoContent();
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to update team player: database error" } } });
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
         /// <summary>
@@ -185,39 +184,34 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
 
             _context.TeamPlayers.Add(teamPlayer);
             var created = await _context.SaveChangesAsync();
-            if(created > 0)
-                return CreatedAtAction("GetTeamPlayer", new { teamId = teamPlayer.TeamId, playerId = teamPlayer.PlayerId }, _mapper.Map<TeamPlayerResponse>(teamPlayer));
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to create team player: database error" } } });
+            return CreatedAtAction("GetTeamPlayer", new { teamId = teamPlayer.TeamId, playerId = teamPlayer.PlayerId }, _mapper.Map<TeamPlayerResponse>(teamPlayer));
         }
 
         /// <summary>
         /// Deletes user's team player by Ids
         /// </summary>
         /// <response code="200">Team player was successfully deleted</response>
-        /// <response code="400">Unable to delete team player</response>
         /// <response code="404">Unable to find team player by given Ids</response>
         [HttpDelete("{teamId}/{playerId}")]
         [ProducesResponseType(typeof(TeamPlayerResponse), 200)]
-        [ProducesResponseType(typeof(ErrorResponse), 400)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
         public async Task<IActionResult> DeleteTeamPlayer(long teamId, long playerId)
         {
             var userId = HttpContext.GetUserId();
             var teamPlayer = await _context.TeamPlayers
                 .Include(tp => tp.Team)
+                .Include(tp => tp.Player)
                 .Include(tp => tp.GamePlayers)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(tp => tp.Team.IdentityUserId == userId && tp.TeamId == teamId && tp.PlayerId == playerId);
+                .SingleOrDefaultAsync(tp => tp.Team.IdentityUserId == userId && tp.TeamId == teamId && tp.Player.IdentityUserId == userId && tp.PlayerId == playerId);
             if (teamPlayer == null)
             {
                 return NotFound(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to find team player by given Ids"} } });
             }
 
             _context.TeamPlayers.Remove(teamPlayer);
-            var deleted = await _context.SaveChangesAsync();
-            if (deleted > 0)
-                return Ok(_mapper.Map<TeamPlayerResponse>(teamPlayer));
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to delete team player: database error" } } });
+            await _context.SaveChangesAsync();
+            return Ok(_mapper.Map<TeamPlayerResponse>(teamPlayer));
         }
     }
 }

@@ -85,7 +85,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             updatePlayer.IdentityUserId = userId;
 
             _context.Players.Update(updatePlayer);
-            var updated = await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return NoContent();
         }
 
@@ -101,7 +101,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             player.IdentityUserId = HttpContext.GetUserId();
             
             _context.Players.Add(player);
-            var created = await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return CreatedAtAction("GetPlayer", new { playerId = player.Id }, _mapper.Map<PlayerResponse>(player));
         }
 
@@ -126,7 +126,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             }
 
             _context.Players.Remove(player);
-            var deleted = await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return Ok(_mapper.Map<PlayerResponse>(player));
         }
     }

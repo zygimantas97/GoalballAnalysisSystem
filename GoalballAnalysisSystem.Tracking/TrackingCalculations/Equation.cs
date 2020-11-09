@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GoalballAnalysisSystem.Tracking
 {
-    class Equation
+    public class Equation
     {
         private CustomPoint BasePoint;
         public double a { get; private set; }
@@ -36,14 +36,13 @@ namespace GoalballAnalysisSystem.Tracking
         }
         public double GetX(double y)
         {
-            double x;
-            x = (y - b) / a;
+            double x = (y - b) / a;
             return x;
         }
         public double GetY(double x)
         {
-            double y;
-            y = a * x + b;
+            
+            double y = a * x + b;
             return y;
         }
         
@@ -53,13 +52,13 @@ namespace GoalballAnalysisSystem.Tracking
 
             if (PointsAreBelow)
             {
-                if (tempValue > point.Y)
+                if (tempValue >= point.Y)
                     return true;
                 return false;
             }
             else
             {
-                if (tempValue < point.Y)
+                if (tempValue <= point.Y)
                     return true;
                 return false;
             }

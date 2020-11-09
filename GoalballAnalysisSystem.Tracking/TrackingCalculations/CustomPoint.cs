@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GoalballAnalysisSystem.Tracking
 {
-    class CustomPoint : IComparable
+    public class CustomPoint : IComparable
     {
         public int X { get; set; }
         public int Y { get; set; }

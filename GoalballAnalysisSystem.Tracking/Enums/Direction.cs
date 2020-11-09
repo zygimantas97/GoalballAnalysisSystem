@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GoalballAnalysisSystem.Tracking.Enums
 {
-    enum Direction
+    public enum Direction
     {
         Up,
         Down

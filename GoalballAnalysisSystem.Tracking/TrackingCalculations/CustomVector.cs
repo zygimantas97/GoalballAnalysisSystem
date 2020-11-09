@@ -6,7 +6,7 @@ using System.Text;
 
 namespace GoalballAnalysisSystem.Tracking
 {
-    class CustomVector
+    public class CustomVector
     {
         public const int minVal = 800;
         public const int maxVal = 2600;
@@ -47,22 +47,22 @@ namespace GoalballAnalysisSystem.Tracking
             return false;
 
         }
-        private bool CheckDistantion(CustomPoint point)
+        public bool CheckDistantion(CustomPoint point)
         {
             return maxDistantion >= GetDistation(pointsOfVector.Last<CustomPoint>(), point);
         }
-        private int GetDistation(CustomPoint point1, CustomPoint point2)
+        public int GetDistation(CustomPoint point1, CustomPoint point2)
         {
             return (int)Math.Pow(Math.Pow(point2.X - point1.X, 2) + Math.Pow(point2.Y - point1.Y, 2), 0.5);
         }
-        private void TryToComplete()
+        public void TryToComplete()
         {
             if (pointsOfVector.Last<CustomPoint>().Y < minVal || pointsOfVector.Last<CustomPoint>().Y > maxVal)
             {
                 isCompleted = true;
             }
         }
-        private bool CheckDirection(CustomPoint point)
+        public bool CheckDirection(CustomPoint point)
         {
             if (pointsOfVector.First<CustomPoint>().Y >= pointsOfVector.Last<CustomPoint>().Y)
             {
@@ -108,7 +108,7 @@ namespace GoalballAnalysisSystem.Tracking
             return false;
 
         }
-        private void SetEquation()
+        public void SetEquation()
         {
             if (pointsOfVector.First<CustomPoint>().X <= pointsOfVector.Last<CustomPoint>().X)
             {
@@ -129,7 +129,7 @@ namespace GoalballAnalysisSystem.Tracking
             }
 
         }
-        private double TgOfAngle(double k1, double k2)
+        public double TgOfAngle(double k1, double k2)
         {
             return (k1 - k2) / (1 + k1 * k2);
         }

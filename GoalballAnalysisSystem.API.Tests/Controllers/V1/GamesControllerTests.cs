@@ -253,7 +253,7 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             Assert.AreEqual(404, objectResult.StatusCode);
             this.mockRepository.VerifyAll();
         }
-
+        [Test]
         public async Task CreateGame_WithPremiumUserRoleAndNotExistingTeam2Id_ReturnsNotFound()
         {
             // Arrange

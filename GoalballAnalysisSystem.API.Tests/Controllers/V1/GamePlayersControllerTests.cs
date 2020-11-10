@@ -503,20 +503,10 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             await _context.SaveChangesAsync();
             _context.Entry(player).State = EntityState.Detached;
 
-            var team = new Team
-            {
-                IdentityUserId = "test_user",
-                Name = "Test Team"
-            };
-            _context.Teams.Add(team);
-            await _context.SaveChangesAsync();
-            _context.Entry(team).State = EntityState.Detached;
-
             var createGamePlayerRequest = new CreateGamePlayerRequest
             {
                 GameId = gameId,
                 PlayerId = player.Id,
-                TeamId = team.Id,
                 StartTime = startTime,
                 EndTime = endTime
             };

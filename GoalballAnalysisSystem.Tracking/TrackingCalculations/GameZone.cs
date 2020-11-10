@@ -6,7 +6,7 @@ using System.Text;
 
 namespace GoalballAnalysisSystem.Tracking
 {
-    class GameZone
+    public class GameZone
     {
         public static int[] zones = { 0, 50, 275, 325, 575, 625, 850, 900 };
         const int sectorWidth = 1800 / 7;

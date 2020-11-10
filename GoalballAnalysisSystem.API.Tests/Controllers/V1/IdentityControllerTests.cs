@@ -1,9 +1,13 @@
 using GoalballAnalysisSystem.API.Contracts.V1.Requests;
 using GoalballAnalysisSystem.API.Controllers.V1;
+using GoalballAnalysisSystem.API.Models;
 using GoalballAnalysisSystem.API.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
@@ -11,61 +15,95 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
     [TestFixture]
     public class IdentityControllerTests : ControllerTestBase
     {
-        private Mock<IIdentityService> _mockIIdentityService;
 
-        public IdentityControllerTests()
+        [Test]
+        public async Task Register_WithValidEmailUsernameAndPassword_ReturnsOk()
         {
-            _mockIIdentityService = mockRepository.Create<IIdentityService>();
-        }
+            // Arrange
+            string expectedEmail = "TestEmail";
+            string expectedUsername = "TestUsername";
+            string password = "TestPassword";
 
-        private IdentityController CreateIdentityController()
-        {
-            return new IdentityController(_mockIIdentityService.Object);
+            var request = new UserRequest
+            {
+                Email = expectedEmail,
+                Password = password,
+                UserName = expectedUsername
+
+            };
+
+            Mock<IIdentityService> mock = new Mock<IIdentityService>();
+            mock.Setup(s => s.RegisterAsync(expectedEmail, password, expectedUsername)).ReturnsAsync(new AuthenticationResult() { Success = true });
+            
+            var identityController = new IdentityController(mock.Object);
+            // Act
+            var actionResult = await identityController.Register(request);
+            var objectResult = actionResult as ObjectResult;
+
+            // Assert
+            Assert.NotNull(objectResult);
+            Assert.AreEqual(200, objectResult.StatusCode);
+            this.mockRepository.VerifyAll();
         }
 
         [Test]
-        public async Task Register_StateUnderTest_ExpectedBehavior()
+        public async Task Login_WithValidEmailUsernameAndPassword_ReturnsOk()
         {
             // Arrange
-            var identityController = this.CreateIdentityController();
-            UserRequest request = null;
+            string expectedEmail = "TestEmail";
+            string password = "TestPassword";
+            string expectedUsername = "TestUsername";
+
+            var request = new UserRequest
+            {
+                Email = expectedEmail,
+                Password = password,
+                UserName = expectedUsername
+
+            };
+
+            Mock<IIdentityService> mock = new Mock<IIdentityService>();
+            mock.Setup(s => s.LoginAsync(expectedEmail, password)).ReturnsAsync(new AuthenticationResult() { Success = true });
+
+            var identityController = new IdentityController(mock.Object);
 
             // Act
-            var result = await identityController.Register(
-                request);
+            var actionResult = await identityController.Login(request);
+            var objectResult = actionResult as ObjectResult;
 
             // Assert
-            Assert.Fail();
+            Assert.NotNull(objectResult);
+            Assert.AreEqual(200, objectResult.StatusCode);
+            this.mockRepository.VerifyAll();
         }
 
         [Test]
-        public async Task Login_StateUnderTest_ExpectedBehavior()
+        public async Task RefreshTokens_WithValidEmailUsernameAndPassword_ReturnsOk()
         {
             // Arrange
-            var identityController = this.CreateIdentityController();
-            UserRequest request = null;
+            string token = "TestToken";
+            string refreshToken = "TestTokenRefresh";
+
+            var request = new RefreshTokenRequest
+            {
+                Token = token,
+                RefreshToken = refreshToken
+
+            };
+
+            Mock<IIdentityService> mock = new Mock<IIdentityService>();
+            mock.Setup(s => s.RefreshTokenAsync(token, refreshToken)).ReturnsAsync(new AuthenticationResult() { Success = true });
+
+            var identityController = new IdentityController(mock.Object);
 
             // Act
-            var result = await identityController.Login(
-                request);
+            var actionResult = await identityController.RefreshToken(request);
+            var objectResult = actionResult as ObjectResult;
 
             // Assert
-            Assert.Fail();
-        }
-
-        [Test]
-        public async Task RefreshToken_StateUnderTest_ExpectedBehavior()
-        {
-            // Arrange
-            var identityController = this.CreateIdentityController();
-            RefreshTokenRequest request = null;
-
-            // Act
-            var result = await identityController.RefreshToken(
-                request);
-
-            // Assert
-            Assert.Fail();
+            Assert.NotNull(objectResult);
+            Assert.AreEqual(200, objectResult.StatusCode);
+            this.mockRepository.VerifyAll();
         }
     }
 }

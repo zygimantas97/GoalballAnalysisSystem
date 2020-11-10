@@ -36,9 +36,11 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
             // Arrange
             var equation1 = CreateEquation(1, 1, 5, 5);
             var equation2 = new Equation(1, 1);
+            var x = 5;
+            var y = 5;
 
             // Act
-            equation2.SetAnotherPoint(5, 5);
+            equation2.SetAnotherPoint(x, y);
 
             // Assert
             Assert.AreEqual(equation1.a, equation2.a);

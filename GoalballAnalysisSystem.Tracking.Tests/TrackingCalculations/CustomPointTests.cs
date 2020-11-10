@@ -17,8 +17,8 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void CompareTo_CompareWithLessXLessY_ReturnsGreater()
         {
             // Arrange
-            var firstCustomPoint = this.CreateCustomPoint(1, 1);
-            var secondCustomPoint = this.CreateCustomPoint(0, 0);
+            var firstCustomPoint = CreateCustomPoint(1, 1);
+            var secondCustomPoint = CreateCustomPoint(0, 0);
             var expectedResult = 1;
 
             // Act
@@ -32,8 +32,8 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void CompareTo_CompareWithLessXEqualY_ReturnsGreater()
         {
             // Arrange
-            var firstCustomPoint = this.CreateCustomPoint(1, 1);
-            var secondCustomPoint = this.CreateCustomPoint(0, 1);
+            var firstCustomPoint = CreateCustomPoint(1, 1);
+            var secondCustomPoint = CreateCustomPoint(0, 1);
             var expectedResult = 1;
 
             // Act
@@ -47,8 +47,8 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void CompareTo_CompareWithLessXGreaterY_ReturnsGreater()
         {
             // Arrange
-            var firstCustomPoint = this.CreateCustomPoint(1, 1);
-            var secondCustomPoint = this.CreateCustomPoint(0, 2);
+            var firstCustomPoint = CreateCustomPoint(1, 1);
+            var secondCustomPoint = CreateCustomPoint(0, 2);
             var expectedResult = 1;
 
             // Act
@@ -62,8 +62,8 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void CompareTo_CompareWithGreaterXLessY_ReturnsLess()
         {
             // Arrange
-            var firstCustomPoint = this.CreateCustomPoint(1, 1);
-            var secondCustomPoint = this.CreateCustomPoint(2, 0);
+            var firstCustomPoint = CreateCustomPoint(1, 1);
+            var secondCustomPoint = CreateCustomPoint(2, 0);
             var expectedResult = -1;
 
             // Act
@@ -77,8 +77,8 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void CompareTo_CompareWithGreaterXEqualY_ReturnsLess()
         {
             // Arrange
-            var firstCustomPoint = this.CreateCustomPoint(1, 1);
-            var secondCustomPoint = this.CreateCustomPoint(2, 1);
+            var firstCustomPoint = CreateCustomPoint(1, 1);
+            var secondCustomPoint = CreateCustomPoint(2, 1);
             var expectedResult = -1;
 
             // Act
@@ -92,8 +92,8 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void CompareTo_CompareWithGreaterXGreaterY_ReturnsLess()
         {
             // Arrange
-            var firstCustomPoint = this.CreateCustomPoint(1, 1);
-            var secondCustomPoint = this.CreateCustomPoint(2, 2);
+            var firstCustomPoint = CreateCustomPoint(1, 1);
+            var secondCustomPoint = CreateCustomPoint(2, 2);
             var expectedResult = -1;
 
             // Act
@@ -107,8 +107,8 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void CompareTo_CompareWithEqualXLessY_ReturnsGreater()
         {
             // Arrange
-            var firstCustomPoint = this.CreateCustomPoint(1, 1);
-            var secondCustomPoint = this.CreateCustomPoint(1, 0);
+            var firstCustomPoint = CreateCustomPoint(1, 1);
+            var secondCustomPoint = CreateCustomPoint(1, 0);
             var expectedResult = 1;
 
             // Act
@@ -122,8 +122,8 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void CompareTo_CompareWithEqualXEqualY_ReturnsEqual()
         {
             // Arrange
-            var firstCustomPoint = this.CreateCustomPoint(1, 1);
-            var secondCustomPoint = this.CreateCustomPoint(1, 1);
+            var firstCustomPoint = CreateCustomPoint(1, 1);
+            var secondCustomPoint = CreateCustomPoint(1, 1);
             var expectedResult = 0;
 
             // Act
@@ -137,8 +137,8 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void CompareTo_CompareWithEqualXGreaterY_ReturnsLess()
         {
             // Arrange
-            var firstCustomPoint = this.CreateCustomPoint(1, 1);
-            var secondCustomPoint = this.CreateCustomPoint(2, 2);
+            var firstCustomPoint = CreateCustomPoint(1, 1);
+            var secondCustomPoint = CreateCustomPoint(2, 2);
             var expectedResult = -1;
 
             // Act
@@ -152,7 +152,7 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void ConvertoToDrawingPoint_ReturnsPointObjectWithSameXAndY()
         {
             // Arrange
-            var customPoint = this.CreateCustomPoint(1, 1);
+            var customPoint = CreateCustomPoint(1, 1);
 
             // Act
             var result = customPoint.ConvertoToDrawingPoint();
@@ -167,8 +167,8 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void Equals_CompareWithEqualXAndY_ReturnsEqual()
         {
             // Arrange
-            var firstCustomPoint = this.CreateCustomPoint(1, 1);
-            var secondCustomPoint = this.CreateCustomPoint(1, 1);
+            var firstCustomPoint = CreateCustomPoint(1, 1);
+            var secondCustomPoint = CreateCustomPoint(1, 1);
             var expectedResult = true;
 
             // Act
@@ -182,11 +182,12 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void Equals_CompareWithNull_ReturnsFalse()
         {
             // Arrange
-            var firstCustomPoint = this.CreateCustomPoint(1, 1);
+            var firstCustomPoint = CreateCustomPoint(1, 1);
+            CustomPoint secondCustomPoint = null;
             var expectedResult = false;
 
             // Act
-            var result = firstCustomPoint.Equals(null);
+            var result = firstCustomPoint.Equals(secondCustomPoint);
 
             // Assert
             Assert.AreEqual(expectedResult, result);
@@ -196,12 +197,12 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void Equals_CompareWithNotCustomPointObject_ReturnsFalse()
         {
             // Arrange
-            var firstCustomPoint = this.CreateCustomPoint(1, 1);
-            var point = new Point(1, 1);
+            var firstCustomPoint = CreateCustomPoint(1, 1);
+            var secondCustomPoint = new Point(1, 1);
             var expectedResult = false;
 
             // Act
-            var result = firstCustomPoint.Equals(point);
+            var result = firstCustomPoint.Equals(secondCustomPoint);
 
             // Assert
             Assert.AreEqual(expectedResult, result);
@@ -211,8 +212,8 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void Equals_CompareWithAbsX0AbsY0_ReturnsTrue()
         {
             // Arrange
-            var firstCustomPoint = this.CreateCustomPoint(1, 1);
-            var secondCustomPoint = this.CreateCustomPoint(1, 1);
+            var firstCustomPoint = CreateCustomPoint(1, 1);
+            var secondCustomPoint = CreateCustomPoint(1, 1);
             var expectedResult = true;
 
             // Act
@@ -226,8 +227,8 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void Equals_CompareWithAbsX4AbsY4_ReturnsTrue()
         {
             // Arrange
-            var firstCustomPoint = this.CreateCustomPoint(1, 1);
-            var secondCustomPoint = this.CreateCustomPoint(5, 5);
+            var firstCustomPoint = CreateCustomPoint(1, 1);
+            var secondCustomPoint = CreateCustomPoint(5, 5);
             var expectedResult = true;
 
             // Act
@@ -241,8 +242,8 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         public void Equals_CompareWithAbsX5AbsY5_ReturnsTrue()
         {
             // Arrange
-            var firstCustomPoint = this.CreateCustomPoint(1, 1);
-            var secondCustomPoint = this.CreateCustomPoint(6, 6);
+            var firstCustomPoint = CreateCustomPoint(1, 1);
+            var secondCustomPoint = CreateCustomPoint(6, 6);
             var expectedResult = false;
 
             // Act

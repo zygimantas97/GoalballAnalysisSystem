@@ -14,7 +14,7 @@ namespace GoalballAnalysisSystem.Tracking
         public const double maxTg = 1;
         public bool isCompleted { get; private set; }
         public List<CustomPoint> pointsOfVector;
-        Equation equationOfVector;
+        public Equation equationOfVector;
         public Direction direction;
 
         public CustomVector(CustomPoint point)
@@ -108,6 +108,7 @@ namespace GoalballAnalysisSystem.Tracking
             return false;
 
         }
+
         public void SetEquation()
         {
             if (pointsOfVector.First<CustomPoint>().X <= pointsOfVector.Last<CustomPoint>().X)
@@ -129,11 +130,14 @@ namespace GoalballAnalysisSystem.Tracking
             }
 
         }
+
+        // Perdaryti į static metodą (galbūt net iškelti
         public double TgOfAngle(double k1, double k2)
         {
             return (k1 - k2) / (1 + k1 * k2);
         }
 
+        // Konstantas iš'hardcode'int
         public CustomPoint GetBeginPoint()
         {
             if (pointsOfVector.First<CustomPoint>().Y >= pointsOfVector.Last<CustomPoint>().Y)
@@ -145,6 +149,8 @@ namespace GoalballAnalysisSystem.Tracking
                 return new CustomPoint((int)equationOfVector.GetX(200), 200);
             }
         }
+        
+        // Konstantas iš'hardcode'int
         public CustomPoint GetEndPoint()
         {
             if (pointsOfVector.First<CustomPoint>().Y >= pointsOfVector.Last<CustomPoint>().Y)

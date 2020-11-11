@@ -31,13 +31,13 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         [ProducesResponseType(typeof(ErrorResponse), 400)]
         public async Task<IActionResult> Register(UserRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new ErrorResponse
-                {
-                    Errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => new ErrorModel { Message = e.ErrorMessage })).ToList()
-                });
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(new ErrorResponse
+            //    {
+            //        Errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => new ErrorModel { Message = e.ErrorMessage })).ToList()
+            //    });
+            //}
 
             var _authResponse = await _identityService.RegisterAsync(request.Email, request.Password, request.UserName);
             if (!_authResponse.Success)
@@ -65,13 +65,13 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         [ProducesResponseType(typeof(ErrorResponse), 400)]
         public async Task<IActionResult> Login(UserRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new ErrorResponse
-                {
-                    Errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => new ErrorModel { Message = e.ErrorMessage })).ToList()
-                });
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(new ErrorResponse
+            //    {
+            //        Errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => new ErrorModel { Message = e.ErrorMessage })).ToList()
+            //    });
+            //}
 
             var _authResponse = await _identityService.LoginAsync(request.Email, request.Password);
             if (!_authResponse.Success)

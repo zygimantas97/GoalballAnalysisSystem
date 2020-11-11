@@ -17,4 +17,8 @@
     <ProjectReference Include="..\GoalballAnalysisSystem.Domain\GoalballAnalysisSystem.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\V1\" />
+  </ItemGroup>
+
 </Project>

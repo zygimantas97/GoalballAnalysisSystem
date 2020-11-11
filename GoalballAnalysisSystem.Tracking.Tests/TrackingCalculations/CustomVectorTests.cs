@@ -9,7 +9,7 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
     public class CustomVectorTests
     {
         [Test]
-        public void TryAddPoint_WithDistanceLessThanMaxDistance_ReturnsTrueAndAddPoint()
+        public void TryAddPoint_WithOnePointAndDistanceLessThanMaxDistance_ReturnsTrueAndAddPoint()
         {
             // Arrange
             var customVector = new CustomVector(new CustomPoint(0, 0));
@@ -26,7 +26,7 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         }
 
         [Test]
-        public void TryAddPoint_WithDistanceEqualMaxDistance_ReturnsTrueAndAddPoint()
+        public void TryAddPoint_WithOnePointAndDistanceEqualMaxDistance_ReturnsTrueAndAddPoint()
         {
             // Arrange
             var customVector = new CustomVector(new CustomPoint(0, 0));
@@ -43,11 +43,65 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         }
 
         [Test]
-        public void TryAddPoint_WithDistanceGreaterThanMaxDistance_ReturnsFalseAndNotAddPoint()
+        public void TryAddPoint_WithOnePointAndDistanceGreaterThanMaxDistance_ReturnsFalseAndNotAddPoint()
         {
             // Arrange
             var customVector = new CustomVector(new CustomPoint(0, 0));
             var point = new CustomPoint(0, CustomVector.maxDistantion+1);
+            var expectedResult = false;
+            var expectedCountOfPoints = customVector.pointsOfVector.Count;
+
+            // Act
+            var result = customVector.TryAddPoint(point);
+
+            // Assert
+            Assert.AreEqual(expectedResult, result);
+            Assert.AreEqual(expectedCountOfPoints, customVector.pointsOfVector.Count);
+        }
+
+        [Test]
+        public void TryAddPoint_WithMoreThanOnePointAndDistanceLessThanMaxDistance_ReturnsTrueAndAddPoint()
+        {
+            // Arrange
+            var customVector = new CustomVector(new CustomPoint(-1, -1));
+            customVector.pointsOfVector.Add(new CustomPoint(0, 0));
+            var point = new CustomPoint(0, CustomVector.maxDistantion - 1);
+            var expectedResult = true;
+            var expectedCountOfPoints = customVector.pointsOfVector.Count + 1; ;
+
+            // Act
+            var result = customVector.TryAddPoint(point);
+
+            // Assert
+            Assert.AreEqual(expectedResult, result);
+            Assert.AreEqual(expectedCountOfPoints, customVector.pointsOfVector.Count);
+        }
+
+        [Test]
+        public void TryAddPoint_WithMoreThanOnePointAndDistanceEqualMaxDistance_ReturnsTrueAndAddPoint()
+        {
+            // Arrange
+            var customVector = new CustomVector(new CustomPoint(-1, -1));
+            customVector.pointsOfVector.Add(new CustomPoint(0, 0));
+            var point = new CustomPoint(0, CustomVector.maxDistantion);
+            var expectedResult = true;
+            var expectedCountOfPoints = customVector.pointsOfVector.Count + 1;
+
+            // Act
+            var result = customVector.TryAddPoint(point);
+
+            // Assert
+            Assert.AreEqual(expectedResult, result);
+            Assert.AreEqual(expectedCountOfPoints, customVector.pointsOfVector.Count);
+        }
+
+        [Test]
+        public void TryAddPoint_WithMoreThanOnePointAndDistanceGreaterThanMaxDistance_ReturnsFalseAndNotAddPoint()
+        {
+            // Arrange
+            var customVector = new CustomVector(new CustomPoint(-1, -1));
+            customVector.pointsOfVector.Add(new CustomPoint(0, 0));
+            var point = new CustomPoint(0, CustomVector.maxDistantion + 1);
             var expectedResult = false;
             var expectedCountOfPoints = customVector.pointsOfVector.Count;
 

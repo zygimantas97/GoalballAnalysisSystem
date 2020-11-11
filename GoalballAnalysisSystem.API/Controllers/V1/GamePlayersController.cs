@@ -115,9 +115,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             
             _context.GamePlayers.Update(updateGamePlayer);
             var updated = await _context.SaveChangesAsync();
-            if (updated > 0)
-                return NoContent();
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to update game player: database error" } } });
+            return NoContent();
         }
 
         /// <summary>
@@ -159,9 +157,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             var gamePlayer = _mapper.Map<GamePlayer>(request);
             _context.GamePlayers.Add(gamePlayer);
             var created = await _context.SaveChangesAsync();
-            if (created > 0)
-                return CreatedAtAction("GetGamePlayer", new { gamePlayerId = gamePlayer.Id }, _mapper.Map<GamePlayerResponse>(gamePlayer));
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to create game player: database error" } } });
+            return CreatedAtAction("GetGamePlayer", new { gamePlayerId = gamePlayer.Id }, _mapper.Map<GamePlayerResponse>(gamePlayer));
         }
 
         /// <summary>
@@ -189,9 +185,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
 
             _context.GamePlayers.Remove(gamePlayer);
             var deleted = await _context.SaveChangesAsync();
-            if (deleted > 0)
-                return Ok(_mapper.Map<GamePlayerResponse>(gamePlayer));
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to delete game player: database error" } } });
+            return Ok(_mapper.Map<GamePlayerResponse>(gamePlayer));
         }
     }
 }

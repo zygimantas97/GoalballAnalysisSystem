@@ -12,7 +12,7 @@ namespace GoalballAnalysisSystem.Tracking
         public const int maxVal = 2600;
         public const int maxDistantion = 1000;
         public const double maxTg = 1;
-        public bool isCompleted { get; private set; }
+        public bool isCompleted { get; set; }
         public List<CustomPoint> pointsOfVector;
         public Equation equationOfVector;
         public Direction direction;

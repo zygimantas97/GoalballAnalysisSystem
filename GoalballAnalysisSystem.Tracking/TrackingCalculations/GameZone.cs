@@ -278,28 +278,28 @@ namespace GoalballAnalysisSystem.Tracking
             else
             {
                 List<CustomVector> completed = remainingVectors.Where(item => item.isCompleted == true).ToList<CustomVector>();
-                if (completed.Count > 0)
-                {
-                    List<CustomVector> filteredCompleted = completed.Where(item => (item.GetBeginPoint().X >= 100) && (item.GetBeginPoint().X <= 1900)).ToList<CustomVector>();
-                    if (filteredCompleted.Count > 0)
-                    {
-                        completedVectors.AddRange(filteredCompleted);
-                        foreach (CustomVector vector in filteredCompleted)
-                        {
-                            SetInOutValues(vector);
-                        }
-                    }
-                }
+                //if (completed.Count > 0)
+                //{
+                //    List<CustomVector> filteredCompleted = completed.Where(item => (item.GetBeginPoint().X >= 100) && (item.GetBeginPoint().X <= 1900)).ToList<CustomVector>();
+                //    if (filteredCompleted.Count > 0)
+                //    {
+                //        completedVectors.AddRange(filteredCompleted);
+                //        foreach (CustomVector vector in filteredCompleted)
+                //        {
+                //            SetInOutValues(vector);
+                //        }
+                //    }
+                //}
                 remainingVectors.RemoveAll(item => item.isCompleted == true);
             }
 
-            if (pointNr == 0)
-            {
-                throw new Exception("remaining: " + remainingVectors.Count.ToString());
-            }
+            //if (pointNr == 0)
+            //{
+            //    throw new Exception("remaining: " + remainingVectors.Count.ToString());
+            //}
         }
 
-        private void SetInOutValues(CustomVector vector)
+        public void SetInOutValues(CustomVector vector)
         {
             int firstX = vector.GetBeginPoint().X - 100;
             int lastX = vector.GetEndPoint().X - 100;

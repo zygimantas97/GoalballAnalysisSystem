@@ -24,9 +24,9 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         {
             List<CustomPoint> pointsList = new List<CustomPoint>();
             pointsList.Add(new CustomPoint(3, 3));
-            pointsList.Add(new CustomPoint(2, 2));
+            pointsList.Add(new CustomPoint(3, 3));
             pointsList.Add(new CustomPoint(1, 1));
-            pointsList.Add(new CustomPoint(0, 0));
+            pointsList.Add(new CustomPoint(1, 1));
             return new GameZone(pointsList);
         }
 
@@ -205,6 +205,51 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         }
 
         [Test]
+        public void IsPointSuitable_WithNegativeAndPositiveNotSuitablePoint_RetursIfPointSuitable()
+        {
+            // Arrange
+            var gameZone = createGameZoneAscending();
+            CustomPoint point = new CustomPoint(100000, -100000);
+            var actualResult = false;
+
+            // Act
+            var result = gameZone.IsPointSuitable(point);
+
+            // Assert
+            Assert.AreEqual(actualResult, result);
+        }
+
+        [Test]
+        public void IsPointSuitable_WithNegativeAndNegativeSuitablePoint_RetursIfPointSuitable()
+        {
+            // Arrange
+            var gameZone = createGameZoneAscending();
+            CustomPoint point = new CustomPoint(-100000, -100000);
+            var actualResult = true;
+
+            // Act
+            var result = gameZone.IsPointSuitable(point);
+
+            // Assert
+            Assert.AreEqual(actualResult, result);
+        }
+
+        [Test]
+        public void IsPointSuitable_WithPositiveAndPositiveNotSuitablePoint_RetursIfPointSuitable()
+        {
+            // Arrange
+            var gameZone = createGameZoneAscending();
+            CustomPoint point = new CustomPoint(100000, -100000);
+            var actualResult = false;
+
+            // Act
+            var result = gameZone.IsPointSuitable(point);
+
+            // Assert
+            Assert.AreEqual(actualResult, result);
+        }
+
+        [Test]
         public void AddPointToVectors_WhenRemainingVectorIsEmpty_ExpectedBehavior()
         {
             // Arrange
@@ -224,11 +269,56 @@ namespace GoalballAnalysisSystem.Tracking.Tests.TrackingCalculations
         {
             // Arrange
             var gameZone = createGameZoneAscending();
-            CustomPoint point = new CustomPoint(150, 200);
-            int expectedResult = 0;
+            CustomPoint point = new CustomPoint(1200, 1300);
+            CustomPoint point2 = new CustomPoint(1300, 1400);
+            CustomPoint point3 = new CustomPoint(14500, 1500);
+            CustomPoint point4 = new CustomPoint(1600, 1700);
+            CustomPoint point5 = new CustomPoint(1750, 1800);
+            CustomPoint point6 = new CustomPoint(2500, 2500);
+            CustomPoint point7 = new CustomPoint(3500, 3500);
+            int expectedResult = 3;
 
             // Act
-            gameZone.AddPointToVectors(point);
+            gameZone.AddPointToVectors(point2);
+            gameZone.AddPointToVectors(point3);
+            gameZone.AddPointToVectors(point4);
+            gameZone.AddPointToVectors(point5);
+            gameZone.AddPointToVectors(point6);
+            gameZone.AddPointToVectors(point7);
+            gameZone.remainingVectors[0].direction = Enums.Direction.Down;
+            gameZone.SetInOutValues(gameZone.remainingVectors[0]);
+
+            // Assert
+            Assert.AreEqual(expectedResult, gameZone.remainingVectors.Count);
+        }
+
+        [Test]
+        public void AddPointToVectors_WhenRemainingVectorIsNotEmptyCustomVectorCompleted_ExpectedBehavior()
+        {
+            // Arrange
+            var gameZone = createGameZoneAscending();
+            CustomPoint point = new CustomPoint(1200, 1300);
+            CustomPoint point2 = new CustomPoint(1300, 1400);
+            CustomPoint point3 = new CustomPoint(14500, 1500);
+            CustomPoint point4 = new CustomPoint(1600, 1700);
+            CustomPoint point5 = new CustomPoint(1750, 1800);
+            CustomPoint point6 = new CustomPoint(2500, 2500);
+            CustomPoint point7 = new CustomPoint(3500, 3500);
+            int expectedResult = 3;
+
+            // Act
+            gameZone.AddPointToVectors(point2);
+            gameZone.AddPointToVectors(point3);
+            gameZone.AddPointToVectors(point4);
+            gameZone.AddPointToVectors(point5);
+            gameZone.AddPointToVectors(point6);
+            gameZone.AddPointToVectors(point7);
+
+            gameZone.remainingVectors[0].isCompleted = true;
+            gameZone.remainingVectors[1].isCompleted = true;
+            gameZone.remainingVectors[2].isCompleted = true;
+            gameZone.remainingVectors[0].direction = Enums.Direction.Up;
+            gameZone.SetInOutValues(gameZone.remainingVectors[0]);
 
             // Assert
             Assert.AreEqual(expectedResult, gameZone.remainingVectors.Count);

@@ -109,9 +109,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
 
             _context.Projections.Update(updateProjection);
             var updated = await _context.SaveChangesAsync();
-            if (updated > 0)
-                return NoContent();
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to update projection: database error" } } });
+            return NoContent();
         }
 
         /// <summary>
@@ -160,9 +158,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
 
             _context.Projections.Add(projection);
             var created = await _context.SaveChangesAsync();
-            if (created > 0)
-                return CreatedAtAction("GetProjection", new { projectionId = projection.Id }, _mapper.Map<ProjectionResponse>(projection));
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to create projection: database error" } } });
+            return CreatedAtAction("GetProjection", new { projectionId = projection.Id }, _mapper.Map<ProjectionResponse>(projection));
         }
 
         /// <summary>
@@ -190,9 +186,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
 
             _context.Projections.Remove(projection);
             var deleted = await _context.SaveChangesAsync();
-            if (deleted > 0)
-                return Ok(_mapper.Map<ProjectionResponse>(projection));
-            return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to delete projection: database error" } } });
+            return Ok(_mapper.Map<ProjectionResponse>(projection));
         }
     }
 }

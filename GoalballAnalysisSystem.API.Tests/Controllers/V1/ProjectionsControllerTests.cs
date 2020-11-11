@@ -43,7 +43,7 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
                 await _context.SaveChangesAsync();
                 _context.Entry(projection).State = EntityState.Detached;
             }
-
+            
             var projectionsController = CreateController<ProjectionsController>();
 
             // Act
@@ -363,6 +363,123 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             Assert.AreEqual(projectionRequest.X1, (objectResult.Value as ProjectionResponse).X1);
             Assert.AreEqual(projectionRequest.X2, (objectResult.Value as ProjectionResponse).X2);
             Assert.AreEqual(1, _context.Projections.Count());
+            this.mockRepository.VerifyAll();
+        }
+
+        [Test]
+        public async Task CreateProjection_WithExistingGameAndGamePlayerDifferentRole_ReturnsCreatedProjection()
+        {
+            // Arrange
+            var game = new Game
+            {
+                IdentityUserId = "test_user",
+                Title = "Test Game"
+            };
+
+            string userRole = "NotRegularUser";
+
+            _context.Games.Add(game);
+            await _context.SaveChangesAsync();
+            _context.Entry(game).State = EntityState.Detached;
+
+            var player = new Player
+            {
+                IdentityUserId = "test_user",
+                Name = "Test Player"
+            };
+
+            _context.Players.Add(player);
+            await _context.SaveChangesAsync();
+            _context.Entry(player).State = EntityState.Detached;
+
+            var gamePlayer = new GamePlayer
+            {
+                PlayerId = player.Id,
+                GameId = game.Id
+                
+            };
+            _context.GamePlayers.Add(gamePlayer);
+            await _context.SaveChangesAsync();
+            _context.Entry(gamePlayer).State = EntityState.Detached;
+
+            var projectionRequest = new ProjectionRequest
+            {
+
+                GamePlayerId = gamePlayer.Id,
+                GameId = game.Id,
+                X1 = 10,
+                Y2 = 15
+            };
+
+            var projectionsController = CreateController<ProjectionsController>(userRole);
+
+            // Act
+            var actionResult = await projectionsController.CreateProjection(projectionRequest);
+            var objectResult = actionResult as ObjectResult;
+
+            // Assert
+            Assert.NotNull(objectResult);
+            Assert.AreEqual(201, objectResult.StatusCode);
+            Assert.IsInstanceOf<ProjectionResponse>(objectResult.Value);
+            Assert.AreEqual(game.Id, (objectResult.Value as ProjectionResponse).GameId);
+            Assert.AreEqual(projectionRequest.X1, (objectResult.Value as ProjectionResponse).X1);
+            Assert.AreEqual(projectionRequest.X2, (objectResult.Value as ProjectionResponse).X2);
+            Assert.AreEqual(1, _context.Projections.Count());
+            this.mockRepository.VerifyAll();
+        }
+
+        [Test]
+        public async Task CreateProjection_WithNotExistingGamePlayerGameIdDifferentRole_ReturnsNotFound()
+        {
+            // Arrange
+            var game = new Game
+            {
+                IdentityUserId = "test_user",
+                Title = "Test Game"
+            };
+
+            string userRole = "NotRegularUser";
+
+            _context.Games.Add(game);
+            await _context.SaveChangesAsync();
+            _context.Entry(game).State = EntityState.Detached;
+
+            var player = new Player
+            {
+                IdentityUserId = "test_user",
+                Name = "Test Player"
+            };
+
+            _context.Players.Add(player);
+            await _context.SaveChangesAsync();
+            _context.Entry(player).State = EntityState.Detached;
+
+            var gamePlayer = new GamePlayer
+            {
+                PlayerId = player.Id,
+            };
+            _context.GamePlayers.Add(gamePlayer);
+            await _context.SaveChangesAsync();
+            _context.Entry(gamePlayer).State = EntityState.Detached;
+
+            var projectionRequest = new ProjectionRequest
+            {
+
+                GamePlayerId = gamePlayer.Id,
+                GameId = game.Id,
+                X1 = 10,
+                Y2 = 15
+            };
+
+            var projectionsController = CreateController<ProjectionsController>(userRole);
+
+            // Act
+            var actionResult = await projectionsController.CreateProjection(projectionRequest);
+            var objectResult = actionResult as ObjectResult;
+
+            // Assert
+            Assert.NotNull(objectResult);
+            Assert.AreEqual(404, objectResult.StatusCode);
             this.mockRepository.VerifyAll();
         }
 

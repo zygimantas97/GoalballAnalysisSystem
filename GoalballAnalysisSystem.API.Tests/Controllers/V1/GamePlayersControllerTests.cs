@@ -492,7 +492,14 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Arrange
             var startTime = new DateTime(2020, 11, 1, 11, 0, 0);
             var endTime = new DateTime(2020, 12, 1, 12, 0, 0);
-            var gameId = 1;
+            var game = new Game
+            {
+                IdentityUserId = "test_user",
+                Title = "Test Game"
+            };
+            _context.Games.Add(game);
+            await _context.SaveChangesAsync();
+            _context.Entry(game).State = EntityState.Detached;
 
             var player = new Player
             {
@@ -505,7 +512,7 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
 
             var createGamePlayerRequest = new CreateGamePlayerRequest
             {
-                GameId = gameId,
+                GameId = game.Id,
                 PlayerId = player.Id,
                 StartTime = startTime,
                 EndTime = endTime

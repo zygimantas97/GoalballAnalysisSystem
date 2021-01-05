@@ -16,6 +16,10 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Drawing;
 using Microsoft.Win32;
+using Emgu.CV;
+using Emgu.Util;
+using Emgu.CV.UI;
+using Emgu.CV.Structure;
 
 namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 {
@@ -28,11 +32,16 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
         public MainWindow()
         {
+            
             InitializeComponent();
+            Image<Bgr, Byte> image = new Image<Bgr, Byte>(@"C:\Users\gudau\Desktop\paveikslelis.png");
+            imgeBox.Image = image;
         }
 
         private void SelectVideoButton_Click(object sender, RoutedEventArgs e)
         {
+            
+
             OpenFileDialog fileDialog = new OpenFileDialog();
             bool? result = fileDialog.ShowDialog();
             if(result == true)

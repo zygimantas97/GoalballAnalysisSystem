@@ -19,7 +19,7 @@ namespace GoalballAnalysisSystem.GameProcessing
         Stopped
     }
 
-    public class GameAnalyzer : INotifyPropertyChanged
+    public class GameAnalyzer
     {
         private VideoCapture _videoCapture;
         private Mat _cameraFeed = new Mat();
@@ -33,7 +33,9 @@ namespace GoalballAnalysisSystem.GameProcessing
         private IBallTracker _ballTracker;
         private IPlayersTracker _playersTracker;
 
-        public GameAnalyzerStatus Status { get; private set; } = GameAnalyzerStatus.NotStarted;
+        public GameAnalyzerStatus Status { get; private set; }
+
+        public event EventHandler FrameChanged;
 
         private Image<Bgr, byte> _currentFrame;
 
@@ -43,7 +45,8 @@ namespace GoalballAnalysisSystem.GameProcessing
             private set
             {
                 _currentFrame = value;
-                OnPropertyChanged(nameof(CurrentFrame));
+                if (FrameChanged != null)
+                    FrameChanged(this, EventArgs.Empty);
             }
         }
 
@@ -97,8 +100,8 @@ namespace GoalballAnalysisSystem.GameProcessing
                     _videoCapture.Read(_cameraFeed);
                     if(_cameraFeed != null)
                     {
-                        Point ballPosition = _ballTracker.GetBallPosition(_cameraFeed);
-                        List<Point> playersPositions = _playersTracker.GetPlayersPositions(_cameraFeed);
+                        //Point ballPosition = _ballTracker.GetBallPosition(_cameraFeed);
+                        //List<Point> playersPositions = _playersTracker.GetPlayersPositions(_cameraFeed);
                         CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();
                     }
                     else
@@ -107,14 +110,6 @@ namespace GoalballAnalysisSystem.GameProcessing
                     }
                 }
             }   
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

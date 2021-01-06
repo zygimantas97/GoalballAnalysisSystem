@@ -11,13 +11,17 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
             <RowDefinition Height="9*"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
-
-            <StackPanel x:Name="VideoStackPanel" Background="Transparent">
+            <StackPanel x:Name="VideoStackPanel" Visibility="Collapsed">
+                <WindowsFormsHost  Name="windowsFormsHost1">
+                    <WinFormControls1:ImageBox x:Name="imageBox"
+                                               Width="480"
+                                               Height="270"
+                                               SizeMode="Zoom"/>
+                </WindowsFormsHost>
                 <WrapPanel HorizontalAlignment="Center">
                     <Button Content="Pause" Margin="10" Name="PauseButton"
                             Click="PauseButton_Click"/>
@@ -27,14 +31,7 @@
                             Click="StopButton_Click"/>
                 </WrapPanel>
             </StackPanel>
-            
         </Grid>
-            <Grid Grid.Row="1">
-                <WindowsFormsHost  Name="windowsFormsHost1">
-                <WinFormControls1:ImageBox x:Name="imgeBox"/>
-            </WindowsFormsHost>
-        </Grid>
-        
         <Button Grid.Row="2"
                 Content="Select Video"
                 HorizontalAlignment="Left"

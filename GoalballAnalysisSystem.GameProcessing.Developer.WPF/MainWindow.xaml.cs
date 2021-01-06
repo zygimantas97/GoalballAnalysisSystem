@@ -20,6 +20,7 @@ using Emgu.CV;
 using Emgu.Util;
 using Emgu.CV.UI;
 using Emgu.CV.Structure;
+using System.ComponentModel;
 
 namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 {
@@ -32,16 +33,11 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
         public MainWindow()
         {
-            
             InitializeComponent();
-            Image<Bgr, Byte> image = new Image<Bgr, Byte>(@"C:\Users\gudau\Desktop\paveikslelis.png");
-            imgeBox.Image = image;
         }
 
         private void SelectVideoButton_Click(object sender, RoutedEventArgs e)
         {
-            
-
             OpenFileDialog fileDialog = new OpenFileDialog();
             bool? result = fileDialog.ShowDialog();
             if(result == true)
@@ -57,11 +53,18 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 IPlayersTracker playersTracker = new EmguCVTrackersBasedPlayersTracker();
 
                 GameAnalyzer = new GameAnalyzer(fileName,
-                                              topLeft, topRight, bottomRight, bottomLeft,
+                                                topLeft, topRight, bottomRight, bottomLeft,
                                                 ballTracker, playersTracker);
-                
+
+                GameAnalyzer.FrameChanged += GameAnalyzer_FrameChanged;
                 VideoStackPanel.Visibility = Visibility.Visible;
+                GameAnalyzer.Start();
             }
+        }
+
+        private void GameAnalyzer_FrameChanged(object sender, EventArgs e)
+        {
+            imageBox.Image = GameAnalyzer.CurrentFrame;
         }
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)

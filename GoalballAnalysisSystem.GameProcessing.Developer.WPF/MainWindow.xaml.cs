@@ -49,7 +49,9 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 var bottomRight = new System.Drawing.Point(0, 0);
                 var bottomLeft = new System.Drawing.Point(0, 0);
 
-                IBallTracker ballTracker = new CNNBasedBallTracker();
+                //IBallTracker ballTracker = new CNNBasedBallTracker();
+
+                IBallTracker ballTracker = new ColorBasedBallTracker();
                 IPlayersTracker playersTracker = new EmguCVTrackersBasedPlayersTracker();
 
                 GameAnalyzer = new GameAnalyzer(fileName,

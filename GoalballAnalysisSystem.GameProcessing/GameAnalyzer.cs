@@ -1,4 +1,5 @@
 ﻿using Emgu.CV;
+using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using GoalballAnalysisSystem.GameProcessing.BallTracker;
 using GoalballAnalysisSystem.GameProcessing.PlayersTracker;
@@ -100,8 +101,17 @@ namespace GoalballAnalysisSystem.GameProcessing
                     _videoCapture.Read(_cameraFeed);
                     if(_cameraFeed != null)
                     {
+                        Point ballPosition = _ballTracker.GetBallPosition(_cameraFeed);
                         //Point ballPosition = _ballTracker.GetBallPosition(_cameraFeed);
                         //List<Point> playersPositions = _playersTracker.GetPlayersPositions(_cameraFeed);
+ 
+                        //Drawing of coordinates in frame
+                        if(ballPosition.X != -1 && ballPosition.Y != -1)
+                            CvInvoke.PutText(_cameraFeed, ballPosition.X.ToString() + "," + ballPosition.Y.ToString(), new Point(ballPosition.X, ballPosition.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
+
+                        Rectangle rect = new Rectangle(ballPosition.X, ballPosition.Y, 30, 30);
+                        CvInvoke.Rectangle(_cameraFeed, rect, new MCvScalar(0, 0, 255), 5);
+
                         CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();
                     }
                     else

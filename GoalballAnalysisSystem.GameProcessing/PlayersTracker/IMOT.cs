@@ -6,8 +6,8 @@ using System.Text;
 
 namespace GoalballAnalysisSystem.GameProcessing.PlayersTracker
 {
-    public interface IPlayersTracker
+    public interface IMOT
     {
-        List<Point> GetPlayersPositions(Mat cameraFeed);
+        Rectangle[] UpdateTrackObjects(Mat frame);
     }
 }

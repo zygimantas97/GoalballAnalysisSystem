@@ -15,13 +15,30 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
-            <StackPanel x:Name="VideoStackPanel" Visibility="Collapsed">
-                <WindowsFormsHost  Name="windowsFormsHost1">
+            <StackPanel x:Name="VideoStackPanel">
+                <WindowsFormsHost  Name="windowsFormsHost1"
+                                   Width="480"
+                                   Height="270">
                     <WinFormControls1:ImageBox x:Name="imageBox"
                                                Width="480"
                                                Height="270"
-                                               SizeMode="Zoom"/>
+                                               SizeMode="Zoom"
+                                               MouseDown="imageBox_MouseDown"
+                                               MouseMove="imageBox_MouseMove"
+                                               MouseUp="imageBox_MouseUp"
+                                               FunctionalMode="Minimum"
+                                               Paint="imageBox_Paint"/>
                 </WindowsFormsHost>
+                <WrapPanel>
+                    <Button Content="Add Tracker"
+                            Margin="10"
+                            x:Name="AddTrackerButton"
+                            Click="AddTrackerButton_Click"/>
+                    <Button Content="Clear ROI"
+                            Margin="10"
+                            x:Name="ClearROIButton"
+                            Click="ClearROIButton_Click"/>
+                </WrapPanel>
                 <WrapPanel HorizontalAlignment="Center">
                     <Button Content="Pause" Margin="10" Name="PauseButton"
                             Click="PauseButton_Click"/>
@@ -32,7 +49,7 @@
                 </WrapPanel>
             </StackPanel>
         </Grid>
-        <Button Grid.Row="2"
+        <Button Grid.Row="1"
                 Content="Select Video"
                 HorizontalAlignment="Left"
                 Click="SelectVideoButton_Click"

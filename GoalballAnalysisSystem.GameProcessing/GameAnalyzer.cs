@@ -32,14 +32,13 @@ namespace GoalballAnalysisSystem.GameProcessing
         private Point _bottomLeftCorner;
 
         private IBallTracker _ballTracker;
-        private IPlayersTracker _playersTracker;
+        private IMOT _playersTracker;
 
         public GameAnalyzerStatus Status { get; private set; }
 
         public event EventHandler FrameChanged;
 
         private Image<Bgr, byte> _currentFrame;
-
         public Image<Bgr, byte> CurrentFrame
         {
             get { return _currentFrame; }
@@ -51,15 +50,18 @@ namespace GoalballAnalysisSystem.GameProcessing
             }
         }
 
+        public int FPS { get; private set; }
+
         public GameAnalyzer(string fileName,
                             Point topLeftCorner,
                             Point topRightCorner,
                             Point bottomRightCorner,
                             Point bottomLeftCorner,
                             IBallTracker ballTracker,
-                            IPlayersTracker playersTracker)
+                            IMOT playersTracker)
         {
             _videoCapture = new VideoCapture(fileName);
+            FPS = (int)_videoCapture.GetCaptureProperty(CapProp.Fps);
             _gameAnalyzerTask = new Task(GameAnalyzerTick);
 
             _topLeftCorner = topLeftCorner;
@@ -69,6 +71,7 @@ namespace GoalballAnalysisSystem.GameProcessing
 
             _ballTracker = ballTracker;
             _playersTracker = playersTracker;
+
         }
 
         public void Start()
@@ -102,8 +105,23 @@ namespace GoalballAnalysisSystem.GameProcessing
                     if(_cameraFeed != null)
                     {
                         Point ballPosition = _ballTracker.GetBallPosition(_cameraFeed);
-                        //Point ballPosition = _ballTracker.GetBallPosition(_cameraFeed);
-                        //List<Point> playersPositions = _playersTracker.GetPlayersPositions(_cameraFeed);
+
+
+                        
+                        Rectangle[] boxes = _playersTracker.UpdateTrackObjects(_cameraFeed);
+
+                        if(boxes != null)
+                        {
+                            // Drawing bounding boxes of players
+                            foreach (var box in boxes)
+                            {
+                                CvInvoke.Rectangle(_cameraFeed, box, new MCvScalar(255, 0, 0), 3);
+                            }
+                        }
+                    
+                        
+                        
+
  
                         //Drawing of coordinates in frame
                         if(ballPosition.X != -1 && ballPosition.Y != -1)

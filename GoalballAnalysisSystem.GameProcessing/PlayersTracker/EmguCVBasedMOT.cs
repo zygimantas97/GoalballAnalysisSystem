@@ -7,6 +7,7 @@ using System.Text;
 using Emgu.CV.Tracking;
 using Emgu.CV.Util;
 using GoalballAnalysisSystem.GameProcessing.Models;
+using System.Threading.Tasks;
 
 namespace GoalballAnalysisSystem.GameProcessing.PlayersTracker
 {
@@ -88,6 +89,11 @@ namespace GoalballAnalysisSystem.GameProcessing.PlayersTracker
             }
         }
 
+        public void RemoveAllTrackingObjects()
+        {
+            _trackingObjects.Clear();
+        }
+
         public List<Rectangle> UpdateTrackingObjects(Mat frame)
         {
             /*
@@ -107,12 +113,14 @@ namespace GoalballAnalysisSystem.GameProcessing.PlayersTracker
                 return new Rectangle[] { rec };
             }
             */
+
             List<Rectangle> rois = new List<Rectangle>();
-            foreach(var trackingObject in _trackingObjects)
+
+            Parallel.ForEach(_trackingObjects, trackingObject =>
             {
                 trackingObject.Update(frame);
                 rois.Add(trackingObject.ROI);
-            }
+            });
 
             return rois;
         }

@@ -108,16 +108,14 @@ namespace GoalballAnalysisSystem.GameProcessing
 
 
                         
-                        Rectangle[] boxes = _playersTracker.UpdateTrackObjects(_cameraFeed);
+                        List<Rectangle> rois = _playersTracker.UpdateTrackingObjects(_cameraFeed);
 
-                        if(boxes != null)
+                        // Drawing bounding boxes of players
+                        foreach (var roi in rois)
                         {
-                            // Drawing bounding boxes of players
-                            foreach (var box in boxes)
-                            {
-                                CvInvoke.Rectangle(_cameraFeed, box, new MCvScalar(255, 0, 0), 3);
-                            }
+                            CvInvoke.Rectangle(_cameraFeed, roi, new MCvScalar(255, 0, 0), 3);
                         }
+                        
                     
                         
                         

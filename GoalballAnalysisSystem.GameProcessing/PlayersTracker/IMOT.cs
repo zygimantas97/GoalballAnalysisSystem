@@ -8,6 +8,6 @@ namespace GoalballAnalysisSystem.GameProcessing.PlayersTracker
 {
     public interface IMOT
     {
-        Rectangle[] UpdateTrackObjects(Mat frame);
+        List<Rectangle> UpdateTrackingObjects(Mat frame);
     }
 }

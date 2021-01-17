@@ -101,7 +101,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                                                     (int)(_selectedROI.Y * verticalScale),
                                                     (int)(_selectedROI.Width * horizontalScale),
                                                     (int)(_selectedROI.Height * verticalScale));
-                _playersTracker.AddTrackObject(GameAnalyzer.CurrentFrame.Mat, rectangle);
+                _playersTracker.AddTrackingObject(GameAnalyzer.CurrentFrame.Mat, rectangle);
                 _selectedROI = Rectangle.Empty;
                 imageBox.Invalidate();
             }

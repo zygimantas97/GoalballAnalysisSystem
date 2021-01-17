@@ -6,6 +6,7 @@ using System.Text;
 
 using Emgu.CV.Tracking;
 using Emgu.CV.Util;
+using GoalballAnalysisSystem.GameProcessing.Models;
 
 namespace GoalballAnalysisSystem.GameProcessing.PlayersTracker
 {
@@ -13,11 +14,22 @@ namespace GoalballAnalysisSystem.GameProcessing.PlayersTracker
     {
         private readonly MultiTracker _multiTracker = new MultiTracker();
         private readonly Tracker _tracker = new TrackerCSRT();
+        private readonly List<TrackingObject> _trackingObjects = new List<TrackingObject>();
 
-        public void AddTrackObject(Mat frame, Rectangle roi)
+        public void AddTrackingObject(Mat frame, Rectangle roi, int objectId = 0)
         {
-            _tracker.Init(frame, roi);
+            Tracker tracker = new TrackerCSRT();
+            tracker.Init(frame, roi);
+            TrackingObject trackingObject = new TrackingObject
+            {
+                ObjectId = objectId,
+                ObjectTracker = tracker,
+                ROI = roi
+            };
+            _trackingObjects.Add(trackingObject);
 
+            //_tracker.Init(frame, roi);
+            
             // System.AccessViolationException: 'Attempted to read or write...
             // Kai bandoma prideti nauja tracker _multiTracker.Add()
             //Tracker tracker = new TrackerBoosting();
@@ -52,7 +64,31 @@ namespace GoalballAnalysisSystem.GameProcessing.PlayersTracker
             //_multiTracker.Add(tracker, frame, roi);
         }
 
-        public Rectangle[] UpdateTrackObjects(Mat frame)
+        public void RemoveTrackingObjectById(long id)
+        {
+            _trackingObjects.RemoveAll(trackingObject => trackingObject.ObjectId == id);
+        }
+
+        public void RemoveTrackingObjectByLocation(Point location)
+        {
+            if(_trackingObjects.Count > 0)
+            {
+                double minDistance = _trackingObjects[0].GetDistance(location);
+                int index = 0;
+                for(int i = 1; i < _trackingObjects.Count; i++)
+                {
+                    double distance = _trackingObjects[i].GetDistance(location);
+                    if(distance < minDistance)
+                    {
+                        minDistance = distance;
+                        index = i;
+                    }
+                }
+                _trackingObjects.RemoveAt(index);
+            }
+        }
+
+        public List<Rectangle> UpdateTrackingObjects(Mat frame)
         {
             /*
             VectorOfRect vectorOfRect = new VectorOfRect();
@@ -62,15 +98,23 @@ namespace GoalballAnalysisSystem.GameProcessing.PlayersTracker
                 return vectorOfRect.ToArray();
             }
             */
-            
+
+            /*
             Rectangle rec = new Rectangle();
             bool success = _tracker.Update(frame, out rec);
             if (success)
             {
                 return new Rectangle[] { rec };
             }
+            */
+            List<Rectangle> rois = new List<Rectangle>();
+            foreach(var trackingObject in _trackingObjects)
+            {
+                trackingObject.Update(frame);
+                rois.Add(trackingObject.ROI);
+            }
 
-            return null;
+            return rois;
         }
     }
 }

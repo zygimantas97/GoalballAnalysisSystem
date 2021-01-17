@@ -30,8 +30,6 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
     public partial class MainWindow : Window
     {
         public GameAnalyzer GameAnalyzer { get; private set; }
-        public int FrameNumber { get; set; }
-        public Stopwatch stopwatch = new Stopwatch();
 
         Rectangle _selectedROI = Rectangle.Empty;
         System.Drawing.Point _startROI;
@@ -74,13 +72,6 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
         private void GameAnalyzer_FrameChanged(object sender, EventArgs e)
         {
-            FrameNumber++;
-            if(FrameNumber == 100)
-            {
-                stopwatch.Stop();
-                var elapsed = stopwatch.ElapsedMilliseconds;
-                System.Windows.Forms.MessageBox.Show(elapsed.ToString());
-            }
             imageBox.Image = GameAnalyzer.CurrentFrame;
         }
 
@@ -91,8 +82,6 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
         private void ResumeButton_Click(object sender, RoutedEventArgs e)
         {
-            FrameNumber = 0;
-            stopwatch.Start();
             GameAnalyzer.Resume();
         }
 

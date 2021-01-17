@@ -109,7 +109,7 @@ namespace GoalballAnalysisSystem.GameProcessing
 
                         
                         List<Rectangle> rois = _playersTracker.UpdateTrackingObjects(_cameraFeed);
-
+                        
                         // Drawing bounding boxes of players
                         foreach (var roi in rois)
                         {

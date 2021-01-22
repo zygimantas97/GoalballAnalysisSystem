@@ -6,8 +6,8 @@ using System.Text;
 
 namespace GoalballAnalysisSystem.GameProcessing.BallTracker
 {
-    public interface IBallTracker
+    public interface IObjectDetectionStrategy
     {
-        Point GetBallPosition(Mat cameraFeed);
+        Rectangle DetectObject(Mat frame);
     }
 }

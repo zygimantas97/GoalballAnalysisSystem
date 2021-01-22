@@ -31,7 +31,7 @@ namespace GoalballAnalysisSystem.GameProcessing
         private Point _bottomRightCorner;
         private Point _bottomLeftCorner;
 
-        private IBallTracker _ballTracker;
+        private IObjectDetectionStrategy _ballTracker;
         private IMOT _playersTracker;
 
         public GameAnalyzerStatus Status { get; private set; }
@@ -57,7 +57,7 @@ namespace GoalballAnalysisSystem.GameProcessing
                             Point topRightCorner,
                             Point bottomRightCorner,
                             Point bottomLeftCorner,
-                            IBallTracker ballTracker,
+                            IObjectDetectionStrategy ballTracker,
                             IMOT playersTracker)
         {
             _videoCapture = new VideoCapture(fileName);
@@ -104,30 +104,23 @@ namespace GoalballAnalysisSystem.GameProcessing
                     _videoCapture.Read(_cameraFeed);
                     if(_cameraFeed != null)
                     {
-                        Point ballPosition = _ballTracker.GetBallPosition(_cameraFeed);
-
-
                         
-                        List<Rectangle> rois = _playersTracker.UpdateTrackingObjects(_cameraFeed);
+                        List<Rectangle> playersRectangles = _playersTracker.UpdateTrackingObjects(_cameraFeed);
                         
                         // Drawing bounding boxes of players
-                        foreach (var roi in rois)
+                        foreach (var rectangle in playersRectangles)
                         {
-                            CvInvoke.Rectangle(_cameraFeed, roi, new MCvScalar(255, 0, 0), 3);
+                            CvInvoke.Rectangle(_cameraFeed, rectangle, new MCvScalar(255, 0, 0), 3);
                         }
-                        
-                    
-                        
-                        
 
- 
+                        Rectangle ballRectangle = _ballTracker.DetectObject(_cameraFeed);
+
                         //Drawing of coordinates in frame
-                        if(ballPosition.X != -1 && ballPosition.Y != -1)
-                            CvInvoke.PutText(_cameraFeed, ballPosition.X.ToString() + "," + ballPosition.Y.ToString(), new Point(ballPosition.X, ballPosition.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
-
-                        Rectangle rect = new Rectangle(ballPosition.X, ballPosition.Y, 30, 30);
-                        CvInvoke.Rectangle(_cameraFeed, rect, new MCvScalar(0, 0, 255), 5);
-
+                        if (ballRectangle != Rectangle.Empty)
+                        {
+                            CvInvoke.PutText(_cameraFeed, ballRectangle.X.ToString() + "," + ballRectangle.Y.ToString(), new Point(ballRectangle.X, ballRectangle.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
+                            CvInvoke.Rectangle(_cameraFeed, ballRectangle, new MCvScalar(0, 0, 255), 5);
+                        }
                         CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();
                     }
                     else

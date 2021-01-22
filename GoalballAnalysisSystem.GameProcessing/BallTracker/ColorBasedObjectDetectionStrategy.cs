@@ -9,20 +9,13 @@ using System.Text;
 
 namespace GoalballAnalysisSystem.GameProcessing.BallTracker
 {
-    public class ColorBasedBallTracker : IBallTracker
+    public class ColorBasedObjectDetectionStrategy : IObjectDetectionStrategy
     {
-        public Mat CameraFeedHSV { get; private set; }
-        public Mat Treshold { get; private set; }
-        public Mat ObjectsFilterMask { get; private set; }
+        public Mat CameraFeedHSV { get; private set; } = new Mat();
+        public Mat Treshold { get; private set; } = new Mat();
+        public Mat ObjectsFilterMask { get; private set; } = new Mat();
 
-        public ColorBasedBallTracker()
-        {
-            CameraFeedHSV = new Mat();
-            Treshold = new Mat();
-            ObjectsFilterMask = new Mat();
-        }
-
-        public Point GetBallPosition(Mat cameraFeed)
+        public Rectangle DetectObject(Mat cameraFeed)
         {
             //conversion to HSV format
             CvInvoke.CvtColor(cameraFeed, CameraFeedHSV, Emgu.CV.CvEnum.ColorConversion.Bgr2Hsv);
@@ -52,7 +45,7 @@ namespace GoalballAnalysisSystem.GameProcessing.BallTracker
             return cameraFeed;
         }
 
-        private Point BallCoordinatesFromMask(Mat mask)
+        private Rectangle BallCoordinatesFromMask(Mat mask)
         {
             VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint(); //all contours that could be found in mask
             VectorOfVectorOfPoint eligibleContours = new VectorOfVectorOfPoint(); //contours that fits all parameters
@@ -75,9 +68,9 @@ namespace GoalballAnalysisSystem.GameProcessing.BallTracker
             }
 
             if (ballWasFound)
-                return eligibleContours[0][0]; //returns a first contour corner coordinates
+                return CvInvoke.BoundingRectangle(eligibleContours[0]); //returns a first contour corner coordinates
             else
-                return new Point(-1, -1); //if nothing was found
+                return Rectangle.Empty; //if nothing was found
         }
     }
 }

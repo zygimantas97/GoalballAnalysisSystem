@@ -30,6 +30,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
     public partial class MainWindow : Window
     {
         public GameAnalyzer GameAnalyzer { get; private set; }
+        private Image<Bgr, byte> selectedPart;
 
         Rectangle _selectedROI = Rectangle.Empty;
         System.Drawing.Point _startROI;
@@ -57,7 +58,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
                 //IBallTracker ballTracker = new CNNBasedBallTracker();
 
-                IBallTracker ballTracker = new ColorBasedBallTracker();
+                IObjectDetectionStrategy ballTracker = new ColorBasedObjectDetectionStrategy();
                 _playersTracker = new EmguCVBasedMOT();
 
                 GameAnalyzer = new GameAnalyzer(openFileDialog.FileName,
@@ -101,7 +102,12 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                                                     (int)(_selectedROI.Y * verticalScale),
                                                     (int)(_selectedROI.Width * horizontalScale),
                                                     (int)(_selectedROI.Height * verticalScale));
-                _playersTracker.AddTrackingObject(GameAnalyzer.CurrentFrame.Mat, rectangle);
+                //_playersTracker.AddTrackingObject(GameAnalyzer.CurrentFrame.Mat, rectangle);
+                
+                var image = GameAnalyzer.CurrentFrame.Clone();
+                image.ROI = rectangle;
+                selectedPart = new Image<Bgr, byte>(rectangle.Width, rectangle.Height);
+                image.CopyTo(selectedPart);
                 _selectedROI = Rectangle.Empty;
                 imageBox.Invalidate();
             }
@@ -150,6 +156,32 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
         {
             _selectedROI = Rectangle.Empty;
             imageBox.Invalidate();
+        }
+
+        private void loadTemplateButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+
+
+                //Image<Gray, byte> template = new Image<Gray, byte>("ball_template.jpg");
+                Image<Gray, byte> template = selectedPart.Convert<Gray, byte>();
+                FeatureBasedObjectDetectionStrategy ballDetector = new FeatureBasedObjectDetectionStrategy(template);
+
+                var image = GameAnalyzer.CurrentFrame.Clone();
+                
+                var rect = ballDetector.DetectObject(image.Mat);
+
+                CvInvoke.Rectangle(image, rect, new MCvScalar(0, 0, 255), 5);
+                imageBox.Image = image;
+                System.Windows.Forms.MessageBox.Show(rect.X.ToString() + ":" + rect.Y.ToString());
+                
+
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
         }
     }
 }

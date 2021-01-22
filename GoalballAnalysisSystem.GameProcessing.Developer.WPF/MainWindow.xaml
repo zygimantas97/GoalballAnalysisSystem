@@ -30,7 +30,7 @@
                                                Paint="imageBox_Paint"/>
                 </WindowsFormsHost>
                 <WrapPanel>
-                    <Button Content="Add Tracker"
+                    <Button Content="Select Template"
                             Margin="10"
                             x:Name="AddTrackerButton"
                             Click="AddTrackerButton_Click"/>
@@ -49,10 +49,18 @@
                 </WrapPanel>
             </StackPanel>
         </Grid>
-        <Button Grid.Row="1"
-                Content="Select Video"
-                HorizontalAlignment="Left"
-                Click="SelectVideoButton_Click"
-                Name="SelectVideoButton"/>
+
+        <WrapPanel Grid.Row="1">
+            <Button Content="Select Video"
+                    HorizontalAlignment="Left"
+                    Click="SelectVideoButton_Click"
+                    Name="SelectVideoButton"/>
+            <Button Content="Detect Object"
+                    HorizontalAlignment="Left"
+                    Name="loadTeamplateButton"
+                    Click="loadTemplateButton_Click"/>
+        </WrapPanel>
+        
+        
     </Grid>
 </Window>

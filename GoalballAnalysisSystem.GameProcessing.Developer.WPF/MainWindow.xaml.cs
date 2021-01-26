@@ -36,7 +36,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
         System.Drawing.Point _startROI;
         bool _isSelecting = false;
 
-        private EmguCVBasedMOT _playersTracker;
+        private EmguCVTrackersBasedMOT _playersTracker;
 
         public MainWindow()
         {
@@ -59,7 +59,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 //IBallTracker ballTracker = new CNNBasedBallTracker();
 
                 IObjectDetectionStrategy ballTracker = new ColorBasedObjectDetectionStrategy();
-                _playersTracker = new EmguCVBasedMOT();
+                _playersTracker = new EmguCVTrackersBasedMOT();
 
                 GameAnalyzer = new GameAnalyzer(openFileDialog.FileName,
                                                 topLeft, topRight, bottomRight, bottomLeft,

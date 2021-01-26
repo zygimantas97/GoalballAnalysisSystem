@@ -3,6 +3,7 @@ using Emgu.CV.Features2D;
 using Emgu.CV.Flann;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
+using Emgu.CV.XFeatures2D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -28,8 +29,11 @@ namespace GoalballAnalysisSystem.GameProcessing.BallTracker
             //_featureDetector = new FastFeatureDetector();
             //_featureDetector = new ORBDetector();
             //_featureDetector = new MSERDetector();
+            //_featureDetector = new VGG();
+            //_featureDetector = new Freak();
             
             // Brute Force matcher alternative
+            // Distance type should be choosen by feature detector
             _matcher = new BFMatcher(DistanceType.Hamming);
 
             /*

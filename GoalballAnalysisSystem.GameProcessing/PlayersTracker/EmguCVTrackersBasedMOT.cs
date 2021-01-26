@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GoalballAnalysisSystem.GameProcessing.PlayersTracker
 {
-    public class EmguCVBasedMOT : IMOT
+    public class EmguCVTrackersBasedMOT : IMOT
     {
         private readonly MultiTracker _multiTracker = new MultiTracker();
         private readonly Tracker _tracker = new TrackerCSRT();

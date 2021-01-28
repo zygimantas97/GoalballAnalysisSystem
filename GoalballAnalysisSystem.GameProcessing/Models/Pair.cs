@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GoalballAnalysisSystem.GameProcessing.BallTracker
+namespace GoalballAnalysisSystem.GameProcessing.Models
 {
     public class Pair <T, U>
     {

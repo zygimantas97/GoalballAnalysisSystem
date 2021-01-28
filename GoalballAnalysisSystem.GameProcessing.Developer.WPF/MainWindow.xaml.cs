@@ -1,5 +1,6 @@
 ﻿using GoalballAnalysisSystem.GameProcessing.BallTracker;
 using GoalballAnalysisSystem.GameProcessing.PlayersTracker;
+using GoalballAnalysisSystem.GameProcessing.PlayFieldTracker;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,10 +52,12 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             bool? result = openFileDialog.ShowDialog();
             if(result == true)
             {
-                var topLeft = new System.Drawing.Point(0, 0);
-                var topRight = new System.Drawing.Point(0, 0);
-                var bottomRight = new System.Drawing.Point(0, 0);
-                var bottomLeft = new System.Drawing.Point(0, 0);
+                IPlayFieldTracker playFieldTracker = new ColorBasedPlayFieldTracker();
+                var videoCapture = new VideoCapture(openFileDialog.FileName);
+                Mat firstFrame = new Mat();
+                videoCapture.Read(firstFrame);
+
+                var gameZoneCorners = playFieldTracker.GetPlayFieldCorners(firstFrame);
 
                 //IBallTracker ballTracker = new CNNBasedBallTracker();
 
@@ -63,6 +66,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
                 GameAnalyzer = new GameAnalyzer(openFileDialog.FileName,
                                                 topLeft, topRight, bottomRight, bottomLeft,
+                                                new System.Drawing.Point(0, 0),
                                                 ballTracker, _playersTracker);
 
                 GameAnalyzer.FrameChanged += GameAnalyzer_FrameChanged;

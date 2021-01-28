@@ -1,4 +1,5 @@
 ﻿using System;
+using GoalballAnalysisSystem.GameProcessing.Models;
 using System.Collections.Generic;
 using System.Text;
 

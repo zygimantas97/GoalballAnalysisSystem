@@ -65,7 +65,9 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 _playersTracker = new EmguCVTrackersBasedMOT();
 
                 GameAnalyzer = new GameAnalyzer(openFileDialog.FileName,
-                                                topLeft, topRight, bottomRight, bottomLeft,
+                                                new System.Drawing.Point(0,0),
+                                                new System.Drawing.Point(0, 0),
+                                                new System.Drawing.Point(0, 0),
                                                 new System.Drawing.Point(0, 0),
                                                 ballTracker, _playersTracker);
 

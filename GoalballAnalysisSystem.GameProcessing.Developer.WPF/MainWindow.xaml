@@ -29,6 +29,8 @@
                                                FunctionalMode="Minimum"
                                                Paint="imageBox_Paint"/>
                 </WindowsFormsHost>
+                <TextBlock x:Name="progressTextBlock"
+                           Text="{Binding Progress}"/>
                 <WrapPanel>
                     <Button Content="Select Template"
                             Margin="10"

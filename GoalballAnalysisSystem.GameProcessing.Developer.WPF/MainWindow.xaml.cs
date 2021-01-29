@@ -27,7 +27,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public GameAnalyzer GameAnalyzer { get; private set; }
         private Image<Bgr, byte> selectedPart;
@@ -36,13 +36,35 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
         System.Drawing.Point _startROI;
         bool _isSelecting = false;
 
+        private int _frameNo = 0;
+
+        private string _progress;
+
+        public string Progress
+        {
+            get { return _progress; }
+            set
+            {
+                _progress = value;
+                OnPropertyChanged(nameof(Progress));
+            }
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         private EmguCVTrackersBasedMOT _playersTracker;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public MainWindow()
         {
             InitializeComponent();
             Image<Bgr, byte> imageBoxBackground = new Image<Bgr, byte>(imageBox.Width, imageBox.Height, new Bgr(0, 0, 0));
             imageBox.Image = imageBoxBackground;
+            DataContext = this;
         }
 
         private void SelectVideoButton_Click(object sender, RoutedEventArgs e)
@@ -73,7 +95,25 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
         private void GameAnalyzer_FrameChanged(object sender, EventArgs e)
         {
-            imageBox.Image = GameAnalyzer.CurrentFrame;
+            try
+            {
+                var image = GameAnalyzer.CurrentFrame;
+                if(image != null)
+                {
+                    imageBox.Image = image;
+                    if (_frameNo % 300 == 0)
+                    {
+                        image.Save("Output\\frame_" + (_frameNo + 1) + ".jpg");
+                    }
+                }
+                _frameNo++;
+                Progress = String.Format("{0:0.00} {1}", (double)_frameNo / (double)GameAnalyzer.FrameCount * 100, "%");
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
+            
         }
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)

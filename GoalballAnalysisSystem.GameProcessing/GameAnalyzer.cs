@@ -51,6 +51,7 @@ namespace GoalballAnalysisSystem.GameProcessing
         }
 
         public int FPS { get; private set; }
+        public int FrameCount { get; private set; }
 
         public GameAnalyzer(string fileName,
                             Point topLeftCorner,
@@ -62,6 +63,7 @@ namespace GoalballAnalysisSystem.GameProcessing
         {
             _videoCapture = new VideoCapture(fileName);
             FPS = (int)_videoCapture.GetCaptureProperty(CapProp.Fps);
+            FrameCount = (int)_videoCapture.GetCaptureProperty(CapProp.FrameCount);
             _gameAnalyzerTask = new Task(GameAnalyzerTick);
 
             _topLeftCorner = topLeftCorner;
@@ -104,7 +106,7 @@ namespace GoalballAnalysisSystem.GameProcessing
                     _videoCapture.Read(_cameraFeed);
                     if(_cameraFeed != null)
                     {
-                        
+                        /*
                         List<Rectangle> playersRectangles = _playersTracker.UpdateTrackingObjects(_cameraFeed);
                         
                         // Drawing bounding boxes of players
@@ -121,6 +123,7 @@ namespace GoalballAnalysisSystem.GameProcessing
                             CvInvoke.PutText(_cameraFeed, ballRectangle.X.ToString() + "," + ballRectangle.Y.ToString(), new Point(ballRectangle.X, ballRectangle.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
                             CvInvoke.Rectangle(_cameraFeed, ballRectangle, new MCvScalar(0, 0, 255), 5);
                         }
+                        */
                         CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();
                     }
                     else

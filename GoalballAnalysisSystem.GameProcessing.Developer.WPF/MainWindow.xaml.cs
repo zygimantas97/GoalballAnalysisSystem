@@ -22,6 +22,8 @@ using Emgu.CV.UI;
 using Emgu.CV.Structure;
 using System.ComponentModel;
 using System.Diagnostics;
+using Emgu.CV.CvEnum;
+using GoalballAnalysisSystem.GameProcessing.ObjectDetection.MLBasedObjectDetectionStrategy;
 
 namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 {
@@ -83,7 +85,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
                 //IBallTracker ballTracker = new CNNBasedBallTracker();
 
-                IObjectDetectionStrategy ballTracker = new ColorBasedObjectDetectionStrategy();
+                IObjectDetectionStrategy ballTracker = new MLBasedObjectDetectionStrategy(new List<string> { "ball" });
                 _playersTracker = new EmguCVTrackersBasedMOT();
 
                 GameAnalyzer = new GameAnalyzer(openFileDialog.FileName,
@@ -107,10 +109,12 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 if(image != null)
                 {
                     imageBox.Image = image;
-                    if (_frameNo % 300 == 0)
+                    /*
+                    if (_frameNo % 50 == 0)
                     {
                         image.Save("Output\\frame_" + (_frameNo + 1) + ".jpg");
                     }
+                    */
                 }
                 _frameNo++;
                 Progress = String.Format("{0:0.00} {1}", (double)_frameNo / (double)GameAnalyzer.FrameCount * 100, "%");
@@ -139,6 +143,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
         private void AddTrackerButton_Click(object sender, RoutedEventArgs e)
         {
+            /*
             if (_selectedROI != Rectangle.Empty)
             {
                 double horizontalScale = GameAnalyzer.CurrentFrame.Width / imageBox.Width;
@@ -157,6 +162,34 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 _selectedROI = Rectangle.Empty;
                 imageBox.Invalidate();
             }
+            */
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            bool? result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                Image<Bgr, byte> image = new Image<Bgr, byte>(openFileDialog.FileName);
+                var objectDetectionStrategy = new MLBasedObjectDetectionStrategy(new List<string>() { "ball" });
+                var rectangles = objectDetectionStrategy.DetectAllObjects(image.Mat);
+                if(rectangles.Count == 0)
+                {
+                    System.Windows.Forms.MessageBox.Show("Not detected");
+                }
+                else
+                {
+                    foreach(var rect in rectangles)
+                    {
+                        CvInvoke.PutText(image, rect.X.ToString() + "," + rect.Y.ToString(), new System.Drawing.Point(rect.X, rect.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
+                        CvInvoke.Rectangle(image, rect, new MCvScalar(0, 0, 255), 5);
+                    }
+                    
+                    imageBox.Image = image;
+                    System.Windows.Forms.MessageBox.Show("Detected: " + rectangles.Count);
+                }
+            }
+
+
+
+
         }
 
         private void imageBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)

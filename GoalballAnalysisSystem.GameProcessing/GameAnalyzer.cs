@@ -114,7 +114,7 @@ namespace GoalballAnalysisSystem.GameProcessing
                         {
                             CvInvoke.Rectangle(_cameraFeed, rectangle, new MCvScalar(255, 0, 0), 3);
                         }
-
+                        */
                         Rectangle ballRectangle = _ballTracker.DetectObject(_cameraFeed);
 
                         //Drawing of coordinates in frame
@@ -123,7 +123,7 @@ namespace GoalballAnalysisSystem.GameProcessing
                             CvInvoke.PutText(_cameraFeed, ballRectangle.X.ToString() + "," + ballRectangle.Y.ToString(), new Point(ballRectangle.X, ballRectangle.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
                             CvInvoke.Rectangle(_cameraFeed, ballRectangle, new MCvScalar(0, 0, 255), 5);
                         }
-                        */
+                        
                         CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();
                     }
                     else

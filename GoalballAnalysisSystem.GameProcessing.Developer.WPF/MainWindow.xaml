@@ -32,7 +32,7 @@
                 <TextBlock x:Name="progressTextBlock"
                            Text="{Binding Progress}"/>
                 <WrapPanel>
-                    <Button Content="Select Template"
+                    <Button Content="Detect Ball"
                             Margin="10"
                             x:Name="AddTrackerButton"
                             Click="AddTrackerButton_Click"/>

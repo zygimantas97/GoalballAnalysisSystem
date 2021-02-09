@@ -3,9 +3,11 @@ using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using GoalballAnalysisSystem.GameProcessing.BallTracker;
 using GoalballAnalysisSystem.GameProcessing.PlayersTracker;
+using GoalballAnalysisSystem.GameProcessing.PlayFieldTracker;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
@@ -106,6 +108,8 @@ namespace GoalballAnalysisSystem.GameProcessing
                     _videoCapture.Read(_cameraFeed);
                     if(_cameraFeed != null)
                     {
+
+
                         /*
                         List<Rectangle> playersRectangles = _playersTracker.UpdateTrackingObjects(_cameraFeed);
                         
@@ -123,7 +127,18 @@ namespace GoalballAnalysisSystem.GameProcessing
                             CvInvoke.PutText(_cameraFeed, ballRectangle.X.ToString() + "," + ballRectangle.Y.ToString(), new Point(ballRectangle.X, ballRectangle.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
                             CvInvoke.Rectangle(_cameraFeed, ballRectangle, new MCvScalar(0, 0, 255), 5);
                         }
+
+
+                        //***********GameZoneCorders COLOR BASED drawing for testing purposes
+                        IPlayFieldTracker playFieldTracker = new ColorBasedPlayFieldTracker();
+                        var gameZoneCorners = playFieldTracker.GetPlayFieldCorners(_cameraFeed);
+                        for (int i = 0; i < gameZoneCorners.Length; i++)
+                        {
+                            _cameraFeed = Drawing.EmguCVFiguresDrawing.DrawRectangle(_cameraFeed, gameZoneCorners[i], 25, 25);
+                        }
+                        //***********GameZoneCorders COLOR BASED drawing for testing purposes
                         
+
                         CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();
                     }
                     else

@@ -65,6 +65,10 @@
                     HorizontalAlignment="Left"
                     Name="loadTeamplateButton"
                     Click="loadTemplateButton_Click"/>
+            <Button Content="SendFrame via API"
+                    HorizontalAlignment="Left"
+                    Name="sendFrame"
+                    Click="sendFrame_Click"/>
         </WrapPanel>
         
         

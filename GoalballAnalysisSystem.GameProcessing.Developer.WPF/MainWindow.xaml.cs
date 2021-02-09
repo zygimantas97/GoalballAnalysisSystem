@@ -32,6 +32,7 @@ using Windows.Security.Cryptography;
 using Windows.Storage.Streams;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Net.Http;
 
 namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 {
@@ -70,12 +71,13 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public MainWindow()
+        public  MainWindow()
         {
             InitializeComponent();
             Image<Bgr, byte> imageBoxBackground = new Image<Bgr, byte>(imageBox.Width, imageBox.Height, new Bgr(0, 0, 0));
             imageBox.Image = imageBoxBackground;
             DataContext = this;
+            
         }
 
         private void SelectVideoButton_Click(object sender, RoutedEventArgs e)
@@ -249,8 +251,6 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
         {
             try
             {
-
-
                 //Image<Gray, byte> template = new Image<Gray, byte>("ball_template.jpg");
                 Image<Gray, byte> template = selectedPart.Convert<Gray, byte>();
                 FeatureBasedObjectDetectionStrategy ballDetector = new FeatureBasedObjectDetectionStrategy(template);
@@ -271,9 +271,22 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             }
         }
 
+        private async void sendFrame_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            bool? result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                HttpResponseMessage response = await ObjectDetection.APIBasedObjectDetectionStrategy.CVSPrediction.MakePredictionRequest(openFileDialog.FileName);
+                System.Windows.Forms.MessageBox.Show("JSON was obtained");
+                Trace.WriteLine(await response.Content.ReadAsStringAsync());
+            }
+        }
+
         private async void DetectObjectWinAIButton_Click(object sender, RoutedEventArgs e)
         {
             
+
             OpenFileDialog openFileDialog = new OpenFileDialog();
             bool? result = openFileDialog.ShowDialog();
             if (result == true)
@@ -395,6 +408,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 img.Save(ms, ImageFormat.Bmp);
                 return ms.ToArray();
             }
+
         }
     }
 }

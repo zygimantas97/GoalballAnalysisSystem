@@ -14,6 +14,8 @@ using GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedObject
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -24,6 +26,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Imaging;
 using Windows.Media;
+using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.Storage.Streams;
 
@@ -263,8 +266,23 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedOb
 
         private VideoFrame MatToVideoFrame(Mat frame)
         {
-            // Need to be implemented
-            return null;
+            // Need to check
+            Bitmap bitmap = frame.ToBitmap();
+            byte[] byteArray = BitmapToByteArray(bitmap);
+            IBuffer buffer = CryptographicBuffer.CreateFromByteArray(byteArray);
+            SoftwareBitmap softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, bitmap.Width, bitmap.Height);
+            softwareBitmap.CopyFromBuffer(buffer);
+            return VideoFrame.CreateWithSoftwareBitmap(softwareBitmap);
+        }
+
+        public static byte[] BitmapToByteArray(Bitmap bitmap)
+        {
+            // Need to be checked
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Bmp);
+                return ms.ToArray();
+            }
         }
     }
 }

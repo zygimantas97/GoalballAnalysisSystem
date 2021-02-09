@@ -23,7 +23,15 @@ using Emgu.CV.Structure;
 using System.ComponentModel;
 using System.Diagnostics;
 using Emgu.CV.CvEnum;
-using GoalballAnalysisSystem.GameProcessing.ObjectDetection.MLBasedObjectDetectionStrategy;
+using GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedObjectDetection.MLBasedObjectDetection;
+using GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedObjectDetection.WinAIBasedObjectDetection;
+using Windows.Storage;
+using Windows.Media;
+using Windows.Graphics.Imaging;
+using Windows.Security.Cryptography;
+using Windows.Storage.Streams;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 {
@@ -141,7 +149,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             GameAnalyzer.Stop();
         }
 
-        private void AddTrackerButton_Click(object sender, RoutedEventArgs e)
+        private void DetectObjectMLButton_Click(object sender, RoutedEventArgs e)
         {
             /*
             if (_selectedROI != Rectangle.Empty)
@@ -260,6 +268,132 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             catch (Exception ex)
             {
                 System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void DetectObjectWinAIButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            bool? result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                /*
+                // Creating object detection strategy
+                var objectDetectionStrategy = new WinAIBasedObjectDetectionStrategy(new List<string>() { "ball", "player" });
+                await objectDetectionStrategy.Init();
+
+                // Reading image
+                Image<Bgra, byte> image = new Image<Bgra, byte>(openFileDialog.FileName);
+                imageBox.Image = image;
+
+                // Converting Bitmap -> VideoFrame
+                byte[] imageByteArray = ImageToByte(image.ToBitmap());
+                IBuffer buffer = CryptographicBuffer.CreateFromByteArray(imageByteArray);
+                SoftwareBitmap softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, image.Width, image.Height);
+                softwareBitmap.CopyFromBuffer(buffer);
+                VideoFrame inputImage = VideoFrame.CreateWithSoftwareBitmap(softwareBitmap);
+
+                // Detecting objects
+                var results = await objectDetectionStrategy.PredictImageAsync(inputImage);
+                
+                
+                using (var stream = new Windows.Storage.Streams.InMemoryRandomAccessStream())
+                {
+                    bitmap.Save(stream.AsStream(), ImageFormat.Jpeg);//choose the specific image format by your own bitmap source
+                    Windows.Graphics.Imaging.BitmapDecoder decoder = await Windows.Graphics.Imaging.BitmapDecoder.CreateAsync(stream);
+                    softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                }
+                
+
+
+
+
+
+
+                
+                if (rectangles.Count == 0)
+                {
+                    System.Windows.Forms.MessageBox.Show("Not detected");
+                }
+                else
+                {
+                    foreach (var rect in rectangles)
+                    {
+                        CvInvoke.PutText(image, rect.X.ToString() + "," + rect.Y.ToString(), new System.Drawing.Point(rect.X, rect.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
+                        CvInvoke.Rectangle(image, rect, new MCvScalar(0, 0, 255), 5);
+                    }
+
+                    imageBox.Image = image;
+                    System.Windows.Forms.MessageBox.Show("Detected: " + rectangles.Count);
+                }
+                */
+            }
+        }
+        /*
+        private async Task<ImageSource> ProcessImageAsync(StorageFile ImageFile)
+        {
+            if (ImageFile == null)
+                throw new ArgumentNullException("ImageFile cannot be null.");
+
+            //The new size of processed image.
+            const int side = 100;
+
+            //Initialize bitmap transformations to be applied to the image.
+            var transform = new BitmapTransform() { ScaledWidth = side, ScaledHeight = side, InterpolationMode = BitmapInterpolationMode.Cubic };
+
+            //Get image pixels.
+            var stream = await ImageFile.OpenStreamForReadAsync();
+            var decoder = await System.Windows.Media.Imaging.BitmapDecoder.CreateAsync(stream.AsRandomAccessStream());
+            var pixelData = await decoder.GetPixelDataAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied, transform, ExifOrientationMode.RespectExifOrientation, ColorManagementMode.ColorManageToSRgb);
+            var pixels = pixelData.DetachPixelData();
+
+            //Initialize writable bitmap.
+            var wBitmap = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
+            await wBitmap.SetSourceAsync(stream.AsRandomAccessStream());
+
+            //Create a software bitmap from the writable bitmap's pixel buffer.
+            var sBitmap = SoftwareBitmap.CreateCopyFromBuffer(wBitmap.PixelBuffer, BitmapPixelFormat.Bgra8, side, side, BitmapAlphaMode.Premultiplied);
+
+            //Create software bitmap source.
+            var sBitmapSource = new SoftwareBitmapSource();
+            await sBitmapSource.SetBitmapAsync(sBitmap);
+
+            return sBitmapSource;
+        }
+
+        private async Task<SoftwareBitmap> ResizeSoftwareBitmap(SoftwareBitmap bitmap)
+        {
+            const int side = 100;
+
+            //Initialize bitmap transformations to be applied to the image.
+            var transform = new BitmapTransform() { ScaledWidth = side, ScaledHeight = side, InterpolationMode = BitmapInterpolationMode.Cubic };
+
+            //Get image pixels.
+            var stream = await bitmap.OpenStreamForReadAsync();
+            var decoder = await System.Windows.Media.Imaging.BitmapDecoder.CreateAsync(stream.AsRandomAccessStream());
+            var pixelData = await decoder.GetPixelDataAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied, transform, ExifOrientationMode.RespectExifOrientation, ColorManagementMode.ColorManageToSRgb);
+            var pixels = pixelData.DetachPixelData();
+
+            //Initialize writable bitmap.
+            var wBitmap = new WriteableBitmap((int)decoder.PixelWidth, (int)decoder.PixelHeight);
+            await wBitmap.SetSourceAsync(stream.AsRandomAccessStream());
+
+            //Create a software bitmap from the writable bitmap's pixel buffer.
+            var sBitmap = SoftwareBitmap.CreateCopyFromBuffer(bitmap, BitmapPixelFormat.Bgra8, side, side, BitmapAlphaMode.Premultiplied);
+
+            return sBitmap
+        }
+        */
+
+        public static byte[] ImageToByte(System.Drawing.Image img)
+        {
+            /*ImageConverter converter = new ImageConverter();
+            return (byte[])converter.ConvertTo(img, typeof(byte[]));*/
+            using (MemoryStream ms = new MemoryStream())
+            {
+                img.Save(ms, ImageFormat.Bmp);
+                return ms.ToArray();
             }
         }
     }

@@ -291,32 +291,25 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             bool? result = openFileDialog.ShowDialog();
             if (result == true)
             {
-                /*
-                // Creating object detection strategy
-                var objectDetectionStrategy = new WinAIBasedObjectDetectionStrategy(new List<string>() { "ball", "player" });
+                
+                var objectDetectionStrategy = new WinAIBasedObjectDetectionStrategy();
                 await objectDetectionStrategy.Init();
 
                 // Reading image
                 Image<Bgra, byte> image = new Image<Bgra, byte>(openFileDialog.FileName);
                 imageBox.Image = image;
 
-                // Converting Bitmap -> VideoFrame
-                byte[] imageByteArray = ImageToByte(image.ToBitmap());
-                IBuffer buffer = CryptographicBuffer.CreateFromByteArray(imageByteArray);
-                SoftwareBitmap softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, image.Width, image.Height);
-                softwareBitmap.CopyFromBuffer(buffer);
-                VideoFrame inputImage = VideoFrame.CreateWithSoftwareBitmap(softwareBitmap);
-
                 // Detecting objects
-                var results = await objectDetectionStrategy.PredictImageAsync(inputImage);
+                var results = await objectDetectionStrategy.PredictImageAsync(image.Mat);
                 
-                
+                /*
                 using (var stream = new Windows.Storage.Streams.InMemoryRandomAccessStream())
                 {
                     bitmap.Save(stream.AsStream(), ImageFormat.Jpeg);//choose the specific image format by your own bitmap source
                     Windows.Graphics.Imaging.BitmapDecoder decoder = await Windows.Graphics.Imaging.BitmapDecoder.CreateAsync(stream);
                     softwareBitmap = await decoder.GetSoftwareBitmapAsync();
                 }
+                
                 
 
 

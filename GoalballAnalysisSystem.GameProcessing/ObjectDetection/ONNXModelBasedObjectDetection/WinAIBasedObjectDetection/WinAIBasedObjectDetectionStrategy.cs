@@ -88,11 +88,11 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedOb
             {
                 var imageFeature = ImageFeatureValue.CreateFromVideoFrame(resizedVideoFrame);
                 var bindings = new LearningModelBinding(this.session);
-                bindings.Bind("input", imageFeature);
+                bindings.Bind("data", imageFeature);
 
-                var result = await this.session.EvaluateAsync(bindings, "");
+                var result = await this.session.EvaluateAsync(bindings, "0");
 
-                return Postprocess(result.Outputs["output"] as TensorFloat);
+                return Postprocess(result.Outputs["model_outputs0"] as TensorFloat);
             }
         }
 
@@ -264,9 +264,9 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedOb
             }
         }
 
+        // Need to check
         private VideoFrame MatToVideoFrame(Mat frame)
         {
-            // Need to check
             Bitmap bitmap = frame.ToBitmap();
             byte[] byteArray = BitmapToByteArray(bitmap);
             IBuffer buffer = CryptographicBuffer.CreateFromByteArray(byteArray);
@@ -275,9 +275,9 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedOb
             return VideoFrame.CreateWithSoftwareBitmap(softwareBitmap);
         }
 
+        // Need to be checked
         public static byte[] BitmapToByteArray(Bitmap bitmap)
         {
-            // Need to be checked
             using (MemoryStream ms = new MemoryStream())
             {
                 bitmap.Save(ms, ImageFormat.Bmp);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.APIBasedObjectDetectionStrategy
 {
-    public static class CVSPrediction
+    public class CVSPrediction
     {
 
         public static async Task<HttpResponseMessage> MakePredictionRequest(string imageFilePath)

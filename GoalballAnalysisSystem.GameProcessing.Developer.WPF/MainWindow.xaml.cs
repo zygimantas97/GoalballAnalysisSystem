@@ -286,7 +286,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 string jsonStrng = await response.Content.ReadAsStringAsync();
                 try
                 {
-                    ApiPredictionModel parsedPredictionModel = JsonConvert.DeserializeObject<ApiPredictionModel>(jsonStrng); // TestModel2 = deserialize object
+                    ApiPredictionModel parsedPredictionModel = JsonConvert.DeserializeObject<ApiPredictionModel>(jsonStrng); // Json convert to model class
                     for (int i=0; i< parsedPredictionModel.Predictions.Length; i++)
                     {
                         if(parsedPredictionModel.Predictions[i].Probability > _apiProbabilityTreshold)

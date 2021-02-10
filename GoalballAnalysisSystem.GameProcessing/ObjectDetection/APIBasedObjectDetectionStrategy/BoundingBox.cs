@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.APIBasedObjectDetectionStrategy
 {
-    public partial class BoundingBox
+    public class BoundingBox
     {
         [JsonProperty("left")]
         public double Left { get; set; }

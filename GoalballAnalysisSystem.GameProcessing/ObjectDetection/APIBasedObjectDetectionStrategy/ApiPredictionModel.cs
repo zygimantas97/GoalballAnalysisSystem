@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.APIBasedObjectDetectionStrategy
 {
-    public partial class ApiPredictionModel
+    public class ApiPredictionModel
     {
         [JsonProperty("id")]
         public Guid Id { get; set; }

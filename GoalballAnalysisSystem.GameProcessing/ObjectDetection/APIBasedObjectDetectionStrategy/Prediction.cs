@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.APIBasedObjectDetectionStrategy
 {
-    public partial class Prediction
+    public class Prediction
     {
         [JsonProperty("probability")]
         public double Probability { get; set; }

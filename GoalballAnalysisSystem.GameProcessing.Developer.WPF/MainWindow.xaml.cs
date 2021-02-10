@@ -33,6 +33,8 @@ using Windows.Storage.Streams;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net.Http;
+using Newtonsoft.Json;
+using GoalballAnalysisSystem.GameProcessing.ObjectDetection.APIBasedObjectDetectionStrategy;
 
 namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 {
@@ -49,6 +51,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
         bool _isSelecting = false;
 
         private int _frameNo = 0;
+        private double _apiProbabilityTreshold = 0.2;
 
         private string _progress;
 
@@ -277,9 +280,46 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             bool? result = openFileDialog.ShowDialog();
             if (result == true)
             {
+                Image<Bgr, byte> image = new Image<Bgr, byte>(openFileDialog.FileName);
                 HttpResponseMessage response = await ObjectDetection.APIBasedObjectDetectionStrategy.CVSPrediction.MakePredictionRequest(openFileDialog.FileName);
-                System.Windows.Forms.MessageBox.Show("JSON was obtained");
-                Trace.WriteLine(await response.Content.ReadAsStringAsync());
+                System.Windows.Forms.MessageBox.Show("Results was obtained from API request");
+                string jsonStrng = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    ApiPredictionModel parsedPredictionModel = JsonConvert.DeserializeObject<ApiPredictionModel>(jsonStrng); // TestModel2 = deserialize object
+                    for (int i=0; i< parsedPredictionModel.Predictions.Length; i++)
+                    {
+                        if(parsedPredictionModel.Predictions[i].Probability > _apiProbabilityTreshold)
+                        {
+                            var rect = new Rectangle(Convert.ToInt32(parsedPredictionModel.Predictions[i].BoundingBox.Left * image.Width), Convert.ToInt32(parsedPredictionModel.Predictions[i].BoundingBox.Top * image.Height), Convert.ToInt32(parsedPredictionModel.Predictions[i].BoundingBox.Width * image.Width), Convert.ToInt32(parsedPredictionModel.Predictions[i].BoundingBox.Height * image.Height));
+
+                            if (parsedPredictionModel.Predictions[i].TagName == "BottomLeft" || parsedPredictionModel.Predictions[i].TagName == "BottomRight" || parsedPredictionModel.Predictions[i].TagName == "TopLeft" || parsedPredictionModel.Predictions[i].TagName == "TopRight")
+                            {
+                                CvInvoke.Rectangle(image, rect, new MCvScalar(255, 137, 0), 4);  //Melyni kampai
+                            }
+
+                            else if(parsedPredictionModel.Predictions[i].TagName == "player")
+                            {
+                                CvInvoke.Rectangle(image, rect, new MCvScalar(51, 255, 51), 4); //Zali zaidejai
+                            }
+
+                            else if (parsedPredictionModel.Predictions[i].TagName == "ball")
+                            {
+                                
+                                CvInvoke.Rectangle(image, rect, new MCvScalar(0, 0, 255), 4); //Raudonas kamuolys
+                            }
+
+                        }
+                        
+                    }
+
+                    imageBox.Image = image;
+                }
+                catch(Exception exception)
+                {
+                    MessageBox.Show(exception.ToString());
+                }
+                
             }
         }
 
@@ -297,7 +337,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
                 // Reading image
                 Image<Bgra, byte> image = new Image<Bgra, byte>(openFileDialog.FileName);
-                imageBox.Image = image;
+                
 
                 // Detecting objects
                 var results = await objectDetectionStrategy.PredictImageAsync(image.Mat);

@@ -44,6 +44,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public GameAnalyzer GameAnalyzer { get; private set; }
+        ObjectDetection.ONNXJulius.Processing _predictionModel;
         private Image<Bgr, byte> selectedPart;
 
         Rectangle _selectedROI = Rectangle.Empty;
@@ -80,7 +81,9 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             Image<Bgr, byte> imageBoxBackground = new Image<Bgr, byte>(imageBox.Width, imageBox.Height, new Bgr(0, 0, 0));
             imageBox.Image = imageBoxBackground;
             DataContext = this;
+            _predictionModel = new ObjectDetection.ONNXJulius.Processing();
             
+
         }
 
         private void SelectVideoButton_Click(object sender, RoutedEventArgs e)
@@ -442,6 +445,18 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 return ms.ToArray();
             }
 
+        }
+
+        private void sendFrameONNX_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            bool? result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                Image<Bgr, byte> image = new Image<Bgr, byte>(openFileDialog.FileName);
+               var resultImage =  _predictionModel.StartProcessing(image.ToBitmap());
+                imageBox.Image = resultImage.ToImage<Bgr, byte>();
+            }
         }
     }
 }

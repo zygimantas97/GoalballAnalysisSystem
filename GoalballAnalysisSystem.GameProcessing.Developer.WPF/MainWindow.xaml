@@ -69,6 +69,10 @@
                     HorizontalAlignment="Left"
                     Name="sendFrame"
                     Click="sendFrame_Click"/>
+            <Button Content="SendFrame to ONNX"
+                    HorizontalAlignment="Left"
+                    Name="sendFrameONNX"
+                    Click="sendFrameONNX_Click"/>
         </WrapPanel>
         
         

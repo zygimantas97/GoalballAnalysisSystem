@@ -53,6 +53,7 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXJulius
             var prediction = predictionEngine.Predict(new ImageInput { Image = testImage });
 
             var boundingBoxes = ParseOutputs(prediction.PredictedLabels, labels);
+            boundingBoxes = boundingBoxes.Where(bb => bb.Label == "ball").ToList();
 
             var originalWidth = testImage.Width;
             var originalHeight = testImage.Height;
@@ -87,7 +88,7 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXJulius
 
         }
 
-        public static List<BoundingBox> ParseOutputs(float[] modelOutput, string[] labels, float probabilityThreshold = .15f)
+        public static List<BoundingBox> ParseOutputs(float[] modelOutput, string[] labels, float probabilityThreshold = .1f)
         {
             var boxes = new List<BoundingBox>();
 

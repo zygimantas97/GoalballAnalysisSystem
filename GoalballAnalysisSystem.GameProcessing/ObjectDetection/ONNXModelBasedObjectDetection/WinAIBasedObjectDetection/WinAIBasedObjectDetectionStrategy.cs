@@ -9,13 +9,10 @@
 
 /// Script for CustomVision's exported object detection model.
 
-using Emgu.CV;
 using GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedObjectDetection.WinAIBasedObjectDetection.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -26,12 +23,16 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Imaging;
 using Windows.Media;
-using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.Storage.Streams;
 
 namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedObjectDetection.WinAIBasedObjectDetection
 {
+    public sealed class modelOutput
+    {
+        public TensorFloat model_outputs0; // shape(-1,-1,13,13)
+    }
+
     public class WinAIBasedObjectDetectionStrategy
     {
         private static readonly float[] Anchors = new float[] { 0.573f, 0.677f, 1.87f, 2.06f, 3.34f, 5.47f, 7.88f, 3.53f, 9.77f, 9.17f };
@@ -56,13 +57,13 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedOb
         /// Initialize
         /// </summary>
         /// <param name="file">The ONNX file</param>
-        public async Task Init()
+        public void Init()
         {
             var root = System.AppDomain.CurrentDomain.BaseDirectory;
             var fileName = "ObjectDetection\\ONNXModelBasedObjectDetection\\ONNXModel\\model.onnx";
             var fullPath = Path.Combine(root, fileName);
-            var file = await StorageFile.GetFileFromPathAsync(fullPath);
-            this.model = await LearningModel.LoadFromStorageFileAsync(file);
+
+            this.model = LearningModel.LoadFromFilePath(fullPath);
             this.session = new LearningModelSession(this.model);
 
             Debug.Assert(this.model.InputFeatures.Count == 1, "The number of input must be 1");
@@ -73,27 +74,16 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedOb
         /// Detect objects from the given image.
         /// The input image must be 416x416.
         /// </summary>
-        public async Task<IList<PredictionModel>> PredictImageAsync(Mat frame)
+        public async Task<IList<PredictionModel>> PredictImageAsync(VideoFrame image)
         {
-            VideoFrame image = MatToVideoFrame(frame);
-            var imageWidth = image.SoftwareBitmap.PixelWidth;
-            var imageHeight = image.SoftwareBitmap.PixelHeight;
+            var output = new modelOutput();
+            var imageFeature = ImageFeatureValue.CreateFromVideoFrame(image);
+            var bindings = new LearningModelBinding(session);
+            bindings.Bind("data", imageFeature);
+            bindings.Bind("model_outputs0", output.model_outputs0);
+            var result = await session.EvaluateAsync(bindings, "0");
 
-            double ratio = Math.Sqrt((double)imageInputSize / (double)imageWidth / (double)imageHeight);
-            int targetWidth = 32 * (int)Math.Round(imageWidth * ratio / 32);
-            int targetHeight = 32 * (int)Math.Round(imageHeight * ratio / 32);
-
-            using (var resizedBitmap = await ResizeBitmap(image.SoftwareBitmap, targetWidth, targetHeight))
-            using (VideoFrame resizedVideoFrame = VideoFrame.CreateWithSoftwareBitmap(resizedBitmap))
-            {
-                var imageFeature = ImageFeatureValue.CreateFromVideoFrame(resizedVideoFrame);
-                var bindings = new LearningModelBinding(this.session);
-                bindings.Bind("data", imageFeature);
-
-                var result = await this.session.EvaluateAsync(bindings, "0");
-
-                return Postprocess(result.Outputs["model_outputs0"] as TensorFloat);
-            }
+            return Postprocess(output.model_outputs0);
         }
 
         private static float Logistic(float x)
@@ -240,7 +230,7 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedOb
             return this.SuppressNonMaximum(extractedBoxes);
         }
 
-        private async Task<SoftwareBitmap> ResizeBitmap(SoftwareBitmap softwareBitmap, int targetWidth, int targetHeight)
+        public async Task<SoftwareBitmap> ResizeBitmap(SoftwareBitmap softwareBitmap, int targetWidth, int targetHeight)
         {
             using (IRandomAccessStream stream = new InMemoryRandomAccessStream())
             {
@@ -263,25 +253,33 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedOb
                 return result;
             }
         }
-
-        // Need to check
-        private VideoFrame MatToVideoFrame(Mat frame)
+        public List<PredictionModel> Process(TensorFloat predictionOutputs)
         {
-            Bitmap bitmap = frame.ToBitmap();
-            byte[] byteArray = BitmapToByteArray(bitmap);
-            IBuffer buffer = CryptographicBuffer.CreateFromByteArray(byteArray);
-            SoftwareBitmap softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, bitmap.Width, bitmap.Height);
-            softwareBitmap.CopyFromBuffer(buffer);
-            return VideoFrame.CreateWithSoftwareBitmap(softwareBitmap);
+            var extractedBoxes = this.ExtractBoxes(predictionOutputs, WinAIBasedObjectDetectionStrategy.Anchors);
+            return this.SuppressNonMaximum(extractedBoxes);
         }
 
-        // Need to be checked
-        public static byte[] BitmapToByteArray(Bitmap bitmap)
+        public static async Task<SoftwareBitmap> Resize(SoftwareBitmap softwareBitmap, int targetWidth, int targetHeight)
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (IRandomAccessStream stream = new InMemoryRandomAccessStream())
             {
-                bitmap.Save(ms, ImageFormat.Bmp);
-                return ms.ToArray();
+                // Create an encoder with the desired format
+                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.BmpEncoderId, stream);
+
+                // Set the software bitmap
+                encoder.SetSoftwareBitmap(softwareBitmap);
+                encoder.BitmapTransform.ScaledWidth = (uint)targetWidth;
+                encoder.BitmapTransform.ScaledHeight = (uint)targetHeight;
+                encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.NearestNeighbor;
+                encoder.IsThumbnailGenerated = false;
+
+                await encoder.FlushAsync();
+                stream.Seek(0);
+
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                var result = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+
+                return result;
             }
         }
     }

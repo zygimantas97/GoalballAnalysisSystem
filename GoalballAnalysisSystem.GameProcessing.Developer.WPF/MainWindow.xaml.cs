@@ -35,6 +35,10 @@ using System.IO;
 using System.Net.Http;
 using Newtonsoft.Json;
 using GoalballAnalysisSystem.GameProcessing.ObjectDetection.APIBasedObjectDetectionStrategy;
+using Windows.Storage.Pickers;
+using MNIST_Demo;
+using Windows.AI.MachineLearning;
+
 
 namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 {
@@ -328,23 +332,69 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
         private async void DetectObjectWinAIButton_Click(object sender, RoutedEventArgs e)
         {
-            
-
             OpenFileDialog openFileDialog = new OpenFileDialog();
             bool? result = openFileDialog.ShowDialog();
             if (result == true)
             {
-                
+
                 var objectDetectionStrategy = new WinAIBasedObjectDetectionStrategy();
-                await objectDetectionStrategy.Init();
+                objectDetectionStrategy.Init();
 
                 // Reading image
                 Image<Bgra, byte> image = new Image<Bgra, byte>(openFileDialog.FileName);
+
+                modelInput input = new modelInput();
+                MNIST_Demo.modelOutput output = new MNIST_Demo.modelOutput();
+                modelModel model = modelModel.CreateFromStreamAsync();
+
+
+                SoftwareBitmap softwareBitmap = BitmapToSoftwareBitmap(image.ToBitmap());
+                softwareBitmap = await WinAIBasedObjectDetectionStrategy.Resize(softwareBitmap, 416, 416);
+                VideoFrame vf = VideoFrame.CreateWithSoftwareBitmap(softwareBitmap);
+                input.data = ImageFeatureValue.CreateFromVideoFrame(vf);
+
+                // Evaluate the model
+                output = await model.EvaluateAsync(vf);
+                var results = objectDetectionStrategy.Process(output.model_outputs0);
+                 
+
+
+
+
+                //Bitmap bitmap = SoftwareBitmapToBitmap(softwareBitmap);
                 
+                /*var root = System.AppDomain.CurrentDomain.BaseDirectory;
+                var fileName = "ObjectDetection\\ONNXModelBasedObjectDetection\\ONNXModel\\model.onnx";
+                var fullPath = Path.Combine(root, fileName);
+
+                var storageFile = await StorageFile.GetFileFromPathAsync(openFileDialog.FileName);
+                SoftwareBitmap softwareBitmap;
+                using (IRandomAccessStream stream = await storageFile.OpenAsync(FileAccessMode.Read))
+                {
+                    Windows.Graphics.Imaging.BitmapDecoder decoder = await Windows.Graphics.Imaging.BitmapDecoder.CreateAsync(stream);
+
+                    softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                }
+                var videoFrame = VideoFrame.CreateWithSoftwareBitmap(softwareBitmap);
+
+
+                Bitmap bitmap = image.ToBitmap();
+                using (var stream = new Windows.Storage.Streams.InMemoryRandomAccessStream())
+                {
+                    bitmap.Save(stream, ImageFormat.Bmp);
+                    Windows.Graphics.Imaging.BitmapDecoder decoder = await Windows.Graphics.Imaging.BitmapDecoder.CreateAsync(stream);
+                    softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                }*/
+
+                /*SoftwareBitmapSource source = new SoftwareBitmapSource();
+                await source.SetBitmapAsync(softwareBitmap);
+                imageBox = source;*/
+
+
 
                 // Detecting objects
-                var results = await objectDetectionStrategy.PredictImageAsync(image.Mat);
-                
+                //var results = await objectDetectionStrategy.PredictImageAsync(videoFrame);
+
                 /*
                 using (var stream = new Windows.Storage.Streams.InMemoryRandomAccessStream())
                 {
@@ -435,17 +485,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
         }
         */
 
-        public static byte[] ImageToByte(System.Drawing.Image img)
-        {
-            /*ImageConverter converter = new ImageConverter();
-            return (byte[])converter.ConvertTo(img, typeof(byte[]));*/
-            using (MemoryStream ms = new MemoryStream())
-            {
-                img.Save(ms, ImageFormat.Bmp);
-                return ms.ToArray();
-            }
-
-        }
+        
 
         private void sendFrameONNX_Click(object sender, RoutedEventArgs e)
         {
@@ -458,5 +498,68 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 imageBox.Image = resultImage.ToImage<Bgr, byte>();
             }
         }
+
+        private Bitmap SoftwareBitmapToBitmap(SoftwareBitmap softwareBitmap)
+        {
+            byte[] byteArray;
+            var buffer = CryptographicBuffer.GenerateRandom((uint)(softwareBitmap.PixelHeight * softwareBitmap.PixelWidth * 4 + 54));
+            
+            softwareBitmap.CopyToBuffer(buffer);
+            
+            CryptographicBuffer.CopyToByteArray(buffer, out byteArray);
+
+            using (var ms = new MemoryStream(byteArray))
+            {
+                var image = System.Drawing.Image.FromStream(ms);
+                return new Bitmap(image);
+            }
+        }
+
+        // Need to check
+        private SoftwareBitmap BitmapToSoftwareBitmap(Bitmap bitmap)
+        {
+            byte[] byteArray;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Bmp);
+                byteArray = ms.ToArray();
+            }
+            IBuffer buffer = CryptographicBuffer.CreateFromByteArray(byteArray);
+            SoftwareBitmap softwareBitmap = new SoftwareBitmap(BitmapPixelFormat.Bgra8, bitmap.Width, bitmap.Height);
+            softwareBitmap.CopyFromBuffer(buffer);
+            return softwareBitmap;
+        }
+
+        // Need to be checked
+        public static byte[] BitmapToByteArray(Bitmap bitmap)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Bmp);
+                return ms.ToArray();
+            }
+        }
+        /*
+        private async Task CropAndDisplayInputImageAsync(VideoFrame inputVideoFrame)
+        {
+            BitmapBounds cropBounds = new BitmapBounds();
+            uint h = 416;
+            uint w = 416;
+            var frameHeight = useDX ? inputVideoFrame.Direct3DSurface.Description.Height : inputVideoFrame.SoftwareBitmap.PixelHeight;
+            var frameWidth = useDX ? inputVideoFrame.Direct3DSurface.Description.Width : inputVideoFrame.SoftwareBitmap.PixelWidth;
+
+            var requiredAR = ((float)28 / 28);
+            w = Math.Min((uint)(requiredAR * frameHeight), (uint)frameWidth);
+            h = Math.Min((uint)(frameWidth / requiredAR), (uint)frameHeight);
+            cropBounds.X = (uint)((frameWidth - w) / 2);
+            cropBounds.Y = 0;
+            cropBounds.Width = w;
+            cropBounds.Height = h;
+
+            cropped_vf = new VideoFrame(BitmapPixelFormat.Bgra8, 28, 28, BitmapAlphaMode.Ignore);
+
+            await inputVideoFrame.CopyToAsync(cropped_vf, cropBounds, null);
+        }
+        */
     }
 }

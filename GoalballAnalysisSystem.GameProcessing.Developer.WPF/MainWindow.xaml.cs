@@ -187,9 +187,10 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             bool? result = openFileDialog.ShowDialog();
             if (result == true)
             {
-                Image<Bgr, byte> image = new Image<Bgr, byte>(openFileDialog.FileName);
+                Image<Bgr, byte> img = new Image<Bgr, byte>(openFileDialog.FileName);
+                var image = (Bitmap)System.Drawing.Image.FromFile(openFileDialog.FileName);
                 var objectDetectionStrategy = new MLBasedObjectDetectionStrategy(new List<string>() { "ball" });
-                var rectangles = objectDetectionStrategy.DetectAllObjects(image.Mat);
+                var rectangles = objectDetectionStrategy.DetectAllObjects(image);
                 if(rectangles.Count == 0)
                 {
                     System.Windows.Forms.MessageBox.Show("Not detected");
@@ -198,11 +199,11 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 {
                     foreach(var rect in rectangles)
                     {
-                        CvInvoke.PutText(image, rect.X.ToString() + "," + rect.Y.ToString(), new System.Drawing.Point(rect.X, rect.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
-                        CvInvoke.Rectangle(image, rect, new MCvScalar(0, 0, 255), 5);
+                        CvInvoke.PutText(img, rect.X.ToString() + "," + rect.Y.ToString(), new System.Drawing.Point(rect.X, rect.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
+                        CvInvoke.Rectangle(img, rect, new MCvScalar(0, 0, 255), 5);
                     }
                     
-                    imageBox.Image = image;
+                    imageBox.Image = img;
                     System.Windows.Forms.MessageBox.Show("Detected: " + rectangles.Count);
                 }
             }

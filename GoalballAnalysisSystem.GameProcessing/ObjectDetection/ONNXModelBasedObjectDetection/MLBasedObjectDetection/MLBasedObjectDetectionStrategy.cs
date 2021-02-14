@@ -87,11 +87,11 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedOb
             return Rectangle.Empty;
         }
 
-        public List<Rectangle> DetectAllObjects(Mat frame)
+        public List<Rectangle> DetectAllObjects(Bitmap image)
         {
             var detectedObjectsRectangles = new List<Rectangle>();
 
-            var image = frame.ToBitmap();
+            //var image = frame.ToBitmap();
 
             var originalWidth = image.Width;
             var originalHeight = image.Height;

@@ -1,51 +1,46 @@
 ﻿using Emgu.CV;
 using Emgu.CV.Structure;
-using GoalballAnalysisSystem.GameProcessing.PlayFieldTracker;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
-using GoalballAnalysisSystem.GameProcessing.Models;
 using Emgu.CV.Util;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace GoalballAnalysisSystem.GameProcessing.PlayFieldTracker
 {
     public class ColorBasedPlayFieldTracker : IPlayFieldTracker
     {
-        public Mat CameraFeedHSV { get; private set; }
-        public Mat Treshold { get; private set; }
+        private Mat cameraFeedHSV;
+        private Mat treshold;
         public ColorBasedPlayFieldTracker()
         {
-            CameraFeedHSV = new Mat();
-            Treshold = new Mat();
+            cameraFeedHSV = new Mat();
+            treshold = new Mat();
             //ObjectsFilterMask = new Mat();
         }
 
         public Point[] GetPlayFieldCorners(Mat cameraFeed)
         {
-            CvInvoke.CvtColor(cameraFeed, CameraFeedHSV, Emgu.CV.CvEnum.ColorConversion.Bgr2Hsv);
+            CvInvoke.CvtColor(cameraFeed, cameraFeedHSV, Emgu.CV.CvEnum.ColorConversion.Bgr2Hsv);
             Trace.WriteLine(cameraFeed);
             //HSV image filtering with given values
-            CvInvoke.InRange(CameraFeedHSV,
+            CvInvoke.InRange(cameraFeedHSV,
                              new ScalarArray(new MCvScalar(FilterParameters.Hue.Min, FilterParameters.Saturation.Min, FilterParameters.Value.Min)), //Minimum range
                              new ScalarArray(new MCvScalar(FilterParameters.Hue.Max, FilterParameters.Saturation.Max, FilterParameters.Value.Max)), //Maximum range
-                             Treshold);  //Treshold
+                             treshold);  //Treshold
 
-            return FindCornerCoordinates( NoiseReduction( Treshold) );
+            return FindCornerCoordinates( NoiseReduction( treshold) );
         }
 
         public Mat GetPlayFieldMask(Mat cameraFeed)
         {
-            CvInvoke.CvtColor(cameraFeed, CameraFeedHSV, Emgu.CV.CvEnum.ColorConversion.Bgr2Hsv);
+            CvInvoke.CvtColor(cameraFeed, cameraFeedHSV, Emgu.CV.CvEnum.ColorConversion.Bgr2Hsv);
 
             //HSV image filtering with given values
-            CvInvoke.InRange(CameraFeedHSV,
+            CvInvoke.InRange(cameraFeedHSV,
                              new ScalarArray(new MCvScalar(FilterParameters.Hue.Min, FilterParameters.Saturation.Min, FilterParameters.Value.Min)), //Minimum range
                              new ScalarArray(new MCvScalar(FilterParameters.Hue.Max, FilterParameters.Saturation.Max, FilterParameters.Value.Max)), //Maximum range
-                             Treshold);  //Treshold
+                             treshold);  //Treshold
 
-            return NoiseReduction(Treshold);
+            return NoiseReduction(treshold);
         }
 
         private Mat NoiseReduction(Mat cameraFeed)

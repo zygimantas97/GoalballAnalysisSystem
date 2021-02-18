@@ -11,23 +11,30 @@ namespace GoalballAnalysisSystem.GameProcessing.BallTracker
 {
     public class ColorBasedObjectDetectionStrategy : IObjectDetectionStrategy
     {
-        public Mat CameraFeedHSV { get; private set; } = new Mat();
-        public Mat Treshold { get; private set; } = new Mat();
-        public Mat ObjectsFilterMask { get; private set; } = new Mat();
+        private Mat cameraFeedHSV;
+        private Mat treshold;
+        private Mat objectsFilterMask;
+
+        public ColorBasedObjectDetectionStrategy()
+        {
+            cameraFeedHSV = new Mat(); ;
+            treshold = new Mat();
+            objectsFilterMask = new Mat();
+        }
 
         public Rectangle DetectObject(Mat cameraFeed)
         {
             //conversion to HSV format
-            CvInvoke.CvtColor(cameraFeed, CameraFeedHSV, Emgu.CV.CvEnum.ColorConversion.Bgr2Hsv);
+            CvInvoke.CvtColor(cameraFeed, cameraFeedHSV, Emgu.CV.CvEnum.ColorConversion.Bgr2Hsv);
             
             //HSV image filtering with given values
-            CvInvoke.InRange(CameraFeedHSV, 
+            CvInvoke.InRange(cameraFeedHSV, 
                              new ScalarArray(new MCvScalar(FilterParameters.Hue.Min, FilterParameters.Saturation.Min, FilterParameters.Value.Min)), //Minimum range
                              new ScalarArray(new MCvScalar(FilterParameters.Hue.Max, FilterParameters.Saturation.Max, FilterParameters.Value.Max)), //Maximum range
-                             Treshold);  //Treshold
+                             treshold);  //Treshold
 
-            ObjectsFilterMask = NoiseReduction(Treshold);
-            return BallCoordinatesFromMask(ObjectsFilterMask);
+            objectsFilterMask = NoiseReduction(treshold);
+            return BallCoordinatesFromMask(objectsFilterMask);
         }
 
         private Mat NoiseReduction(Mat cameraFeed)

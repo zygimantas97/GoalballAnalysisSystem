@@ -45,6 +45,14 @@
                             x:Name="ClearROIButton"
                             Click="ClearROIButton_Click"/>
                 </WrapPanel>
+                <WrapPanel>
+                    <Button Content="Detect With ML TensorFlow"
+                            x:Name="DetectMLTensorFlow"
+                            Click="DetectMLTensorFlow_Click"/>
+                    <Button Content="Detect With TensorFlowSharp"
+                            x:Name="DetectTensorFlowSharp"
+                            Click="DetectTensorFlowSharp_Click"/>
+                </WrapPanel>
                 <WrapPanel HorizontalAlignment="Center">
                     <Button Content="Pause" Margin="10" Name="PauseButton"
                             Click="PauseButton_Click"/>

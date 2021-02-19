@@ -5,6 +5,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ObjectDetection\ONNXModelBasedObjectDetection\ML\OnnxModel.zip" />
+    <None Remove="ObjectDetection\ONNXModelBasedObjectDetection\ONNXModel\labels.txt" />
+    <None Remove="ObjectDetection\ONNXModelBasedObjectDetection\ONNXModel\model.onnx" />
+    <None Remove="ObjectDetection\TensorFlowBasedObjectDetection\TensorFlowModel\labels.txt" />
+    <None Remove="ObjectDetection\TensorFlowBasedObjectDetection\TensorFlowModel\model.pb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ObjectDetection\ONNXModelBasedObjectDetection\ML\OnnxModel.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ObjectDetection\ONNXModelBasedObjectDetection\ONNXModel\labels.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ObjectDetection\ONNXModelBasedObjectDetection\ONNXModel\model.onnx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ObjectDetection\TensorFlowBasedObjectDetection\TensorFlowModel\labels.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ObjectDetection\TensorFlowBasedObjectDetection\TensorFlowModel\model.pb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Emgu.CV" Version="4.4.0.4099" />
     <PackageReference Include="Emgu.CV.Bitmap" Version="4.4.0.4099" />
     <PackageReference Include="Emgu.CV.runtime.windows" Version="4.4.0.4099" />
@@ -13,15 +39,10 @@
     <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.5.4" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.6.0" />
     <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="1.5.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="ObjectDetection\ONNXModelBasedObjectDetection\ONNXModel\labels.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="ObjectDetection\ONNXModelBasedObjectDetection\ONNXModel\model.onnx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <PackageReference Include="Microsoft.ML.TensorFlow" Version="1.5.4" />
+    <PackageReference Include="Microsoft.ML.TensorFlow.Redist" Version="0.14.0" />
+    <PackageReference Include="TensorFlow.NET" Version="0.33.0" />
+    <PackageReference Include="TensorFlowSharp" Version="1.15.1" />
   </ItemGroup>
 
 </Project>

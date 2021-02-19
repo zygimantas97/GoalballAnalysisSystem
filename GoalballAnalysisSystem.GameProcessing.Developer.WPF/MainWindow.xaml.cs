@@ -38,7 +38,11 @@ using GoalballAnalysisSystem.GameProcessing.ObjectDetection.APIBasedObjectDetect
 using Windows.Storage.Pickers;
 using MNIST_Demo;
 using Windows.AI.MachineLearning;
-
+using OnnxObjectDetection;
+using Microsoft.ML;
+using BoundingBox = OnnxObjectDetection.BoundingBox;
+using GoalballAnalysisSystem.GameProcessing.ObjectDetection.TensorFlowBasedObjectDetection.MLBasedObjectDetection;
+using GoalballAnalysisSystem.GameProcessing.ObjectDetection.TensorFlowBasedObjectDetection.TensorFlowSharpBasedObjectDetection;
 
 namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 {
@@ -47,6 +51,12 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        private OnnxOutputParser outputParser;
+        private PredictionEngine<ImageInputData, CustomVisionPrediction> customVisionPredictionEngine;
+
+        private static readonly string modelsDirectory = Path.Combine(Environment.CurrentDirectory, @"ObjectDetection\ONNXModelBasedObjectDetection\ML");
+
+        private Bitmap globalBitmap;
         public GameAnalyzer GameAnalyzer { get; private set; }
         ObjectDetection.ONNXJulius.Processing _predictionModel;
         private Image<Bgr, byte> selectedPart;
@@ -86,8 +96,24 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             imageBox.Image = imageBoxBackground;
             DataContext = this;
             _predictionModel = new ObjectDetection.ONNXJulius.Processing();
-            
 
+            LoadModel();
+        }
+
+        private void LoadModel()
+        {
+            // Check for an Onnx model exported from Custom Vision
+            var customVisionExport = Directory.GetFiles(modelsDirectory, "*.zip").FirstOrDefault();
+
+            // If there is one, use it.
+            if (customVisionExport != null)
+            {
+                var customVisionModel = new CustomVisionModel(customVisionExport);
+                var modelConfigurator = new OnnxModelConfigurator(customVisionModel);
+
+                outputParser = new OnnxOutputParser(customVisionModel);
+                customVisionPredictionEngine = modelConfigurator.GetMlNetPredictionEngine<CustomVisionPrediction>();
+            }
         }
 
         private void SelectVideoButton_Click(object sender, RoutedEventArgs e)
@@ -187,10 +213,13 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             bool? result = openFileDialog.ShowDialog();
             if (result == true)
             {
-                Image<Bgr, byte> img = new Image<Bgr, byte>(openFileDialog.FileName);
-                var image = (Bitmap)System.Drawing.Image.FromFile(openFileDialog.FileName);
-                var objectDetectionStrategy = new MLBasedObjectDetectionStrategy(new List<string>() { "ball" });
+                Image<Bgr, byte> img;
+                Bitmap image = new Bitmap(System.Drawing.Image.FromFile(openFileDialog.FileName));
+                img = image.ToImage<Bgr, byte>();
+
+                var objectDetectionStrategy = new MLBasedObjectDetectionStrategy(new List<string>() { "ball" }, 0.1f);
                 var rectangles = objectDetectionStrategy.DetectAllObjects(image);
+
                 if(rectangles.Count == 0)
                 {
                     System.Windows.Forms.MessageBox.Show("Not detected");
@@ -199,12 +228,12 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 {
                     foreach(var rect in rectangles)
                     {
-                        CvInvoke.PutText(img, rect.X.ToString() + "," + rect.Y.ToString(), new System.Drawing.Point(rect.X, rect.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
-                        CvInvoke.Rectangle(img, rect, new MCvScalar(0, 0, 255), 5);
+                        //CvInvoke.PutText(img, rect.X.ToString() + "," + rect.Y.ToString(), new System.Drawing.Point(rect.X, rect.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
+                        CvInvoke.Rectangle(img, rect, new MCvScalar(0, 0, 255), 4);
                     }
                     
                     imageBox.Image = img;
-                    System.Windows.Forms.MessageBox.Show("Detected: " + rectangles.Count);
+                    //System.Windows.Forms.MessageBox.Show("Detected: " + rectangles.Count);
                 }
             }
 
@@ -338,6 +367,13 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             if (result == true)
             {
 
+                Bitmap bitmapImage = new Bitmap(System.Drawing.Image.FromFile(openFileDialog.FileName));
+                globalBitmap = (Bitmap)bitmapImage.Clone();
+                imageBox.Image = bitmapImage.ToImage<Bgr, byte>();
+                await ParseWebCamFrame(bitmapImage);
+
+
+                /*
                 var objectDetectionStrategy = new WinAIBasedObjectDetectionStrategy();
                 objectDetectionStrategy.Init();
 
@@ -363,7 +399,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
 
                 //Bitmap bitmap = SoftwareBitmapToBitmap(softwareBitmap);
-                
+                */
                 /*var root = System.AppDomain.CurrentDomain.BaseDirectory;
                 var fileName = "ObjectDetection\\ONNXModelBasedObjectDetection\\ONNXModel\\model.onnx";
                 var fullPath = Path.Combine(root, fileName);
@@ -562,5 +598,136 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             await inputVideoFrame.CopyToAsync(cropped_vf, cropBounds, null);
         }
         */
+
+
+
+        // Need to check
+        async Task ParseWebCamFrame(Bitmap bitmap)
+        {
+            if (customVisionPredictionEngine == null)
+                return;
+
+            var frame = new ImageInputData { Image = bitmap };
+            var filteredBoxes = DetectObjectsUsingModel(frame);
+
+          
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                DrawOverlays(filteredBoxes, bitmap.Height, bitmap.Width);
+            });
+         
+        }
+
+        public List<BoundingBox> DetectObjectsUsingModel(ImageInputData imageInputData)
+        {
+            var labels = customVisionPredictionEngine?.Predict(imageInputData).PredictedLabels;
+            var boundingBoxes = outputParser.ParseOutputs(labels, 0.1f);
+            boundingBoxes = boundingBoxes.Where(bb => bb.Label == "ball").ToList();
+            //var filteredBoxes = outputParser.FilterBoundingBoxes(boundingBoxes, 20, 0.5f);
+            var filteredBoxes = boundingBoxes;
+            return filteredBoxes;
+        }
+
+        // Need to check
+        private void DrawOverlays(List<BoundingBox> filteredBoxes, double originalHeight, double originalWidth)
+        {
+            var image = globalBitmap.ToImage<Bgr, byte>();
+            foreach (var box in filteredBoxes)
+            {
+                // process output boxes
+                double x = Math.Max(box.Dimensions.X, 0);
+                double y = Math.Max(box.Dimensions.Y, 0);
+                double width = Math.Min(originalWidth - x, box.Dimensions.Width);
+                double height = Math.Min(originalHeight - y, box.Dimensions.Height);
+
+                // fit to current image size
+                x = originalWidth * x / ImageSettings.imageWidth;
+                y = originalHeight * y / ImageSettings.imageHeight;
+                width = originalWidth * width / ImageSettings.imageWidth;
+                height = originalHeight * height / ImageSettings.imageHeight;
+
+                
+
+                var objBox = new Rectangle
+                {
+                    X = (int)Math.Round(x),
+                    Y = (int)Math.Round(y),
+                    Width = (int)Math.Round(width),
+                    Height = (int)Math.Round(height)
+                };
+
+                
+                CvInvoke.Rectangle(image, objBox, new MCvScalar(255, 0, 0), 4);
+            }
+            imageBox.Image = image;
+        }
+
+        private void DetectMLTensorFlow_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            bool? result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                Image<Bgr, byte> img;
+                Bitmap image = new Bitmap(System.Drawing.Image.FromFile(openFileDialog.FileName));
+                img = image.ToImage<Bgr, byte>();
+
+                var objectDetectionStrategy = new TensorFlowMLBasedObjectDetectionStrategy(new List<string>() { "ball, player" }, 0.1f);
+                var rectangles = objectDetectionStrategy.DetectAllObjects(image);
+
+                if (rectangles.Count == 0)
+                {
+                    System.Windows.Forms.MessageBox.Show("Not detected");
+                }
+                else
+                {
+                    foreach (var rect in rectangles)
+                    {
+                        //CvInvoke.PutText(img, rect.X.ToString() + "," + rect.Y.ToString(), new System.Drawing.Point(rect.X, rect.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
+                        CvInvoke.Rectangle(img, rect, new MCvScalar(0, 0, 255), 4);
+                    }
+
+                    imageBox.Image = img;
+                    //System.Windows.Forms.MessageBox.Show("Detected: " + rectangles.Count);
+                }
+            }
+
+
+        }
+
+        private void DetectTensorFlowSharp_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            bool? result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                var model = new TensorFlowSharpBasedObjectDetectionStrategy();
+                model.DetectAllObjects(openFileDialog.FileName);
+                /*
+                Image<Bgr, byte> img;
+                Bitmap image = new Bitmap(System.Drawing.Image.FromFile(openFileDialog.FileName));
+                img = image.ToImage<Bgr, byte>();
+
+                var objectDetectionStrategy = new TensorFlowMLBasedObjectDetectionStrategy(new List<string>() { "ball, player" }, 0.1f);
+                var rectangles = objectDetectionStrategy.DetectAllObjects(image);
+
+                if (rectangles.Count == 0)
+                {
+                    System.Windows.Forms.MessageBox.Show("Not detected");
+                }
+                else
+                {
+                    foreach (var rect in rectangles)
+                    {
+                        //CvInvoke.PutText(img, rect.X.ToString() + "," + rect.Y.ToString(), new System.Drawing.Point(rect.X, rect.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
+                        CvInvoke.Rectangle(img, rect, new MCvScalar(0, 0, 255), 4);
+                    }
+
+                    imageBox.Image = img;
+                    //System.Windows.Forms.MessageBox.Show("Detected: " + rectangles.Count);
+                }
+                */
+            }
+        }
     }
 }

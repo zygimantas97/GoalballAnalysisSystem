@@ -311,52 +311,40 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             }
         }
 
-        private async void sendFrame_Click(object sender, RoutedEventArgs e)
+        private void sendFrame_Click(object sender, RoutedEventArgs e)
         {
+
             OpenFileDialog openFileDialog = new OpenFileDialog();
+
             bool? result = openFileDialog.ShowDialog();
             if (result == true)
             {
+                var videoCapture = new VideoCapture(openFileDialog.FileName);
+                Mat firstFrame = new Mat();
+                videoCapture.Read(firstFrame);
                 Image<Bgr, byte> image = new Image<Bgr, byte>(openFileDialog.FileName);
-                HttpResponseMessage response = await ObjectDetection.APIBasedObjectDetectionStrategy.CVSPrediction.MakePredictionRequest(openFileDialog.FileName);
-                System.Windows.Forms.MessageBox.Show("Results was obtained from API request");
-                string jsonStrng = await response.Content.ReadAsStringAsync();
-                try
+                var convertedImage = (Bitmap)System.Drawing.Image.FromFile(openFileDialog.FileName);
+                APIBasedObjectDetectionStrategy a = new APIBasedObjectDetectionStrategy(new List<string>() { "ball", "player", "BottomLeft", "BottomRight", "TopLeft", "TopRight" }, 0.1f);
+
+                List<Rectangle> rectangles = new List<Rectangle>();
+                Task<List<Rectangle>> task = Task.Run<List<Rectangle>>(async () => await a.DetectAllObjects(firstFrame));
+                rectangles = task.Result;
+
+                if (rectangles.Count == 0)
                 {
-                    ApiPredictionModel parsedPredictionModel = JsonConvert.DeserializeObject<ApiPredictionModel>(jsonStrng); // Json convert to model class
-                    for (int i=0; i< parsedPredictionModel.Predictions.Length; i++)
+                    System.Windows.Forms.MessageBox.Show("Not detected");
+                }
+                else
+                {
+                    foreach (var rect in rectangles)
                     {
-                        if(parsedPredictionModel.Predictions[i].Probability > _apiProbabilityTreshold)
-                        {
-                            var rect = new Rectangle(Convert.ToInt32(parsedPredictionModel.Predictions[i].BoundingBox.Left * image.Width), Convert.ToInt32(parsedPredictionModel.Predictions[i].BoundingBox.Top * image.Height), Convert.ToInt32(parsedPredictionModel.Predictions[i].BoundingBox.Width * image.Width), Convert.ToInt32(parsedPredictionModel.Predictions[i].BoundingBox.Height * image.Height));
-
-                            if (parsedPredictionModel.Predictions[i].TagName == "BottomLeft" || parsedPredictionModel.Predictions[i].TagName == "BottomRight" || parsedPredictionModel.Predictions[i].TagName == "TopLeft" || parsedPredictionModel.Predictions[i].TagName == "TopRight")
-                            {
-                                CvInvoke.Rectangle(image, rect, new MCvScalar(255, 137, 0), 4);  //Melyni kampai
-                            }
-
-                            else if(parsedPredictionModel.Predictions[i].TagName == "player")
-                            {
-                                CvInvoke.Rectangle(image, rect, new MCvScalar(51, 255, 51), 4); //Zali zaidejai
-                            }
-
-                            else if (parsedPredictionModel.Predictions[i].TagName == "ball")
-                            {
-                                
-                                CvInvoke.Rectangle(image, rect, new MCvScalar(0, 0, 255), 4); //Raudonas kamuolys
-                            }
-
-                        }
-                        
+                        CvInvoke.PutText(image, rect.X.ToString() + "," + rect.Y.ToString(), new System.Drawing.Point(rect.X, rect.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
+                        CvInvoke.Rectangle(image, rect, new MCvScalar(255, 0, 0), 4);
                     }
 
                     imageBox.Image = image;
+                    System.Windows.Forms.MessageBox.Show("Detected: " + rectangles.Count);
                 }
-                catch(Exception exception)
-                {
-                    MessageBox.Show(exception.ToString());
-                }
-                
             }
         }
 

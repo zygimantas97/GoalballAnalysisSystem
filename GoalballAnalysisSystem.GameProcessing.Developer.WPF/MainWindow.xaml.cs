@@ -66,7 +66,6 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
         bool _isSelecting = false;
 
         private int _frameNo = 0;
-        private double _apiProbabilityTreshold = 0.2;
 
         private string _progress;
 
@@ -85,7 +84,8 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private EmguCVTrackersBasedMOT _playersTracker;
+        //private EmguCVTrackersBasedMOT _playersTracker;
+        private IMOT _playersTracker;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -132,7 +132,8 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 //IBallTracker ballTracker = new CNNBasedBallTracker();
 
                 IObjectDetectionStrategy ballTracker = new MLBasedObjectDetectionStrategy(new List<string> { "ball" });
-                _playersTracker = new EmguCVTrackersBasedMOT();
+                //_playersTracker = new EmguCVTrackersBasedMOT();
+                _playersTracker = new ONNXBasedMOT();
 
                 GameAnalyzer = new GameAnalyzer(openFileDialog.FileName,
                                                 new System.Drawing.Point(0,0),
@@ -680,7 +681,6 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 }
             }
 
-
         }
 
         private void DetectTensorFlowSharp_Click(object sender, RoutedEventArgs e)
@@ -715,6 +715,23 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                     //System.Windows.Forms.MessageBox.Show("Detected: " + rectangles.Count);
                 }
                 */
+            }
+        }
+
+        private void addMarkedPlayerONNX_CLick(object sender, RoutedEventArgs e)
+        {
+            if (_selectedROI != Rectangle.Empty)
+            {
+                double horizontalScale = GameAnalyzer.CurrentFrame.Width / imageBox.Width;
+                double verticalScale = GameAnalyzer.CurrentFrame.Height / imageBox.Height;
+
+                Rectangle rectangle = new Rectangle((int)(_selectedROI.X * horizontalScale),
+                                                    (int)(_selectedROI.Y * verticalScale),
+                                                    (int)(_selectedROI.Width * horizontalScale),
+                                                    (int)(_selectedROI.Height * verticalScale));
+                _playersTracker.AddTrackingObject(GameAnalyzer.CurrentFrame.Mat, rectangle);
+                _selectedROI = Rectangle.Empty;
+                imageBox.Invalidate();
             }
         }
     }

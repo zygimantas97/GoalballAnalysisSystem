@@ -2,6 +2,7 @@
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using GoalballAnalysisSystem.GameProcessing.BallTracker;
+using GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedObjectDetection.MLBasedObjectDetection;
 using GoalballAnalysisSystem.GameProcessing.PlayersTracker;
 using GoalballAnalysisSystem.GameProcessing.PlayFieldTracker;
 using System;
@@ -101,6 +102,9 @@ namespace GoalballAnalysisSystem.GameProcessing
 
         private void GameAnalyzerTick()
         {
+            MLBasedObjectDetectionStrategy objectDetectionStrategy = new MLBasedObjectDetectionStrategy(new List<string>() { "player" }, 0.1f);
+            int counter = 0;
+            List<Rectangle> playersRectangles = new List<Rectangle>();
             while (Status != GameAnalyzerStatus.Stopped)
             {
                 if(Status == GameAnalyzerStatus.Active)
@@ -108,36 +112,45 @@ namespace GoalballAnalysisSystem.GameProcessing
                     _videoCapture.Read(_cameraFeed);
                     if(_cameraFeed != null)
                     {
+                        counter++;
 
-
-                        /*
-                        List<Rectangle> playersRectangles = _playersTracker.UpdateTrackingObjects(_cameraFeed);
-                        
+                        if(counter >= 3) //testavimui
+                        {
+                            playersRectangles = _playersTracker.UpdateTrackingObjects(_cameraFeed);
+                            counter = 0;
+                        }
                         // Drawing bounding boxes of players
+
+                        List<Rectangle> playersRectangles2 = objectDetectionStrategy.DetectAllObjects(_cameraFeed.ToBitmap());
+                        foreach (var rectangle in playersRectangles2)
+                        {
+                            CvInvoke.Rectangle(_cameraFeed, rectangle, new MCvScalar(0, 0, 255), 3);
+                        }
+
                         foreach (var rectangle in playersRectangles)
                         {
-                            CvInvoke.Rectangle(_cameraFeed, rectangle, new MCvScalar(255, 0, 0), 3);
+                            CvInvoke.Rectangle(_cameraFeed, rectangle, new MCvScalar(255, 0, 0), 4);
                         }
-                        */
-                        Rectangle ballRectangle = _ballTracker.DetectObject(_cameraFeed);
+
+                        // Rectangle ballRectangle = _ballTracker.DetectObject(_cameraFeed);
 
                         //Drawing of coordinates in frame
-                        if (ballRectangle != Rectangle.Empty)
-                        {
-                            CvInvoke.PutText(_cameraFeed, ballRectangle.X.ToString() + "," + ballRectangle.Y.ToString(), new Point(ballRectangle.X, ballRectangle.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
-                            CvInvoke.Rectangle(_cameraFeed, ballRectangle, new MCvScalar(0, 0, 255), 5);
-                        }
+                        // if (ballRectangle != Rectangle.Empty)
+                        // {
+                        //     CvInvoke.PutText(_cameraFeed, ballRectangle.X.ToString() + "," + ballRectangle.Y.ToString(), new Point(ballRectangle.X, ballRectangle.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
+                        //      CvInvoke.Rectangle(_cameraFeed, ballRectangle, new MCvScalar(0, 0, 255), 5);
+                        // }
 
 
                         //***********GameZoneCorders COLOR BASED drawing for testing purposes
-                        IPlayFieldTracker playFieldTracker = new ColorBasedPlayFieldTracker();
-                        var gameZoneCorners = playFieldTracker.GetPlayFieldCorners(_cameraFeed);
-                        for (int i = 0; i < gameZoneCorners.Length; i++)
-                        {
-                            _cameraFeed = Drawing.EmguCVFiguresDrawing.DrawRectangle(_cameraFeed, gameZoneCorners[i], 25, 25);
-                        }
+                        // IPlayFieldTracker playFieldTracker = new ColorBasedPlayFieldTracker();
+                        // var gameZoneCorners = playFieldTracker.GetPlayFieldCorners(_cameraFeed);
+                        // for (int i = 0; i < gameZoneCorners.Length; i++)
+                        // {
+                        //     _cameraFeed = Drawing.EmguCVFiguresDrawing.DrawRectangle(_cameraFeed, gameZoneCorners[i], 25, 25);
+                        // }
                         //***********GameZoneCorders COLOR BASED drawing for testing purposes
-                        
+
 
                         CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();
                     }

@@ -81,8 +81,12 @@
                     HorizontalAlignment="Left"
                     Name="sendFrameONNX"
                     Click="sendFrameONNX_Click"/>
+            <Button Content="Add marked player"
+                    HorizontalAlignment="Left"
+                    Name="addMarkedPlayerONNX"
+                    Click="addMarkedPlayerONNX_CLick"/>
         </WrapPanel>
         
-        
     </Grid>
+    
 </Window>

@@ -21,6 +21,7 @@ namespace GoalballAnalysisSystem.API.Models
         [ForeignKey(nameof(GameId))]
         public Game Game { get; set; }
         
-        public ICollection<Projection> Throws { get; set; }
+        public ICollection<Projection> OffenseProjections { get; set; }
+        public ICollection<Projection> DefenseProjections { get; set; }
     }
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GoalballAnalysisSystem.API.Contracts.V1.Responses
+namespace GoalballAnalysisSystem.API.Contracts.Models
 {
-    public class ErrorModel
+    public class Error
     {
         public string Message { get; set; }
     }

@@ -19,7 +19,8 @@ namespace GoalballAnalysisSystem.API.Examples.Requests
                 Y2 = 2,
                 Speed = 0,
                 GameId = 1,
-                GamePlayerId = 1
+                OffenseGamePlayerId = null,
+                DefenseGamePlayerId = null
             };
         }
     }

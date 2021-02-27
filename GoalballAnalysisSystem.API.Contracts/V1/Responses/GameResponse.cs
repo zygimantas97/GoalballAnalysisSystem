@@ -13,5 +13,7 @@ namespace GoalballAnalysisSystem.API.Contracts.V1.Responses
         public string Comment { get; set; }
         public long? HomeTeamId { get; set; }
         public long? GuestTeamId { get; set; }
+        public TeamResponse HomeTeam { get; set; }
+        public TeamResponse GuestTeam { get; set; }
     }
 }

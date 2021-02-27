@@ -12,5 +12,6 @@ namespace GoalballAnalysisSystem.API.Contracts.V1.Responses
         public string Surname { get; set; }
         public string Country { get; set; }
         public string Description { get; set; }
+        public IEnumerable<TeamPlayerResponse> PlayerTeams { get; set; }
     }
 }

@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace GoalballAnalysisSystem.API.Contracts.V1.Responses
 {
-    public class GamePlayerResponse
+    public class TeamPlayerResponse
     {
-        public long Id { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
         public long TeamId { get; set; }
         public long PlayerId { get; set; }
-        public long GameId { get; set; }
+        public int Number { get; set; }
+        public long? RoleId { get; set; }
+        public TeamResponse Team { get; set; }
+        public PlayerResponse Player { get; set; }
     }
 }

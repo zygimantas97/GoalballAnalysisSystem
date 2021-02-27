@@ -14,6 +14,7 @@ namespace GoalballAnalysisSystem.API.Contracts.V1.Responses
         public int Y2 { get; set; }
         public double Speed { get; set; }
         public int GameId { get; set; }
-        public int? GamePlayerId { get; set; }
+        public int? OffenseGamePlayerId { get; set; }
+        public int? DefenseGamePlayerId { get; set; }
     }
 }

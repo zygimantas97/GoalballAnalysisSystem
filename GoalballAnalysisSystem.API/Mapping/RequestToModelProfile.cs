@@ -12,13 +12,13 @@ namespace GoalballAnalysisSystem.API.Mapping
     {
         public RequestToModelProfile()
         {
-            CreateMap<PlayerRequest, Player>();
-            CreateMap<TeamRequest, Team>();
-            CreateMap<TeamPlayerRequest, TeamPlayer>();
-            CreateMap<GameRequest, Game>();
             CreateMap<CreateGamePlayerRequest, GamePlayer>();
-            CreateMap<UpdateGamePlayerRequest, GamePlayer>();
+            CreateMap<GameRequest, Game>();
+            CreateMap<PlayerRequest, Player>();
             CreateMap<ProjectionRequest, Projection>();
+            CreateMap<TeamPlayerRequest, TeamPlayer>();
+            CreateMap<TeamRequest, Team>();
+            CreateMap<UpdateGamePlayerRequest, GamePlayer>();
         }
     }
 }

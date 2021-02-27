@@ -14,6 +14,7 @@ using GoalballAnalysisSystem.API.Extensions;
 using GoalballAnalysisSystem.API.Contracts.V1.Responses;
 using Microsoft.VisualBasic.CompilerServices;
 using GoalballAnalysisSystem.API.Contracts.V1.Requests;
+using GoalballAnalysisSystem.API.Contracts.Models;
 
 namespace GoalballAnalysisSystem.API.Controllers.V1
 {
@@ -39,7 +40,9 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             var userId = HttpContext.GetUserId();
             return Ok(_mapper.Map<List<TeamPlayerResponse>>(await _context.TeamPlayers
                 .Include(tp => tp.Team)
+                .Include(tp => tp.Player)
                 .Where(tp => tp.Team.IdentityUserId == userId && tp.TeamId == teamId)
+                .AsNoTracking()
                 .ToListAsync()));
         }
 
@@ -53,8 +56,10 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         {
             var userId = HttpContext.GetUserId();
             return Ok(_mapper.Map<List<TeamPlayerResponse>>(await _context.TeamPlayers
+                .Include(tp => tp.Team)
                 .Include(tp => tp.Player)
                 .Where(tp => tp.Player.IdentityUserId == userId && tp.PlayerId == playerId)
+                .AsNoTracking()
                 .ToListAsync()));
         }
 
@@ -72,11 +77,12 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             var teamPlayer = await _context.TeamPlayers
                 .Include(tp => tp.Team)
                 .Include(tp => tp.Player)
+                .AsNoTracking()
                 .SingleOrDefaultAsync(tp => tp.Team.IdentityUserId == userId && tp.TeamId == teamId && tp.Player.IdentityUserId == userId && tp.PlayerId == playerId);
 
             if (teamPlayer == null)
             {
-                return NotFound(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to find team player by given Ids" } } });
+                return NotFound(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to find team player by given Ids" } } });
             }
 
             return Ok(_mapper.Map<TeamPlayerResponse>(teamPlayer));
@@ -101,7 +107,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
 
             if(teamPlayer == null)
             {
-                return NotFound(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to find team player by given Ids" } } });
+                return NotFound(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to find team player by given Ids" } } });
             }
 
             var playerRole = await _context.PlayerRoles
@@ -109,12 +115,12 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
                 .SingleOrDefaultAsync(pr => pr.Id == request.RoleId);
             if(playerRole == null && request.RoleId != null)
             {
-                return NotFound(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to find player role by given Id" } } });
+                return NotFound(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to find player role by given Id" } } });
             }
 
             if(request.Number < 0)
             {
-                return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to update team player: wrong team players's number"} } });
+                return BadRequest(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to update team player: wrong team players's number"} } });
             }
 
             var updateTeamPlayer = _mapper.Map<TeamPlayer>(request);
@@ -145,7 +151,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
                 .SingleOrDefaultAsync(t => t.Id == teamId && t.IdentityUserId == userId);
             if(team == null)
             {
-                return NotFound(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to find team by given Id"} } });
+                return NotFound(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to find team by given Id"} } });
             }
 
             var player = await _context.Players
@@ -153,7 +159,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
                 .SingleOrDefaultAsync(p => p.Id == playerId && p.IdentityUserId == userId);
             if(player == null)
             {
-                return NotFound(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to find player by given Id"} } });
+                return NotFound(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to find player by given Id"} } });
             }
 
             var existingTeamPlayer = await _context.TeamPlayers
@@ -162,7 +168,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
                 .SingleOrDefaultAsync(tp => tp.Team.IdentityUserId == userId && tp.TeamId == teamId && tp.PlayerId == playerId);
             if(existingTeamPlayer != null)
             {
-                return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to create team player: this team player already exists"} } });
+                return BadRequest(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to create team player: this team player already exists"} } });
             }
 
             var playerRole = await _context.PlayerRoles
@@ -170,12 +176,12 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
                 .SingleOrDefaultAsync(pr => pr.Id == request.RoleId);
             if (playerRole == null && request.RoleId != null)
             {
-                return NotFound(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to find player role by given Id" } } });
+                return NotFound(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to find player role by given Id" } } });
             }
 
             if (request.Number < 0)
             {
-                return BadRequest(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to create team player: wrong team players's number" } } });
+                return BadRequest(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to create team player: wrong team players's number" } } });
             }
 
             var teamPlayer = _mapper.Map<TeamPlayer>(request);
@@ -183,7 +189,9 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             teamPlayer.PlayerId = playerId;
 
             _context.TeamPlayers.Add(teamPlayer);
-            var created = await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            teamPlayer.Team = team;
+            teamPlayer.Player = player;
             return CreatedAtAction("GetTeamPlayer", new { teamId = teamPlayer.TeamId, playerId = teamPlayer.PlayerId }, _mapper.Map<TeamPlayerResponse>(teamPlayer));
         }
 
@@ -206,7 +214,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
                 .SingleOrDefaultAsync(tp => tp.Team.IdentityUserId == userId && tp.TeamId == teamId && tp.Player.IdentityUserId == userId && tp.PlayerId == playerId);
             if (teamPlayer == null)
             {
-                return NotFound(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to find team player by given Ids"} } });
+                return NotFound(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to find team player by given Ids"} } });
             }
 
             _context.TeamPlayers.Remove(teamPlayer);

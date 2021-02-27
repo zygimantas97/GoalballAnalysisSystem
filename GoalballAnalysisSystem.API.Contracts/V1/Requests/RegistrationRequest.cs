@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GoalballAnalysisSystem.API.Contracts.V1.Requests
 {
-    public class UserRequest
+    public class RegistrationRequest
     {
         public string UserName { get; set; }
         [EmailAddress]

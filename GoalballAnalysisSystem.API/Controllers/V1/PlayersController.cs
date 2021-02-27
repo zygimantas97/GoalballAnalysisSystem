@@ -13,6 +13,7 @@ using AutoMapper;
 using GoalballAnalysisSystem.API.Extensions;
 using GoalballAnalysisSystem.API.Contracts.V1.Responses;
 using GoalballAnalysisSystem.API.Contracts.V1.Requests;
+using GoalballAnalysisSystem.API.Contracts.Models;
 
 namespace GoalballAnalysisSystem.API.Controllers.V1
 {
@@ -36,7 +37,11 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         public async Task<IActionResult> GetPlayers()
         {
             var userId = HttpContext.GetUserId();
-            return Ok(_mapper.Map<List<PlayerResponse>>(await _context.Players.Where(p => p.IdentityUserId == userId).ToListAsync()));
+            return Ok(_mapper.Map<List<PlayerResponse>>(await _context.Players
+                .Include(p => p.PlayerTeams).ThenInclude(pt => pt.Team)
+                .Where(p => p.IdentityUserId == userId)
+                .AsNoTracking()
+                .ToListAsync()));
         }
 
         /// <summary>
@@ -51,11 +56,13 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         {
             var userId = HttpContext.GetUserId();
             var player = await _context.Players
+                .Include(p => p.PlayerTeams).ThenInclude(pt => pt.Team)
+                .AsNoTracking()
                 .SingleOrDefaultAsync(p => p.Id == playerId && p.IdentityUserId == userId);
 
             if (player == null)
             {
-                return NotFound(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to find user's player by given Id" } } });
+                return NotFound(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to find user's player by given Id" } } });
             }
 
             return Ok(_mapper.Map<PlayerResponse>(player));
@@ -77,7 +84,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
 
             if(player == null)
             {
-                return NotFound(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to find user's player by given Id" } } });
+                return NotFound(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to find user's player by given Id" } } });
             }
 
             var updatePlayer = _mapper.Map<Player>(request);
@@ -117,12 +124,12 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         {
             var userId = HttpContext.GetUserId();
             var player = await _context.Players
-                .Include(p => p.PlayerTeams)
+                .Include(p => p.PlayerTeams).ThenInclude(pt => pt.Team)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(p => p.Id == playerId && p.IdentityUserId == userId);
             if (player == null)
             {
-                return NotFound(new ErrorResponse { Errors = new List<ErrorModel> { new ErrorModel { Message = "Unable to find player by given Id" } } });
+                return NotFound(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to find player by given Id" } } });
             }
 
             _context.Players.Remove(player);

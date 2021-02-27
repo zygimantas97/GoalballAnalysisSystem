@@ -1,4 +1,6 @@
-﻿using GoalballAnalysisSystem.API.Contracts.V1.Responses;
+﻿using GoalballAnalysisSystem.API.Contracts.Models;
+using GoalballAnalysisSystem.API.Contracts.V1.Responses;
+using GoalballAnalysisSystem.API.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,13 @@ namespace GoalballAnalysisSystem.API.Examples.Responses
         {
             return new ErrorResponse
             {
-                Errors = new List<ErrorModel> { new ErrorModel { Message = "Error message" } }
+                Errors = new List<Error>
+                {
+                    new Error
+                    {
+                        Message = "Error message"
+                    }
+                }
             };
         }
     }

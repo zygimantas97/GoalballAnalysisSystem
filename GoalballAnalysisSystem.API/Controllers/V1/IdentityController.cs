@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GoalballAnalysisSystem.API.Contracts.Models;
 using GoalballAnalysisSystem.API.Contracts.V1.Requests;
 using GoalballAnalysisSystem.API.Contracts.V1.Responses;
+using GoalballAnalysisSystem.API.Models;
 using GoalballAnalysisSystem.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,22 +31,22 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         [HttpPost("Register")]
         [ProducesResponseType(typeof(AuthenticationResponse), 200)]
         [ProducesResponseType(typeof(ErrorResponse), 400)]
-        public async Task<IActionResult> Register(UserRequest request)
+        public async Task<IActionResult> Register(RegistrationRequest request)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(new ErrorResponse
-            //    {
-            //        Errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => new ErrorModel { Message = e.ErrorMessage })).ToList()
-            //    });
-            //}
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ErrorResponse
+                {
+                    Errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => new Error { Message = e.ErrorMessage })).ToList()
+                });
+            }
 
             var _authResponse = await _identityService.RegisterAsync(request.Email, request.Password, request.UserName);
             if (!_authResponse.Success)
             {
                 return BadRequest(new ErrorResponse
                 {
-                    Errors = _authResponse.Errors.Select(e => new ErrorModel { Message = e }).ToList()
+                    Errors = _authResponse.Errors.Select(e => new Error { Message = e }).ToList()
                 });
             }
 
@@ -63,22 +65,22 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         [HttpPost("Login")]
         [ProducesResponseType(typeof(AuthenticationResponse), 200)]
         [ProducesResponseType(typeof(ErrorResponse), 400)]
-        public async Task<IActionResult> Login(UserRequest request)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(new ErrorResponse
-            //    {
-            //        Errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => new ErrorModel { Message = e.ErrorMessage })).ToList()
-            //    });
-            //}
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ErrorResponse
+                {
+                    Errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => new Error { Message = e.ErrorMessage })).ToList()
+                });
+            }
 
             var _authResponse = await _identityService.LoginAsync(request.Email, request.Password);
             if (!_authResponse.Success)
             {
                 return BadRequest(new ErrorResponse
                 {
-                    Errors = _authResponse.Errors.Select(e => new ErrorModel { Message = e }).ToList()
+                    Errors = _authResponse.Errors.Select(e => new Error { Message = e }).ToList()
                 });
             }
 
@@ -104,7 +106,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             {
                 return BadRequest(new ErrorResponse
                 {
-                    Errors = _authResponse.Errors.Select(e => new ErrorModel { Message = e }).ToList()
+                    Errors = _authResponse.Errors.Select(e => new Error { Message = e }).ToList()
                 });
             }
 

@@ -17,7 +17,26 @@ namespace GoalballAnalysisSystem.API.Examples.Responses
                 Name = "Povilas",
                 Surname = "Povilaitis",
                 Country = "LTU",
-                Description = "Very good player"
+                Description = "Very good player",
+                PlayerTeams = new List<TeamPlayerResponse>()
+                {
+                    new TeamPlayerResponse
+                    {
+                        TeamId = 1,
+                        PlayerId = 1,
+                        Number = 1,
+                        RoleId = 1,
+                        Team = new TeamResponse
+                        {
+                            Id = 1,
+                            Name = "Lithuania",
+                            Country = "LTU",
+                            Description = "Very good team",
+                            TeamPlayers = null
+                        },
+                        Player = null
+                    }
+                }
             };
         }
     }

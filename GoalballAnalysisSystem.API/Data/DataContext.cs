@@ -108,16 +108,22 @@ namespace GoalballAnalysisSystem.API.Data
             builder.Entity<Projection>(entity =>
             {
                 entity.HasOne(e => e.Game)
-                    .WithMany(f => f.Throws)
+                    .WithMany(f => f.Projections)
                     .HasForeignKey(e => e.GameId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FKC_Throw_Game");
+                    .HasConstraintName("FKC_Projection_Game");
 
-                entity.HasOne(e => e.GamePlayer)
-                    .WithMany(f => f.Throws)
-                    .HasForeignKey(e => e.GamePlayerId)
-                    .OnDelete(DeleteBehavior.SetNull)
-                    .HasConstraintName("FKC_Throw_GamePlayer");
+                entity.HasOne(e => e.OffenseGamePlayer)
+                    .WithMany(f => f.OffenseProjections)
+                    .HasForeignKey(e => e.OffenseGamePlayerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FKC_Projection_OffenseGamePlayer");
+
+                entity.HasOne(e => e.DefenseGamePlayer)
+                    .WithMany(f => f.DefenseProjections)
+                    .HasForeignKey(e => e.DefenseGamePlayerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FKC_Projection_DefenseGamePlayer");
             });
 
             builder.Entity<IdentityRole>().HasData(
@@ -156,7 +162,5 @@ namespace GoalballAnalysisSystem.API.Data
 
             base.OnModelCreating(builder);
         }
-
-        public DbSet<GoalballAnalysisSystem.API.Models.Projection> Throw { get; set; }
     }
 }

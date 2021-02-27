@@ -17,11 +17,14 @@ namespace GoalballAnalysisSystem.API.Models
         public int Y2 { get; set; }
         public double Speed { get; set; }
         public long GameId { get; set; }
-        public long? GamePlayerId { get; set; }
+        public long? OffenseGamePlayerId { get; set; }
+        public long? DefenseGamePlayerId { get; set; }
 
         [ForeignKey(nameof(GameId))]
         public Game Game { get; set; }
-        [ForeignKey(nameof(GamePlayerId))]
-        public GamePlayer GamePlayer { get; set; }
+        [ForeignKey(nameof(OffenseGamePlayerId))]
+        public GamePlayer OffenseGamePlayer { get; set; }
+        [ForeignKey(nameof(DefenseGamePlayerId))]
+        public GamePlayer DefenseGamePlayer { get; set; }
     }
 }

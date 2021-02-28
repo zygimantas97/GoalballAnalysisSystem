@@ -14,7 +14,8 @@ namespace GoalballAnalysisSystem.API.Examples.Responses
             return new AuthenticationResponse
             {
                 Token = "Your authentication token",
-                RefreshToken = "Your refresh token"
+                RefreshToken = "Your refresh token",
+                ExpirityDate = DateTime.Now.AddMinutes(10)
             };
         }
     }

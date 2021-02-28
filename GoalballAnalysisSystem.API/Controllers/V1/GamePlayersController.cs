@@ -99,7 +99,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         [HttpPut("{gamePlayerId}")]
         [ProducesResponseType(typeof(ErrorResponse), 400)]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
-        public async Task<IActionResult> PutGamePlayer(long gamePlayerId, UpdateGamePlayerRequest request)
+        public async Task<IActionResult> UpdateGamePlayer(long gamePlayerId, UpdateGamePlayerRequest request)
         {
             var userId = HttpContext.GetUserId();
             var gamePlayer = await _context.GamePlayers

@@ -276,7 +276,7 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             var gamePlayersController = CreateController<GamePlayersController>();
 
             // Act
-            var actionResult = await gamePlayersController.PutGamePlayer(gamePlayer.Id,updateGamePlayerRequest);
+            var actionResult = await gamePlayersController.UpdateGamePlayer(gamePlayer.Id,updateGamePlayerRequest);
             var statusCodeResult = actionResult as StatusCodeResult;
 
             // Assert
@@ -303,7 +303,7 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             var gamePlayersController = CreateController<GamePlayersController>();
 
             // Act
-            var actionResult = await gamePlayersController.PutGamePlayer(gamePlayerId, updateGamePlayerRequest);
+            var actionResult = await gamePlayersController.UpdateGamePlayer(gamePlayerId, updateGamePlayerRequest);
             var objectResult = actionResult as ObjectResult;
 
             // Assert
@@ -352,7 +352,7 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             var gamePlayersController = CreateController<GamePlayersController>();
 
             // Act
-            var actionResult = await gamePlayersController.PutGamePlayer(gamePlayer.Id, updateGamePlayerRequest);
+            var actionResult = await gamePlayersController.UpdateGamePlayer(gamePlayer.Id, updateGamePlayerRequest);
             var objectResult = actionResult as ObjectResult;
 
             // Assert

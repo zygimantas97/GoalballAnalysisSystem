@@ -46,7 +46,7 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             var teamPlayersController = CreateController<TeamPlayersController>();
 
             // Act
-            var actionResult = await teamPlayersController.GetTeamPlayersByTeamId(team.Id);
+            var actionResult = await teamPlayersController.GetTeamPlayersByTeam(team.Id);
             var objectResult = actionResult as ObjectResult;
 
             // Assert
@@ -66,7 +66,7 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             var teamPlayersController = CreateController<TeamPlayersController>();
 
             // Act
-            var actionResult = await teamPlayersController.GetTeamPlayersByTeamId(teamId);
+            var actionResult = await teamPlayersController.GetTeamPlayersByTeam(teamId);
             var objectResult = actionResult as ObjectResult;
 
             // Assert
@@ -105,7 +105,7 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             var teamPlayersController = CreateController<TeamPlayersController>();
 
             // Act
-            var actionResult = await teamPlayersController.GetTeamPlayersByPlayerId(player.Id);
+            var actionResult = await teamPlayersController.GetTeamPlayersByPlayer(player.Id);
             var objectResult = actionResult as ObjectResult;
 
             // Assert
@@ -125,7 +125,7 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             var teamPlayersController = CreateController<TeamPlayersController>();
 
             // Act
-            var actionResult = await teamPlayersController.GetTeamPlayersByPlayerId(playerId);
+            var actionResult = await teamPlayersController.GetTeamPlayersByPlayer(playerId);
             var objectResult = actionResult as ObjectResult;
 
             // Assert

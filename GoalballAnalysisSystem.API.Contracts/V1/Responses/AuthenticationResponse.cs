@@ -9,5 +9,6 @@ namespace GoalballAnalysisSystem.API.Contracts.V1.Responses
     {
         public string Token { get; set; }
         public string RefreshToken { get; set; }
+        public DateTime ExpirityDate { get; set; }
     }
 }

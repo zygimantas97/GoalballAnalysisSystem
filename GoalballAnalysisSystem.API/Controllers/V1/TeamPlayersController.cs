@@ -35,7 +35,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         /// <response code="200">Returns all team players</response>
         [HttpGet("ByTeam/{teamId}")]
         [ProducesResponseType(typeof(TeamPlayerResponse), 200)]
-        public async Task<IActionResult> GetTeamPlayersByTeamId(long teamId)
+        public async Task<IActionResult> GetTeamPlayersByTeam(long teamId)
         {
             var userId = HttpContext.GetUserId();
             return Ok(_mapper.Map<List<TeamPlayerResponse>>(await _context.TeamPlayers
@@ -52,7 +52,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         /// <response code="200">Returns all team players</response>
         [HttpGet("ByPlayer/{playerId}")]
         [ProducesResponseType(typeof(TeamPlayerResponse), 200)]
-        public async Task<IActionResult> GetTeamPlayersByPlayerId(long playerId)
+        public async Task<IActionResult> GetTeamPlayersByPlayer(long playerId)
         {
             var userId = HttpContext.GetUserId();
             return Ok(_mapper.Map<List<TeamPlayerResponse>>(await _context.TeamPlayers

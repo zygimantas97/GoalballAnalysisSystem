@@ -53,7 +53,8 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             return Ok(new AuthenticationResponse
             {
                 Token = _authResponse.Token,
-                RefreshToken = _authResponse.RefreshToken
+                RefreshToken = _authResponse.RefreshToken,
+                ExpirityDate = _authResponse.ExpirityDate
             });
         }
 
@@ -87,7 +88,8 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             return Ok(new AuthenticationResponse
             {
                 Token = _authResponse.Token,
-                RefreshToken = _authResponse.RefreshToken
+                RefreshToken = _authResponse.RefreshToken,
+                ExpirityDate = _authResponse.ExpirityDate
             });
         }
 
@@ -113,7 +115,8 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             return Ok(new AuthenticationResponse
             {
                 Token = _authResponse.Token,
-                RefreshToken = _authResponse.RefreshToken
+                RefreshToken = _authResponse.RefreshToken,
+                ExpirityDate = _authResponse.ExpirityDate
             });
         }
     }

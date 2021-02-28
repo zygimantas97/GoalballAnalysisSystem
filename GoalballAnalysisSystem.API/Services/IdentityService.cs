@@ -233,7 +233,8 @@ namespace GoalballAnalysisSystem.API.Services
             {
                 Success = true,
                 Token = tokenHandler.WriteToken(token),
-                RefreshToken = refreshToken.Token
+                RefreshToken = refreshToken.Token,
+                ExpirityDate = DateTime.Now.AddSeconds((int)_jwtSettings.TokenLifetime.TotalSeconds)
             };
         }
     }

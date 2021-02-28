@@ -7,36 +7,36 @@ using System.Threading.Tasks;
 
 namespace GoalballAnalysisSystem.WPF.Services
 {
-    public class PlayersService : BaseService
+    public class GamesService : BaseService
     {
         private readonly IIdentityService _identityService;
 
-        public PlayersService(IIdentityService identityService)
+        public GamesService(IIdentityService identityService)
         {
             _identityService = identityService;
         }
 
-        public async Task<List<PlayerResponse>> GetPlayersAsync()
+        public async Task<List<GameResponse>> GetGamesAsync()
         {
             return null;
         }
 
-        public async Task<PlayerResponse> GetPlayerAsync(long playerId)
+        public async Task<GameResponse> GetGameAsync(long gameId)
         {
             return null;
         }
 
-        public async Task UpdatePlayerAsync(long playerId, PlayerRequest request)
+        public async Task UpdateGameAsync(long gameId, GameRequest request)
         {
-
+            
         }
 
-        public async Task<PlayerResponse> CreatePlayerAsync(PlayerRequest request)
+        public async Task<GameResponse> CreateGameAsync(GameRequest request)
         {
             return null;
         }
 
-        public async Task<PlayerResponse> DeletePlayerAsync(long playerId)
+        public async Task<GameResponse> DeleteGameAsync(long gameId)
         {
             return null;
         }

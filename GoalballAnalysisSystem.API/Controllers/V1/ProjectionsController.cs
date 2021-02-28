@@ -34,7 +34,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         /// <response code="200">Returns all projections</response>
         [HttpGet("ByGame/{gameId}")]
         [ProducesResponseType(typeof(ProjectionResponse), 200)]
-        public async Task<IActionResult> GetProjectionsByGameId(long gameId)
+        public async Task<IActionResult> GetProjectionsByGame(long gameId)
         {
             var userId = HttpContext.GetUserId();
             return Ok(_mapper.Map<List<ProjectionResponse>>(await _context.Projections
@@ -49,7 +49,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         /// <response code="200">Returns all projections</response>
         [HttpGet("ByGamePlayer/{gamePlayerId}")]
         [ProducesResponseType(typeof(ProjectionResponse), 200)]
-        public async Task<IActionResult> GetProjectionsByGamePlayerId(long gamePlayerId)
+        public async Task<IActionResult> GetProjectionsByGamePlayer(long gamePlayerId)
         {
             var userId = HttpContext.GetUserId();
             return Ok(_mapper.Map<List<ProjectionResponse>>(await _context.Projections
@@ -88,7 +88,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
         /// <response code="404">Unable to find projection by given Id</response>
         [HttpPut("{projectionId}")]
         [ProducesResponseType(typeof(ErrorResponse), 404)]
-        public async Task<IActionResult> UpdateProjectionw(long projectionId, ProjectionRequest request)
+        public async Task<IActionResult> UpdateProjection(long projectionId, ProjectionRequest request)
         {
             var userId = HttpContext.GetUserId();
             var projection = await _context.Projections

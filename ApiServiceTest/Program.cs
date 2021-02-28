@@ -16,29 +16,31 @@ namespace ApiServiceTest
         static async Task MainAsync()
         {
             var identityService = new IdentityService();
-            var teamsService = new TeamsService(identityService);
+            var playersService = new PlayersService(identityService);
             try
             {
                 await identityService.LoginAsync("user@gas.com", "Password123!");
-                var createResponse = await teamsService.CreateTeamAsync(new TeamRequest
+                var createResponse = await playersService.CreatePlayerAsync(new PlayerRequest
                 {
-                    Name = "Germany",
+                    Name = "Simas",
+                    Surname = "Simaitis",
                     Country = "GER",
-                    Description = "Good team"
+                    Description = "Good player"
                 });
-                var getResponse = await teamsService.GetTeamAsync(createResponse.Id);
+                var getResponse = await playersService.GetPlayerAsync(createResponse.Id);
                 Console.WriteLine(getResponse.Name);
-                await teamsService.UpdateTeamAsync(getResponse.Id, new TeamRequest
+                await playersService.UpdatePlayerAsync(getResponse.Id, new PlayerRequest
                 {
-                    Name = "Germany update",
+                    Name = "Simas update",
+                    Surname = "Simaitis",
                     Country = "GER",
-                    Description = "Good team"
+                    Description = "Good player"
                 });
-                var deleteResponse = await teamsService.DeleteTeamAsync(createResponse.Id);
+                var deleteResponse = await playersService.DeletePlayerAsync(createResponse.Id);
                 Console.WriteLine(deleteResponse.Name);
 
-                var getTeamsResponse = await teamsService.GetTeamsAsync();
-                Console.WriteLine(getTeamsResponse.Count);
+                var getAllResponse = await playersService.GetPlayersAsync();
+                Console.WriteLine(getAllResponse.Count);
                 Console.WriteLine("Ok");
             }
             catch(Exception e)

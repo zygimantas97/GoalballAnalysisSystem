@@ -16,53 +16,34 @@ namespace ApiServiceTest
         static async Task MainAsync()
         {
             var identityService = new IdentityService();
-            var teamsService = new TeamsService(identityService);
-            var playersService = new PlayersService(identityService);
-            var teamPlayersService = new TeamPlayersService(identityService);
+            var gamesService = new GamesService(identityService);
             try
             {
                 await identityService.LoginAsync("user@gas.com", "Password123!");
-                var teamResponse = await teamsService.CreateTeamAsync(new TeamRequest
+
+                var createResponse = await gamesService.CreateGameAsync(new GameRequest
                 {
-                    Name = "USA",
-                    Country = "USA",
-                    Description = "Very good team"
+                    Title = "Test Game",
+                    Comment = "Test Game",
+                    HomeTeamId = null,
+                    GuestTeamId = null
                 });
-                var playerResponse = await playersService.CreatePlayerAsync(new PlayerRequest
+                var getResponse = await gamesService.GetGameAsync(createResponse.Id);
+                Console.WriteLine(getResponse.Title);
+
+                var getAllResponse = await gamesService.GetGamesAsync();
+                Console.WriteLine(getAllResponse.Count);
+
+                await gamesService.UpdateGameAsync(getResponse.Id, new GameRequest
                 {
-                    Name = "Simas",
-                    Surname = "Simaitis",
-                    Country = "USA",
-                    Description = "Good player"
+                    Title = "Test Game updated",
+                    Comment = "Test Game",
+                    HomeTeamId = null,
+                    GuestTeamId = null
                 });
-                var createTeamPlayerResponse = await teamPlayersService.CreateTeamPlayerAsync(
-                    teamResponse.Id,
-                    playerResponse.Id,
-                    new TeamPlayerRequest
-                    {
-                        RoleId = 1,
-                        Number = 11
-                    });
-                var getTeamPlayerResponse = await teamPlayersService.GetTeamPlayerAsync(
-                    createTeamPlayerResponse.TeamId,
-                    createTeamPlayerResponse.PlayerId);
-                Console.WriteLine(getTeamPlayerResponse.Number);
-                var getTeamPlayerByTeamResponse = await teamPlayersService.GetTeamPlayersByTeamAsync(teamResponse.Id);
-                Console.WriteLine(getTeamPlayerByTeamResponse.Count);
-                var getTeamPlayerByPlayerResponse = await teamPlayersService.GetTeamPlayersByPlayerAsync(playerResponse.Id);
-                Console.WriteLine(getTeamPlayerByPlayerResponse.Count);
-                await teamPlayersService.UpdateTeamPlayerAsync(
-                    createTeamPlayerResponse.TeamId,
-                    createTeamPlayerResponse.PlayerId,
-                    new TeamPlayerRequest
-                    {
-                        RoleId = 1,
-                        Number = 111
-                    });
-                var deleteTeamPlayerResponse = await teamPlayersService.DeleteTeamPlayerAsync(
-                    getTeamPlayerResponse.TeamId,
-                    getTeamPlayerResponse.PlayerId);
-                Console.WriteLine(deleteTeamPlayerResponse.Number);
+                var deleteResponse = await gamesService.DeleteGameAsync(getResponse.Id);
+                Console.WriteLine(deleteResponse.Title);
+
                 Console.WriteLine("Ok");
             }
             catch(Exception e)

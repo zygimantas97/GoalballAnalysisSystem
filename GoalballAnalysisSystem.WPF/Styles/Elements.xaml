@@ -11,20 +11,28 @@
         <Setter Property="Margin" Value="10"/>
         <Setter Property="Effect">
             <Setter.Value>
-                <DropShadowEffect  Color="LightGray"
-                                   BlurRadius="3"/>
+                <DropShadowEffect  Color="#edf1f7"
+                                   BlurRadius="2"/>
             </Setter.Value>
         </Setter>
     </Style>
 
     <Style x:Key="HeaderOneText" TargetType="TextBlock">
         <Setter Property="FontSize" Value="33"/>
-        
-
+        <Setter Property="FontFamily" Value="Monospace"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
     <Style x:Key="HeaderTwoText" TargetType="TextBlock">
         <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontFamily" Value="Monospace"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <Style x:Key="RegularText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontFamily" Value="Monospace"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
     <Style x:Key="BigButtonElement" TargetType="Button">
@@ -45,6 +53,23 @@
                 <Setter Property="Background" Value="{StaticResource PrimaryButtonBrush}"/>
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+
+    <Style x:Key="DarkerStackPanel" TargetType="StackPanel">
+        <Setter Property="Background" Value="{StaticResource PrimaryBackgroundBrush}"/>
+    </Style>
+
+    <Style x:Key="LighterStackPanel" TargetType="StackPanel">
+        <Setter Property="Background" Value="{StaticResource ThirdBackgroundBrush}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource PrimaryBackgroundBrush}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="False">
+                <Setter Property="Background" Value="{StaticResource ThirdBackgroundBrush}" />
+            </Trigger>
+        </Style.Triggers>    
     </Style>
 
 </ResourceDictionary>

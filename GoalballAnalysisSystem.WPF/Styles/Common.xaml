@@ -8,8 +8,9 @@
     <!--Brushes-->
     <SolidColorBrush x:Key="PrimaryButtonBrush" Color="{StaticResource PrimaryButtonColor}"/>
     <SolidColorBrush x:Key="SecondaryButtonBrush" Color="{StaticResource SecondaryButtonColor}"/>
-    <SolidColorBrush x:Key="PrimaryBackgroundBrush" Color="DarkGray"/>
-    <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="LightGray"/>
+    <SolidColorBrush x:Key="PrimaryBackgroundBrush" Color="#D9E1E2"/>
+    <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="#F3F3ED"/>
+    <SolidColorBrush x:Key="ThirdBackgroundBrush" Color="White"/>
 
     <!--Text Boxes-->
     <Style x:Key="TextBoxBase" TargetType="Control">
@@ -54,5 +55,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
 
 </ResourceDictionary>

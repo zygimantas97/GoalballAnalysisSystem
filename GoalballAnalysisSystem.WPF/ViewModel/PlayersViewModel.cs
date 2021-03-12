@@ -23,7 +23,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         public ICommand DeleteSelectedPlayer { get; }
         public ICommand AddNewPlayerPlayer { get; }
 
-        private readonly ObservableCollection<Player> listOfItems;
+        private readonly ObservableCollection<Player> _listOfPlayers;
 
         private Player _selectedPlayer;
         public Player SelectedPlayer
@@ -39,17 +39,17 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
         }
 
-        public ObservableCollection<Player> ListOfItems
+        public ObservableCollection<Player> ListOfPlayers
         {
-            get { return listOfItems; }
+            get { return _listOfPlayers; }
         }
 
 
         public PlayersViewModel()
         {
-            listOfItems = AddFakeData();
-            if (listOfItems.Count != 0)
-                SelectedPlayer = listOfItems[0];
+            _listOfPlayers = AddFakeData();
+            if (_listOfPlayers.Count != 0)
+                SelectedPlayer = _listOfPlayers[0];
 
 
 
@@ -75,7 +75,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
         public void SelectPlayer(int Id)
         {
-            foreach (Player item in listOfItems)
+            foreach (Player item in _listOfPlayers)
             {
                 if(item.Id == Id)
                 {

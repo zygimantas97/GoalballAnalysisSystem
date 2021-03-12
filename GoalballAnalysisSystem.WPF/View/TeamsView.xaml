@@ -8,37 +8,50 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="620"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
- 
-            <TextBlock Grid.Column="0"
-                       Text="Teams"
-                       FontSize="48"
-                       FontWeight="Bold"/>
-            <Button Grid.Column="1"
-                    Content="Create new"
-                    HorizontalAlignment="Right"/>
-        </Grid>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
 
-            <ListView Grid.Column="0"
-                      ItemsSource="{Binding Teams}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}"/>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer x:Name="TeamsList" Grid.Row="1" Grid.Column="0">
+            <StackPanel>
+                <StackPanel>
+                    <ItemsControl x:Name="ListViewTeams" ItemsSource="{Binding ListOfTeams}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="10" Orientation="Horizontal" Style="{StaticResource DarkerStackPanel}">
+                                    <Border Width="60" Height="60" CornerRadius="5" Margin="20, 20, 50, 20">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="../Assets/team.png"/>
+                                        </Border.Background>
+                                    </Border>
+                                    <StackPanel Orientation="Vertical" Margin="10">
+                                        <TextBlock Margin="5" Text="{Binding Path=Name}" HorizontalAlignment="Center"  Style="{StaticResource RegularText}"></TextBlock>
+                                        <TextBlock Margin="5" Text="{Binding Path=Description}" HorizontalAlignment="Center"  Style="{StaticResource RegularText}"></TextBlock>
+                                        <Button 
+                                                Content="Select"
+                                                Margin="0, 15, 0, 5"
+                                                Command="{Binding Path=DataContext.ChangeSelectedPlayer, ElementName=ListViewTeams}"
+                                                CommandParameter="{Binding Path=.}">
+                                        </Button>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
     </Grid>
 </UserControl>

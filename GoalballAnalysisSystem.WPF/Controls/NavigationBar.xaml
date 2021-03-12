@@ -19,14 +19,14 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0"
-              Background="{StaticResource PrimaryButtonBrush}">
+              Background="{StaticResource LightButtonBrush}">
             <TextBlock Text="Goalball Analysis System"
                        MaxWidth="1000"
                        Padding="10"
                        FontSize="28"/>
         </Grid>
         <Grid Grid.Row="1"
-              Background="{StaticResource SecondaryButtonBrush}"
+              Background="{StaticResource DarkButtonBrush}"
               RenderOptions.EdgeMode="Aliased">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
@@ -72,7 +72,6 @@
                     Margin="0 0 10 0"
                     Command="{Binding LogoutCommand}"/>
         </Grid>
-        
-        
+
     </Grid>
 </UserControl>

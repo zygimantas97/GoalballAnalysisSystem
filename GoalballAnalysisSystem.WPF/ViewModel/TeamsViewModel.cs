@@ -13,31 +13,33 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         private readonly IUserStore _userStore;
         private readonly ObservableCollection<Team> _teams;
 
-        public IEnumerable<Team> Teams => _teams;
+        public ObservableCollection<Team> ListOfTeams
+        {
+            get { return _teams; }
+        }
+
 
         public TeamsViewModel(IUserStore userStore)
         {
-            _userStore = userStore;
-            _teams = new ObservableCollection<Team>();
-            _userStore.StateChanged += UserStore_StateChanged;
-            ResetTeams();
+            _teams = AddFakeData();
         }
 
-        private void ResetTeams()
+        public ObservableCollection<Team> AddFakeData()
         {
-            _teams.Clear();
-            if(_userStore.CurrentUser != null)
+            ObservableCollection<Team> list = new ObservableCollection<Team>();
+
+
+            for (int i = 0; i < 50; i++)
             {
-                foreach (Team team in _userStore.CurrentUser.Teams)
-                {
-                    _teams.Add(team);
-                }
-            }
-        }
+                Team a = new Team();
+                a.Name = "Team" + i;
+                a.Description = "Description" + i;
+                a.Id = i;
+                list.Add(a);
 
-        private void UserStore_StateChanged()
-        {
-            ResetTeams();
+            }
+
+            return list;
         }
     }
 }

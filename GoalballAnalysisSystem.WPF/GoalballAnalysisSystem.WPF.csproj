@@ -8,22 +8,14 @@
 
   <ItemGroup>
     <None Remove="Assets\player.png" />
-    <None Remove="Assets\player2.png" />
-    <None Remove="Assets\player3.png" />
-    <None Remove="Assets\player4.png" />
+    <None Remove="Assets\team.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\player.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\player2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\player3.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\player4.png">
+    <Content Include="Assets\team.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

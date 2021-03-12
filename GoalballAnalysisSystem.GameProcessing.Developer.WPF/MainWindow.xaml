@@ -32,16 +32,19 @@
                 <TextBlock x:Name="progressTextBlock"
                            Text="{Binding Progress}"/>
                 <WrapPanel>
+                    <Button Content="Add tracking player"
+                            x:Name="AddTrackingPlayerButton"
+                            Click="AddTrackingPlayerButton_Click"/>
+                </WrapPanel>
+                <WrapPanel>
                     <Button Content="Detect Ball (ML)"
-                            Margin="10"
                             x:Name="DetectObjectMLButton"
                             Click="DetectObjectMLButton_Click"/>
                     <Button Content="Detect Ball (WinAI)"
-                            Margin="10"
                             x:Name="DetectObjectWinAIButton"
                             Click="DetectObjectWinAIButton_Click"/>
                     <Button Content="Clear ROI"
-                            Margin="10"
+                            
                             x:Name="ClearROIButton"
                             Click="ClearROIButton_Click"/>
                 </WrapPanel>

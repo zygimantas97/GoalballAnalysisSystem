@@ -82,7 +82,8 @@ namespace GoalballAnalysisSystem.GameProcessing
         public void Start()
         {
             Status = GameAnalyzerStatus.Active;
-            _gameAnalyzerTask.Start();
+            //_gameAnalyzerTask.Start();
+            GameAnalyzerTick();
         }
 
         public void Resume()
@@ -102,9 +103,11 @@ namespace GoalballAnalysisSystem.GameProcessing
 
         private void GameAnalyzerTick()
         {
+            /*
             MLBasedObjectDetectionStrategy objectDetectionStrategy = new MLBasedObjectDetectionStrategy(new List<string>() { "player" }, 0.1f);
             int counter = 0;
             List<Rectangle> playersRectangles = new List<Rectangle>();
+            */
             while (Status != GameAnalyzerStatus.Stopped)
             {
                 if(Status == GameAnalyzerStatus.Active)
@@ -112,26 +115,28 @@ namespace GoalballAnalysisSystem.GameProcessing
                     _videoCapture.Read(_cameraFeed);
                     if(_cameraFeed != null)
                     {
-                        counter++;
-
+                        //counter++;
+                        /*
                         if(counter >= 3) //testavimui
                         {
                             playersRectangles = _playersTracker.UpdateTrackingObjects(_cameraFeed);
                             counter = 0;
                         }
+                        */
                         // Drawing bounding boxes of players
-
+                        /*
                         List<Rectangle> playersRectangles2 = objectDetectionStrategy.DetectAllObjects(_cameraFeed.ToBitmap());
                         foreach (var rectangle in playersRectangles2)
                         {
                             CvInvoke.Rectangle(_cameraFeed, rectangle, new MCvScalar(0, 0, 255), 3);
                         }
-
+                        */
+                        /*
                         foreach (var rectangle in playersRectangles)
                         {
                             CvInvoke.Rectangle(_cameraFeed, rectangle, new MCvScalar(255, 0, 0), 4);
                         }
-
+                        */
                         // Rectangle ballRectangle = _ballTracker.DetectObject(_cameraFeed);
 
                         //Drawing of coordinates in frame

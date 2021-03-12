@@ -122,18 +122,21 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             bool? result = openFileDialog.ShowDialog();
             if(result == true)
             {
-                IPlayFieldTracker playFieldTracker = new ColorBasedPlayFieldTracker();
+                
+                //IPlayFieldTracker playFieldTracker = new ColorBasedPlayFieldTracker();
+                /*
                 var videoCapture = new VideoCapture(openFileDialog.FileName);
                 Mat firstFrame = new Mat();
                 videoCapture.Read(firstFrame);
-
-                var gameZoneCorners = playFieldTracker.GetPlayFieldCorners(firstFrame);
+                imageBox.Image = firstFrame;
+                */
+                //var gameZoneCorners = playFieldTracker.GetPlayFieldCorners(firstFrame);
 
                 //IBallTracker ballTracker = new CNNBasedBallTracker();
 
                 IObjectDetectionStrategy ballTracker = new MLBasedObjectDetectionStrategy(new List<string> { "ball" });
                 //_playersTracker = new EmguCVTrackersBasedMOT();
-                _playersTracker = new ONNXBasedMOT();
+                //_playersTracker = new ONNXBasedMOT();
 
                 GameAnalyzer = new GameAnalyzer(openFileDialog.FileName,
                                                 new System.Drawing.Point(0,0),
@@ -144,7 +147,8 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
                 GameAnalyzer.FrameChanged += GameAnalyzer_FrameChanged;
                 VideoStackPanel.Visibility = Visibility.Visible;
-                GameAnalyzer.Start();
+                //GameAnalyzer.Start();
+                
             }
         }
 
@@ -153,18 +157,12 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             try
             {
                 var image = GameAnalyzer.CurrentFrame;
-                if(image != null)
+                if (image != null)
                 {
                     imageBox.Image = image;
-                    /*
-                    if (_frameNo % 50 == 0)
-                    {
-                        image.Save("Output\\frame_" + (_frameNo + 1) + ".jpg");
-                    }
-                    */
                 }
-                _frameNo++;
-                Progress = String.Format("{0:0.00} {1}", (double)_frameNo / (double)GameAnalyzer.FrameCount * 100, "%");
+                //_frameNo++;
+                //Progress = String.Format("{0:0.00} {1}", (double)_frameNo / (double)GameAnalyzer.FrameCount * 100, "%");
             }
             catch (Exception ex)
             {
@@ -180,7 +178,14 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
         private void ResumeButton_Click(object sender, RoutedEventArgs e)
         {
-            GameAnalyzer.Resume();
+            if(GameAnalyzer.Status == GameAnalyzerStatus.NotStarted)
+            {
+                GameAnalyzer.Start();
+            }
+            else
+            {
+                GameAnalyzer.Resume();
+            }
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
@@ -733,6 +738,11 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 _selectedROI = Rectangle.Empty;
                 imageBox.Invalidate();
             }
+        }
+
+        private void AddTrackingPlayerButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

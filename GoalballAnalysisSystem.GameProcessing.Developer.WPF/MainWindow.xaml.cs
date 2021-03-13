@@ -136,7 +136,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
                 IObjectDetectionStrategy ballTracker = new MLBasedObjectDetectionStrategy(new List<string> { "ball" });
                 //_playersTracker = new EmguCVTrackersBasedMOT();
-                //_playersTracker = new ONNXBasedMOT();
+                _playersTracker = new ONNXBasedMOT();
 
                 GameAnalyzer = new GameAnalyzer(openFileDialog.FileName,
                                                 new System.Drawing.Point(0,0),
@@ -147,7 +147,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
                 GameAnalyzer.FrameChanged += GameAnalyzer_FrameChanged;
                 VideoStackPanel.Visibility = Visibility.Visible;
-                //GameAnalyzer.Start();
+                GameAnalyzer.Start();
                 
             }
         }
@@ -242,9 +242,6 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                     //System.Windows.Forms.MessageBox.Show("Detected: " + rectangles.Count);
                 }
             }
-
-
-
 
         }
 

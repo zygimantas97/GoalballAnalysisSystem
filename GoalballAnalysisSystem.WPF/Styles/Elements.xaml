@@ -54,9 +54,39 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="TransparentButtonElement" TargetType="Button">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Name="border" 
+                        BorderBrush="Transparent" 
+                        Background="Transparent">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="Transparent" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
     <Style x:Key="DarkerStackPanel" TargetType="StackPanel">
-        <Setter Property="Background" Value="{StaticResource SecondBackgroundBrush}"/>
+        <!--<Setter Property="Background" Value="{StaticResource SecondBackgroundBrush}"/>-->
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" Value="#edebe1" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="false">
+                <Setter Property="Background" Value="{StaticResource SecondBackgroundBrush}" />
+            </Trigger>
+        </Style.Triggers>
+        
     </Style>
 
     <Style x:Key="LighterStackPanel" TargetType="StackPanel">

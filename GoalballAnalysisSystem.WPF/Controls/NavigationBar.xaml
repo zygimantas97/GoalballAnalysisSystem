@@ -18,15 +18,17 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0"
-              Background="{StaticResource LightButtonBrush}">
+        <!--<Grid Grid.Row="0"
+              Background="{StaticResource HeaderOneBrush}">
             <TextBlock Text="Goalball Analysis System"
+                       Style="{StaticResource HeaderOneText}"
+                       HorizontalAlignment="Left"
                        MaxWidth="1000"
                        Padding="10"
                        FontSize="28"/>
-        </Grid>
+        </Grid>-->
         <Grid Grid.Row="1"
-              Background="{StaticResource DarkButtonBrush}"
+              Background="{StaticResource HeaderTwoBrush}"
               RenderOptions.EdgeMode="Aliased">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>

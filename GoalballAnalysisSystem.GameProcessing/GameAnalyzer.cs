@@ -40,16 +40,24 @@ namespace GoalballAnalysisSystem.GameProcessing
         public GameAnalyzerStatus Status { get; private set; }
 
         public event EventHandler FrameChanged;
+        public event EventHandler ProcessingFinished;
 
         private Image<Bgr, byte> _currentFrame;
+        private int frameNo = 0;
         public Image<Bgr, byte> CurrentFrame
         {
             get { return _currentFrame; }
             private set
             {
                 _currentFrame = value;
+                frameNo++;
+                
+              
+                
                 if (FrameChanged != null)
                     FrameChanged(this, EventArgs.Empty);
+                
+                
             }
         }
 
@@ -101,7 +109,7 @@ namespace GoalballAnalysisSystem.GameProcessing
             Status = GameAnalyzerStatus.Stopped;
         }
 
-        private void GameAnalyzerTick()
+        private async void GameAnalyzerTick()
         {
             /*
             MLBasedObjectDetectionStrategy objectDetectionStrategy = new MLBasedObjectDetectionStrategy(new List<string>() { "player" }, 0.1f);
@@ -125,12 +133,13 @@ namespace GoalballAnalysisSystem.GameProcessing
                         */
                         // Drawing bounding boxes of players
                         /*
-                        List<Rectangle> playersRectangles2 = objectDetectionStrategy.DetectAllObjects(_cameraFeed.ToBitmap());
+                        List<Rectangle> playersRectangles2 = objectDetectionStrategy.DetectAllObjects(_cameraFeed);
                         foreach (var rectangle in playersRectangles2)
                         {
                             CvInvoke.Rectangle(_cameraFeed, rectangle, new MCvScalar(0, 0, 255), 3);
                         }
                         */
+
                         /*
                         foreach (var rectangle in playersRectangles)
                         {
@@ -156,15 +165,33 @@ namespace GoalballAnalysisSystem.GameProcessing
                         // }
                         //***********GameZoneCorders COLOR BASED drawing for testing purposes
 
+                        var rectangles = _playersTracker.UpdateTrackingObjects(_cameraFeed);
+                        foreach(var rec in rectangles)
+                        {
+                            if (rec != Rectangle.Empty)
+                            {
+                                CvInvoke.Rectangle(_cameraFeed, rec, new MCvScalar(0, 0, 255), 3);
+                            }
 
+                        }
+         
+                        
+                        
+                        
+                        
                         CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();
+                        await Task.Delay(30);
                     }
                     else
                     {
                         Status = GameAnalyzerStatus.Stopped;
+                        ProcessingFinished(this, EventArgs.Empty);
+                        
                     }
                 }
-            }   
+            }
+            ProcessingFinished(this, EventArgs.Empty);
+            await Task.Delay(1000);
         }
     }
 }

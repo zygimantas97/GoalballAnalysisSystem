@@ -51,6 +51,11 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        private bool finished = false;
+        private Stopwatch sw = new Stopwatch();
+        private Mat firstFrame = new Mat();
+        private int objID = 1;
+
         private OnnxOutputParser outputParser;
         private PredictionEngine<ImageInputData, CustomVisionPrediction> customVisionPredictionEngine;
 
@@ -122,21 +127,20 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             bool? result = openFileDialog.ShowDialog();
             if(result == true)
             {
-                
-                //IPlayFieldTracker playFieldTracker = new ColorBasedPlayFieldTracker();
-                /*
-                var videoCapture = new VideoCapture(openFileDialog.FileName);
-                Mat firstFrame = new Mat();
-                videoCapture.Read(firstFrame);
+                var capture = new VideoCapture(openFileDialog.FileName);
+                capture.Read(firstFrame);
                 imageBox.Image = firstFrame;
-                */
+                //IPlayFieldTracker playFieldTracker = new ColorBasedPlayFieldTracker();
+                
+                
+                
                 //var gameZoneCorners = playFieldTracker.GetPlayFieldCorners(firstFrame);
 
                 //IBallTracker ballTracker = new CNNBasedBallTracker();
 
                 IObjectDetectionStrategy ballTracker = new MLBasedObjectDetectionStrategy(new List<string> { "ball" });
                 //_playersTracker = new EmguCVTrackersBasedMOT();
-                //_playersTracker = new ONNXBasedMOT();
+                _playersTracker = new EmguCVTrackersBasedMOT();
 
                 GameAnalyzer = new GameAnalyzer(openFileDialog.FileName,
                                                 new System.Drawing.Point(0,0),
@@ -146,27 +150,42 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                                                 ballTracker, _playersTracker);
 
                 GameAnalyzer.FrameChanged += GameAnalyzer_FrameChanged;
-                VideoStackPanel.Visibility = Visibility.Visible;
+                GameAnalyzer.ProcessingFinished += GameAnalyzer_ProcessingFinished;
+                //VideoStackPanel.Visibility = Visibility.Visible;
                 //GameAnalyzer.Start();
                 
             }
+        }
+
+        private void GameAnalyzer_ProcessingFinished(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void GameAnalyzer_FrameChanged(object sender, EventArgs e)
         {
             try
             {
-                var image = GameAnalyzer.CurrentFrame;
-                if (image != null)
+                if(GameAnalyzer.Status != GameAnalyzerStatus.Stopped)
                 {
-                    imageBox.Image = image;
+                    _frameNo++;
+                    var image = GameAnalyzer.CurrentFrame;
+                    if (image != null && image.Data != null)
+                    {
+                        imageBox.Image = image;
+                    }
+                    
+                    
+                    Progress = String.Format("{0:0.00} {1}", (double)_frameNo / (double)GameAnalyzer.FrameCount * 100, "%");
+                    if(Math.Abs((double)_frameNo / (double)GameAnalyzer.FrameCount - 1) < 0.0001 && !finished)
+                    {
+                        Finish();
+                    }
                 }
-                //_frameNo++;
-                //Progress = String.Format("{0:0.00} {1}", (double)_frameNo / (double)GameAnalyzer.FrameCount * 100, "%");
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                //System.Windows.Forms.MessageBox.Show("ERROR: FrameChanged");
             }
             
         }
@@ -181,6 +200,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             if(GameAnalyzer.Status == GameAnalyzerStatus.NotStarted)
             {
                 GameAnalyzer.Start();
+                sw.Start();
             }
             else
             {
@@ -250,7 +270,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
         private void imageBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if(GameAnalyzer.Status == GameAnalyzerStatus.Paused)
+            if(GameAnalyzer.Status == GameAnalyzerStatus.Paused || GameAnalyzer.Status == GameAnalyzerStatus.NotStarted)
             {
                 _isSelecting = true;
                 _startROI = e.Location;
@@ -742,7 +762,56 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
         private void AddTrackingPlayerButton_Click(object sender, RoutedEventArgs e)
         {
+            if (_selectedROI != Rectangle.Empty)
+            {
+                double horizontalScale;
+                double verticalScale;
+                if(GameAnalyzer.CurrentFrame != null)
+                {
+                    horizontalScale = (double)GameAnalyzer.CurrentFrame.Width / (double)imageBox.Width;
+                    verticalScale = (double)GameAnalyzer.CurrentFrame.Height / (double)imageBox.Height;
+                }
+                else
+                {
+                    horizontalScale = (double)firstFrame.Width / (double)imageBox.Width;
+                    verticalScale = (double)firstFrame.Height / (double)imageBox.Height;
+                }
 
+                Rectangle rectangle = new Rectangle((int)(_selectedROI.X * horizontalScale),
+                                                    (int)(_selectedROI.Y * verticalScale),
+                                                    (int)(_selectedROI.Width * horizontalScale),
+                                                    (int)(_selectedROI.Height * verticalScale));
+                if(GameAnalyzer.CurrentFrame != null)
+                {
+                    _playersTracker.AddTrackingObject(GameAnalyzer.CurrentFrame.Mat, rectangle, objID++);
+                }
+                _playersTracker.AddTrackingObject(firstFrame, rectangle, objID++);
+                _selectedROI = Rectangle.Empty;
+                imageBox.Invalidate();
+            }
+        }
+
+        private void Finish()
+        {
+            finished = true;
+            sw.Stop();
+            var elapsedMiliseconds = sw.ElapsedMilliseconds;
+
+            List<string> results = new List<string>() { "Elapsed time: " + elapsedMiliseconds};
+
+            var mot = (EmguCVTrackersBasedMOT)_playersTracker;
+            results.Add("Processed frames: " + mot.FramesCount);
+            results.Add("Detected all: " + mot.DetectedAllCount);
+            results.Add("Detected any: " + mot.DetectedAnyCount);
+            results.Add("\nDetected objects:\n");
+
+            foreach(var key in mot.ObjectDetectionCounts.Keys)
+            {
+                results.Add(key + ": " + mot.ObjectDetectionCounts[key]);
+            }
+
+            File.WriteAllLines("results.txt", results);
+            System.Windows.Forms.MessageBox.Show("Finished");
         }
     }
 }

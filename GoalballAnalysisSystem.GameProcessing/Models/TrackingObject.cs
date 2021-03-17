@@ -9,18 +9,20 @@ namespace GoalballAnalysisSystem.GameProcessing.Models
 {
     public class TrackingObject
     {
-        public long ObjectId { get; set; }
+        public int ObjectId { get; set; }
         public Tracker ObjectTracker { get; set; }
         public Rectangle ROI { get; set; }
 
-        public void Update(Mat frame)
+        public Rectangle Update(Mat frame)
         {
             Rectangle rec = new Rectangle();
             bool success = ObjectTracker.Update(frame, out rec);
             if (success)
             {
                 ROI = rec;
+                return rec;
             }
+            return Rectangle.Empty;
         }
 
         public double GetDistance(Point location)

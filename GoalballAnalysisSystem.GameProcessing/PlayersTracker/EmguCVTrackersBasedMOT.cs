@@ -8,6 +8,7 @@ using Emgu.CV.Tracking;
 using Emgu.CV.Util;
 using GoalballAnalysisSystem.GameProcessing.Models;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace GoalballAnalysisSystem.GameProcessing.PlayersTracker
 {
@@ -17,9 +18,29 @@ namespace GoalballAnalysisSystem.GameProcessing.PlayersTracker
         private readonly Tracker _tracker = new TrackerCSRT();
         private readonly List<TrackingObject> _trackingObjects = new List<TrackingObject>();
 
+        public int FramesCount { get; private set; } = 0;
+        public int DetectedAnyCount { get; private set; } = 0;
+        public int DetectedAllCount { get; private set; } = 0;
+        public Dictionary<int, int> ObjectDetectionCounts { get; private set; } = new Dictionary<int, int>();
+
         public void AddTrackingObject(Mat frame, Rectangle roi, int objectId = 0)
         {
-            Tracker tracker = new TrackerCSRT();
+            // For testing purposes
+            ObjectDetectionCounts.Add(objectId, 0);
+
+            Tracker tracker;
+
+            //tracker = new TrackerBoosting();
+            //tracker= new TrackerCSRT();
+            //tracker = new TrackerGOTURN();
+            //tracker = new TrackerKCF();
+            //tracker = new TrackerMIL();
+            //tracker = new TrackerMOSSE();
+            tracker = new TrackerTLD();
+
+
+
+
             tracker.Init(frame, roi);
             TrackingObject trackingObject = new TrackingObject
             {
@@ -28,41 +49,6 @@ namespace GoalballAnalysisSystem.GameProcessing.PlayersTracker
                 ROI = roi
             };
             _trackingObjects.Add(trackingObject);
-
-            //_tracker.Init(frame, roi);
-            
-            // System.AccessViolationException: 'Attempted to read or write...
-            // Kai bandoma prideti nauja tracker _multiTracker.Add()
-            //Tracker tracker = new TrackerBoosting();
-
-            // System.AccessViolationException: 'Attempted to read or write...
-            // Kai bandoma kviesti _multiTracker.Update()
-            //Tracker tracker = new TrackerCSRT();
-
-            // Emgu.CV.Util.CvException: 'OpenCV: FAILED: fs.is_open(). Can't open...
-            // Kai bandoma prideti nauja tracker _multiTracker.Add()
-            //Tracker tracker = new TrackerGOTURN();
-
-            // System.AccessViolationException: 'Attempted to read or write...
-            // Kai bandoma kviesti _multiTracker.Update()
-            //Tracker tracker = new TrackerKCF();
-
-            // Netestuota, nes reikalauja papildomu parametru
-            //Tracker tracker = new TrackerMedianFlow(;
-
-            // System.AccessViolationException: 'Attempted to read or write...
-            // Kai bandoma prideti nauja tracker _multiTracker.Add()
-            //Tracker tracker = new TrackerMIL();
-
-            // System.AccessViolationException: 'Attempted to read or write...
-            // Kai bandoma kviesti _multiTracker.Update()
-            //Tracker tracker = new TrackerMOSSE();
-
-            // System.AccessViolationException: 'Attempted to read or write...
-            // Kai bandoma kviesti _multiTracker.Update()
-            //Tracker tracker = new TrackerTLD();
-
-            //_multiTracker.Add(tracker, frame, roi);
         }
 
         public void RemoveTrackingObjectById(long id)
@@ -96,31 +82,35 @@ namespace GoalballAnalysisSystem.GameProcessing.PlayersTracker
 
         public List<Rectangle> UpdateTrackingObjects(Mat frame)
         {
-            /*
-            VectorOfRect vectorOfRect = new VectorOfRect();
-            bool success = _multiTracker.Update(frame, vectorOfRect);
-            if (success)
-            {
-                return vectorOfRect.ToArray();
-            }
-            */
-
-            /*
-            Rectangle rec = new Rectangle();
-            bool success = _tracker.Update(frame, out rec);
-            if (success)
-            {
-                return new Rectangle[] { rec };
-            }
-            */
+            // For testing implement success checks
 
             List<Rectangle> rois = new List<Rectangle>();
 
             Parallel.ForEach(_trackingObjects, trackingObject =>
             {
-                trackingObject.Update(frame);
-                rois.Add(trackingObject.ROI);
+                var rect = trackingObject.Update(frame);
+                if (rect != Rectangle.Empty)
+                {
+                    ObjectDetectionCounts[trackingObject.ObjectId]++;
+                }
+                rois.Add(rect);
             });
+
+            // For testing only
+            if(rois.Count > 0)
+            {
+                if (rois.All(r => r != Rectangle.Empty))
+                {
+                    DetectedAllCount++;
+                }
+
+                if (rois.Any(r => r != Rectangle.Empty))
+                {
+                    DetectedAnyCount++;
+                }
+            }
+            
+            FramesCount++;
 
             return rois;
         }

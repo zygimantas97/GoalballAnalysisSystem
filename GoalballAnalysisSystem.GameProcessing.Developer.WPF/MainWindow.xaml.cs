@@ -142,6 +142,8 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 //_playersTracker = new EmguCVTrackersBasedMOT();
                 _playersTracker = new EmguCVTrackersBasedMOT();
 
+
+
                 GameAnalyzer = new GameAnalyzer(openFileDialog.FileName,
                                                 new System.Drawing.Point(0,0),
                                                 new System.Drawing.Point(0, 0),
@@ -153,6 +155,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 GameAnalyzer.ProcessingFinished += GameAnalyzer_ProcessingFinished;
                 //VideoStackPanel.Visibility = Visibility.Visible;
                 //GameAnalyzer.Start();
+                
                 
             }
         }
@@ -262,9 +265,6 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                     //System.Windows.Forms.MessageBox.Show("Detected: " + rectangles.Count);
                 }
             }
-
-
-
 
         }
 

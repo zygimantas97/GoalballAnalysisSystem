@@ -4,20 +4,32 @@
     <Color x:Key="GrayColor">#777777</Color>
     <Color x:Key="DarkGrayColor">#444444</Color>
     <Color x:Key="LightBlueColor">#D9E1E2</Color>
+    <Color x:Key="LightBlue2Color">#e9f1f2</Color>
     <Color x:Key="BlueColor">#616675</Color>
     <Color x:Key="DarkBlueColor">#3c4740</Color>
-    <Color x:Key="LightYellowColor">#F3F3ED</Color>
+    <Color x:Key="LightYellowColor">#e6e6e1</Color>
     <Color x:Key="WhiteColor">White</Color>
-    
+    <Color x:Key="RichBlue">#5b739d</Color>
+
+    <!--Colors that are binded-->
+    <Color x:Key="HeaderButtonNormalColor">#5b739d</Color>
+    <Color x:Key="HeaderButtonHighlightColor">White</Color>
+
     <!--Brushes-->
     <SolidColorBrush x:Key="LightButtonBrush" Color="{StaticResource GrayColor}"/>
     <SolidColorBrush x:Key="DarkButtonBrush" Color="{StaticResource DarkGrayColor}"/>
     <SolidColorBrush x:Key="BlueButtonBrush" Color="{StaticResource BlueColor}"/>
     <SolidColorBrush x:Key="DarkBlueButtonBrush" Color="{StaticResource DarkBlueColor}"/>
 
-    <SolidColorBrush x:Key="MainBackgroundBrush" Color="{StaticResource LightYellowColor}"/>
+    <SolidColorBrush x:Key="MainBackgroundBrush" Color="{StaticResource WhiteColor}"/>
     <SolidColorBrush x:Key="FirstBackgroundBrush" Color="{StaticResource WhiteColor}"/>
     <SolidColorBrush x:Key="SecondBackgroundBrush" Color="{StaticResource LightBlueColor}"/>
+    <SolidColorBrush x:Key="ThirdBackgroundBrush" Color="{StaticResource LightYellowColor}"/>
+    <SolidColorBrush x:Key="HighlightBackgroundBrush" Color="{StaticResource LightBlue2Color}"/>
+    <SolidColorBrush x:Key="HeaderOneBrush" Color="{StaticResource HeaderButtonNormalColor}"/>
+    <SolidColorBrush x:Key="HeaderTwoBrush" Color="{StaticResource HeaderButtonNormalColor}"/>
+    <SolidColorBrush x:Key="HeaderButtonBrush" Color="{StaticResource HeaderButtonNormalColor}"/>
+    <SolidColorBrush x:Key="HeaderButtonHighLightBrush" Color="{StaticResource HeaderButtonHighlightColor}"/>
 
 
     <!--Text Boxes-->

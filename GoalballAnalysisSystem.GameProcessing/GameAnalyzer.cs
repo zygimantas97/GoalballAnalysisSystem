@@ -1,9 +1,6 @@
 ﻿using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
-using GoalballAnalysisSystem.GameProcessing.BallTracker;
-using GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNXModelBasedObjectDetection.MLBasedObjectDetection;
-using GoalballAnalysisSystem.GameProcessing.PlayersTracker;
 using GoalballAnalysisSystem.GameProcessing.PlayFieldTracker;
 using System;
 using System.Collections.Generic;
@@ -12,186 +9,120 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
+using GoalballAnalysisSystem.GameProcessing.ObjectDetection;
+using GoalballAnalysisSystem.GameProcessing.ObjectTracking;
+using GoalballAnalysisSystem.GameProcessing.Models;
+using GoalballAnalysisSystem.API.Contracts.V1.Requests;
 
 namespace GoalballAnalysisSystem.GameProcessing
 {
     public enum GameAnalyzerStatus
     {
-        NotStarted,
-        Active,
         Paused,
-        Stopped
+        Processing,
+        Finished
     }
 
     public class GameAnalyzer
     {
-        private VideoCapture _videoCapture;
-        private Mat _cameraFeed = new Mat();
-        private Task _gameAnalyzerTask;
-
-        private Point _topLeftCorner;
-        private Point _topRightCorner;
-        private Point _bottomRightCorner;
-        private Point _bottomLeftCorner;
-
-        private IObjectDetectionStrategy _ballTracker;
-        private IMOT _playersTracker;
+        private readonly VideoCapture _videoCapture;
+        private readonly Mat _cameraFeed = new Mat();
+        private readonly IGameAnalyzerConfigurator _gameZoneConfigurator;
+        private readonly IObjectDetector _objectDetector;
+        private readonly IMOT<CreateGamePlayerRequest> _mot;
 
         public GameAnalyzerStatus Status { get; private set; }
+        public int FPS { get; private set; }
+        public int FrameCount { get; private set; }
 
         public event EventHandler FrameChanged;
         public event EventHandler ProcessingFinished;
+        public event EventHandler ProjectionDetected;
 
         private Image<Bgr, byte> _currentFrame;
-        private int frameNo = 0;
         public Image<Bgr, byte> CurrentFrame
         {
             get { return _currentFrame; }
             private set
             {
                 _currentFrame = value;
-                frameNo++;
-                
-              
-                
                 if (FrameChanged != null)
                     FrameChanged(this, EventArgs.Empty);
-                
-                
             }
         }
 
-        public int FPS { get; private set; }
-        public int FrameCount { get; private set; }
-
         public GameAnalyzer(string fileName,
-                            Point topLeftCorner,
-                            Point topRightCorner,
-                            Point bottomRightCorner,
-                            Point bottomLeftCorner,
-                            IObjectDetectionStrategy ballTracker,
-                            IMOT playersTracker)
+                            IGameAnalyzerConfigurator gameAnalyzerConfigurator,
+                            IObjectDetector objectDetector,
+                            IMOT<CreateGamePlayerRequest> mot)
         {
             _videoCapture = new VideoCapture(fileName);
             FPS = (int)_videoCapture.GetCaptureProperty(CapProp.Fps);
             FrameCount = (int)_videoCapture.GetCaptureProperty(CapProp.FrameCount);
-            _gameAnalyzerTask = new Task(GameAnalyzerTick);
 
-            _topLeftCorner = topLeftCorner;
-            _topRightCorner = topRightCorner;
-            _bottomRightCorner = bottomRightCorner;
-            _bottomLeftCorner = bottomLeftCorner;
-
-            _ballTracker = ballTracker;
-            _playersTracker = playersTracker;
-
+            _objectDetector = objectDetector;
+            _mot = mot;
         }
 
-        public void Start()
+        public void Process()
         {
-            Status = GameAnalyzerStatus.Active;
-            //_gameAnalyzerTask.Start();
-            GameAnalyzerTick();
-        }
-
-        public void Resume()
-        {
-            Status = GameAnalyzerStatus.Active;
+            if(Status == GameAnalyzerStatus.Paused)
+            {
+                Status = GameAnalyzerStatus.Processing;
+                ProcessVideoStream();
+            }
         }
 
         public void Pause()
         {
-            Status = GameAnalyzerStatus.Paused;
-        }
-
-        public void Stop()
-        {
-            Status = GameAnalyzerStatus.Stopped;
-        }
-
-        private async void GameAnalyzerTick()
-        {
-            /*
-            MLBasedObjectDetectionStrategy objectDetectionStrategy = new MLBasedObjectDetectionStrategy(new List<string>() { "player" }, 0.1f);
-            int counter = 0;
-            List<Rectangle> playersRectangles = new List<Rectangle>();
-            */
-            while (Status != GameAnalyzerStatus.Stopped)
+            if(Status == GameAnalyzerStatus.Processing)
             {
-                if(Status == GameAnalyzerStatus.Active)
+                Status = GameAnalyzerStatus.Paused;
+            }
+        }
+
+        public void Finish()
+        {
+            if(Status == GameAnalyzerStatus.Paused)
+            {
+                Status = GameAnalyzerStatus.Finished;
+                ProcessingFinished?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        private async void ProcessVideoStream()
+        {
+            while (Status == GameAnalyzerStatus.Processing)
+            {
+                _videoCapture.Read(_cameraFeed);
+                if(_cameraFeed != null)
                 {
-                    _videoCapture.Read(_cameraFeed);
-                    if(_cameraFeed != null)
+                    var detectedCategories = await _objectDetector.Detect(_cameraFeed);
+                    foreach (var key in detectedCategories.Keys)
                     {
-                        //counter++;
-                        /*
-                        if(counter >= 3) //testavimui
-                        {
-                            playersRectangles = _playersTracker.UpdateTrackingObjects(_cameraFeed);
-                            counter = 0;
-                        }
-                        */
-                        // Drawing bounding boxes of players
-                        /*
-                        List<Rectangle> playersRectangles2 = objectDetectionStrategy.DetectAllObjects(_cameraFeed);
-                        foreach (var rectangle in playersRectangles2)
-                        {
-                            CvInvoke.Rectangle(_cameraFeed, rectangle, new MCvScalar(0, 0, 255), 3);
-                        }
-                        */
-
-                        /*
-                        foreach (var rectangle in playersRectangles)
-                        {
-                            CvInvoke.Rectangle(_cameraFeed, rectangle, new MCvScalar(255, 0, 0), 4);
-                        }
-                        */
-                        // Rectangle ballRectangle = _ballTracker.DetectObject(_cameraFeed);
-
-                        //Drawing of coordinates in frame
-                        // if (ballRectangle != Rectangle.Empty)
-                        // {
-                        //     CvInvoke.PutText(_cameraFeed, ballRectangle.X.ToString() + "," + ballRectangle.Y.ToString(), new Point(ballRectangle.X, ballRectangle.Y + 100), FontFace.HersheySimplex, 1, new MCvScalar(255, 0, 0), 2);
-                        //      CvInvoke.Rectangle(_cameraFeed, ballRectangle, new MCvScalar(0, 0, 255), 5);
-                        // }
-
-
-                        //***********GameZoneCorders COLOR BASED drawing for testing purposes
-                        // IPlayFieldTracker playFieldTracker = new ColorBasedPlayFieldTracker();
-                        // var gameZoneCorners = playFieldTracker.GetPlayFieldCorners(_cameraFeed);
-                        // for (int i = 0; i < gameZoneCorners.Length; i++)
-                        // {
-                        //     _cameraFeed = Drawing.EmguCVFiguresDrawing.DrawRectangle(_cameraFeed, gameZoneCorners[i], 25, 25);
-                        // }
-                        //***********GameZoneCorders COLOR BASED drawing for testing purposes
-
-                        var rectangles = _playersTracker.UpdateTrackingObjects(_cameraFeed);
+                        var rectangles = detectedCategories[key];
                         foreach(var rec in rectangles)
                         {
-                            if (rec != Rectangle.Empty)
-                            {
-                                CvInvoke.Rectangle(_cameraFeed, rec, new MCvScalar(0, 0, 255), 3);
-                            }
-
+                            CvInvoke.Rectangle(_cameraFeed, rec, new MCvScalar(255, 0, 0), 3);
                         }
-         
-                        
-                        
-                        
-                        
-                        CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();
-                        await Task.Delay(30);
                     }
-                    else
+
+                    var trackingObjects = await _mot.Update(_cameraFeed);
+                    foreach (var obj in trackingObjects.Keys)
                     {
-                        Status = GameAnalyzerStatus.Stopped;
-                        ProcessingFinished(this, EventArgs.Empty);
-                        
+                        var rectangle = trackingObjects[obj];
+                        CvInvoke.Rectangle(_cameraFeed, rectangle, new MCvScalar(255, 0, 0), 3);
                     }
+
+                    CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();
+                    await Task.Delay(30);
+                }
+                else
+                {
+                    Pause();
+                    Finish(); 
                 }
             }
-            ProcessingFinished(this, EventArgs.Empty);
-            await Task.Delay(1000);
         }
     }
 }

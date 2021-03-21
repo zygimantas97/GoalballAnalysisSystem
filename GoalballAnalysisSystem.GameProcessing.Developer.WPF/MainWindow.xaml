@@ -11,7 +11,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="9*"/>
+            <RowDefinition Height="4*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
@@ -19,77 +19,54 @@
                 <WindowsFormsHost  Name="windowsFormsHost1"
                                    Width="480"
                                    Height="270">
-                    <WinFormControls1:ImageBox x:Name="imageBox"
+                    <WinFormControls1:ImageBox x:Name="VideoImageBox"
                                                Width="480"
                                                Height="270"
                                                SizeMode="Zoom"
-                                               MouseDown="imageBox_MouseDown"
-                                               MouseMove="imageBox_MouseMove"
-                                               MouseUp="imageBox_MouseUp"
+                                               MouseDown="VideoImageBox_MouseDown"
+                                               MouseMove="VideoImageBox_MouseMove"
+                                               MouseUp="VideoImageBox_MouseUp"
                                                FunctionalMode="Minimum"
-                                               Paint="imageBox_Paint"/>
+                                               Paint="VideoImageBox_Paint"/>
                 </WindowsFormsHost>
                 <TextBlock x:Name="progressTextBlock"
                            Text="{Binding Progress}"/>
-                <WrapPanel>
-                    <Button Content="Add tracking player"
-                            x:Name="AddTrackingPlayerButton"
-                            Click="AddTrackingPlayerButton_Click"/>
-                </WrapPanel>
-                <WrapPanel>
-                    <Button Content="Detect Ball (ML)"
-                            x:Name="DetectObjectMLButton"
-                            Click="DetectObjectMLButton_Click"/>
-                    <Button Content="Detect Ball (WinAI)"
-                            x:Name="DetectObjectWinAIButton"
-                            Click="DetectObjectWinAIButton_Click"/>
-                    <Button Content="Clear ROI"
-                            
-                            x:Name="ClearROIButton"
-                            Click="ClearROIButton_Click"/>
-                </WrapPanel>
-                <WrapPanel>
-                    <Button Content="Detect With ML TensorFlow"
-                            x:Name="DetectMLTensorFlow"
-                            Click="DetectMLTensorFlow_Click"/>
-                    <Button Content="Detect With TensorFlowSharp"
-                            x:Name="DetectTensorFlowSharp"
-                            Click="DetectTensorFlowSharp_Click"/>
-                </WrapPanel>
-                <WrapPanel HorizontalAlignment="Center">
-                    <Button Content="Pause" Margin="10" Name="PauseButton"
-                            Click="PauseButton_Click"/>
-                    <Button Content="Resume" Margin="10" Name="ResumeButton"
-                            Click="ResumeButton_Click"/>
-                    <Button Content="Stop" Margin="10" Name="StopButton"
-                            Click="StopButton_Click"/>
-                </WrapPanel>
             </StackPanel>
         </Grid>
-
-        <WrapPanel Grid.Row="1">
-            <Button Content="Select Video"
-                    HorizontalAlignment="Left"
-                    Click="SelectVideoButton_Click"
-                    Name="SelectVideoButton"/>
-            <Button Content="Detect Object"
-                    HorizontalAlignment="Left"
-                    Name="loadTeamplateButton"
-                    Click="loadTemplateButton_Click"/>
-            <Button Content="SendFrame via API"
-                    HorizontalAlignment="Left"
-                    Name="sendFrame"
-                    Click="sendFrame_Click"/>
-            <Button Content="SendFrame to ONNX"
-                    HorizontalAlignment="Left"
-                    Name="sendFrameONNX"
-                    Click="sendFrameONNX_Click"/>
-            <Button Content="Add marked player"
-                    HorizontalAlignment="Left"
-                    Name="addMarkedPlayerONNX"
-                    Click="addMarkedPlayerONNX_CLick"/>
-        </WrapPanel>
+        <StackPanel Grid.Row="1">
+            <WrapPanel HorizontalAlignment="Center">
+                <Button Content="Start"
+                    x:Name="StartResumeButton"
+                    Click="StartResumeButton_Click"/>
+                <Button Content="Pause"
+                    x:Name="PauseButton"
+                    Click="PauseButton_Click"/>
+                <Button Content="Finish"
+                    x:Name="FinishButton"
+                    Click="FinishButton_Click"/>
+            </WrapPanel>
+            <WrapPanel>
+                <Button Content="Select video"
+                        x:Name="SelectVideoButton"
+                        Click="SelectVideoButton_Click"/>
+            </WrapPanel>
+            <WrapPanel>
+                <Button Content="Add tracking object"
+                        x:Name="AddTrackingObjectButton"
+                        Click="AddTrackingObjectButton_Click"/>
+                <Button Content="Remove all tracking objects"
+                        x:Name="RemoveAllTrackingObjectsButton"
+                        Click="RemoveAllTrackingObjectsButton_Click"/>
+            </WrapPanel>
+            <WrapPanel>
+                <Button Content="Detect players (API)"
+                        x:Name="DetectPlayersApiButton"
+                        Click="DetectPlayersApiButton_Click"/>
+                <Button Content="Detect players (ONNX)"
+                        x:Name="DetectPlayersOnnxButton"
+                        Click="DetectPlayersOnnxButton_Click"/>
+            </WrapPanel>
+        </StackPanel>
         
     </Grid>
-    
 </Window>

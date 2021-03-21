@@ -108,7 +108,15 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 capture.Read(_frame);
                 VideoImageBox.Image = _frame;
 
-                _gameAnalyzerConfigurator = new GameAnalyzerConfigurator();
+                var points = new List<System.Drawing.Point>();
+                points.Add(new System.Drawing.Point(30, 25));
+                points.Add(new System.Drawing.Point(70, 25));
+                points.Add(new System.Drawing.Point(25, 75));
+                points.Add(new System.Drawing.Point(75, 75));
+
+                _gameAnalyzerConfigurator = GameAnalyzerConfigurator.Create(points, 100, 100);
+
+                var check = _gameAnalyzerConfigurator.CheckPointInZoneOfInterest(new System.Drawing.Point(70, 50));
                 _objectDetector = new ColorObjectDetector("ball");
                 _mot = new SOTBasedMOT<CreateGamePlayerRequest>();
 

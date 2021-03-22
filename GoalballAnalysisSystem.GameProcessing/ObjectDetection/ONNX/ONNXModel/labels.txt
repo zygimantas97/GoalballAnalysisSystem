@@ -1,0 +1,6 @@
+ball
+BottomLeft
+BottomRight
+player
+TopLeft
+TopRight

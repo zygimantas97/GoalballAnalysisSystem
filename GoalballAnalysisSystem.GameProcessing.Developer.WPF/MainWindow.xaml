@@ -1,0 +1,72 @@
+﻿<Window x:Class="GoalballAnalysisSystem.GameProcessing.Developer.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GoalballAnalysisSystem.GameProcessing.Developer.WPF"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"  
+        xmlns:WinFormHost="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+        xmlns:WinFormControls1="clr-namespace:Emgu.CV.UI;assembly=Emgu.CV.Platform.NetCore"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <StackPanel x:Name="VideoStackPanel">
+                <WindowsFormsHost  Name="windowsFormsHost1"
+                                   Width="480"
+                                   Height="270">
+                    <WinFormControls1:ImageBox x:Name="VideoImageBox"
+                                               Width="480"
+                                               Height="270"
+                                               SizeMode="Zoom"
+                                               MouseDown="VideoImageBox_MouseDown"
+                                               MouseMove="VideoImageBox_MouseMove"
+                                               MouseUp="VideoImageBox_MouseUp"
+                                               FunctionalMode="Minimum"
+                                               Paint="VideoImageBox_Paint"/>
+                </WindowsFormsHost>
+                <TextBlock x:Name="progressTextBlock"
+                           Text="{Binding Progress}"/>
+            </StackPanel>
+        </Grid>
+        <StackPanel Grid.Row="1">
+            <WrapPanel HorizontalAlignment="Center">
+                <Button Content="Start"
+                    x:Name="StartResumeButton"
+                    Click="StartResumeButton_Click"/>
+                <Button Content="Pause"
+                    x:Name="PauseButton"
+                    Click="PauseButton_Click"/>
+                <Button Content="Finish"
+                    x:Name="FinishButton"
+                    Click="FinishButton_Click"/>
+            </WrapPanel>
+            <WrapPanel>
+                <Button Content="Select video"
+                        x:Name="SelectVideoButton"
+                        Click="SelectVideoButton_Click"/>
+            </WrapPanel>
+            <WrapPanel>
+                <Button Content="Add tracking object"
+                        x:Name="AddTrackingObjectButton"
+                        Click="AddTrackingObjectButton_Click"/>
+                <Button Content="Remove all tracking objects"
+                        x:Name="RemoveAllTrackingObjectsButton"
+                        Click="RemoveAllTrackingObjectsButton_Click"/>
+            </WrapPanel>
+            <WrapPanel>
+                <Button Content="Detect players (API)"
+                        x:Name="DetectPlayersApiButton"
+                        Click="DetectPlayersApiButton_Click"/>
+                <Button Content="Detect players (ONNX)"
+                        x:Name="DetectPlayersOnnxButton"
+                        Click="DetectPlayersOnnxButton_Click"/>
+            </WrapPanel>
+        </StackPanel>
+        
+    </Grid>
+</Window>

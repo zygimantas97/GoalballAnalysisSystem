@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aspnet-GoalballAnalysisSystem.API-AB135167-23DA-48B3-A974-A6D50E282E14</UserSecretsId>
+  </PropertyGroup>
+
+	<PropertyGroup>
+		<CodeAnalysisRuleAssemblies>..\CustomRules\bin\Debug\netcoreapp3.1\CustomRules.dll</CodeAnalysisRuleAssemblies>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Data\Migrations\20201024054548_AddedTeamPlayersTable.cs" />
+	  <Compile Remove="Data\Migrations\20201024054548_AddedTeamPlayersTable.Designer.cs" />
+	  <Compile Remove="Data\Migrations\20201025073522_ChangedTeamOnDeleteInGame.cs" />
+	  <Compile Remove="Data\Migrations\20201025073522_ChangedTeamOnDeleteInGame.Designer.cs" />
+	  <Compile Remove="Data\Migrations\20201025074008_empty.cs" />
+	  <Compile Remove="Data\Migrations\20201025074008_empty.Designer.cs" />
+	  <Compile Remove="Data\Migrations\20201025075723_AddedGamePlayersTable.cs" />
+	  <Compile Remove="Data\Migrations\20201025075723_AddedGamePlayersTable.Designer.cs" />
+	  <Compile Remove="Data\Migrations\20210221093443_AddedOffenseAndDefenseProjections.cs" />
+	  <Compile Remove="Data\Migrations\20210221093443_AddedOffenseAndDefenseProjections.Designer.cs" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.7" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Filters\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GoalballAnalysisSystem.API.Contracts\GoalballAnalysisSystem.API.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -7,38 +7,108 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-
-    <Border Style="{StaticResource BorderElement}">
-        <Grid>
+    <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="7*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="700"/>
+            <RowDefinition Height="*"/>
 
         </Grid.RowDefinitions>
 
-        <TextBlock x:Name="TitleTextBlock"
-                       Text="Games"
-                       Grid.Row="0"
-                       Style="{StaticResource HeaderOneText}"
-                       HorizontalAlignment="Center"
-                       />
-
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="10*"/>
-                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="1"
-                           Margin="0 10"
-                           Text="Games content"
-                           Style="{StaticResource HeaderTwoText}"/>
+            <ScrollViewer x:Name="GamesList" Grid.Column="0">
+                <StackPanel>
+                    <StackPanel>
+                        <ItemsControl x:Name="ListViewGames" ItemsSource="{Binding ListOfGames}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate >
+                                    <Button Style="{StaticResource TransparentButtonElement}"
+                                            Command="{Binding Path=DataContext.ChangeSelectedObjectCommand, ElementName=ListViewGames}"
+                                            CommandParameter="{Binding Path=.}">
+                                        <StackPanel Style="{StaticResource DarkerStackPanel}">
+                                            <Border Width="60" Height="60" CornerRadius="5" Margin="35, 20">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="../Assets/player.png"/>
+                                                </Border.Background>
+                                            </Border>
+                                            <TextBlock Margin="5" Text="{Binding Path=Title}" HorizontalAlignment="Center"  Style="{StaticResource RegularText}"></TextBlock>
+                                            <TextBlock Margin="5, 5, 5, 20" Text="{Binding Path=Comment}" HorizontalAlignment="Center"  Style="{StaticResource RegularText}"></TextBlock>
 
+                                        </StackPanel>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+
+            <Grid Grid.Column="1">
+                <StackPanel>
+
+                </StackPanel>
             </Grid>
 
+            <Grid Grid.Column="2">
+                <StackPanel Background="{StaticResource SecondBackgroundBrush}" Margin="5">
+
+                    <StackPanel Background="LightGray" Margin="20" Height="600">
+                        <TextBlock Style="{StaticResource HeaderTwoText}"
+                                   Margin="5, 20">
+                            Atvaizduojami vektoriai
+                        </TextBlock>
+                        
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Margin="5" Text="First     " HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
+                            <TextBox Margin="5" Text="{Binding SelectedProjection.X1}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
+                        <TextBox Margin="5" Text="{Binding SelectedProjection.X2}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
+                        </StackPanel>
+                        
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Margin="5" Text="Second" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
+                            <TextBox Margin="5" Text="{Binding SelectedProjection.Y1}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
+                            <TextBox Margin="5" Text="{Binding SelectedProjection.Y2}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
+                        </StackPanel>
+                    </StackPanel>
+                    
+                    
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center">
+                        <Button
+                            Margin="5"
+                            Padding="5"
+                            Content="Previous"
+                            Command="{Binding PreviousProjectionCommand}">
+                        </Button>
+                        <Button
+                            Margin="5"
+                            Padding="5"
+                            Content="Next"
+                            Command="{Binding NextProjectionCommand}">
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+
         </Grid>
-    </Border>
+
+        
+
+    </Grid>
+
+
+
 </UserControl>

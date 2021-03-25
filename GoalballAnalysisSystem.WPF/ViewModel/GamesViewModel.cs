@@ -12,6 +12,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     public class GamesViewModel : BaseViewModel, ISelectableProperties
     {
+        #region Commands
         public ICommand LoginCommand { get; }
         public ICommand UpdateCurrentViewModelCommand { get; }
         public ICommand ChangeSelectedObjectCommand { get; }
@@ -19,8 +20,9 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         public ICommand DeleteSelectedObjectCommand { get; }
         public ICommand PreviousProjectionCommand { get; }
         public ICommand NextProjectionCommand { get; }
+        #endregion
 
-
+        #region Definitions
         private readonly ObservableCollection<GameResponse> _games;
         public ObservableCollection<GameResponse> ListOfGames
         {
@@ -78,6 +80,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 OnPropertyChanged(nameof(CanNotBeEdited));
             }
         }
+        #endregion
 
         public GamesViewModel()
         {
@@ -110,6 +113,9 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             return list;
         }
 
+        /// <summary>
+        /// Method is called when game is selected. Should fill projections observable collection with the values of specific game
+        /// </summary>
         private void AddFakeProjections()
         {
             if (_projections.Count != 0)

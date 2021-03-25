@@ -15,11 +15,14 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
     {
         private readonly IUserStore _userStore;
 
+        #region Commands
         public ICommand ChangeSelectedObjectCommand { get; }
         public ICommand EditSelectedObjectCommand { get; }
         public ICommand DeleteSelectedObjectCommand { get; }
         public ICommand AddNewTeam { get; }
+        #endregion
 
+        #region Definitions
         private readonly ObservableCollection<TeamResponse> _teams;
 
         public ObservableCollection<TeamResponse> ListOfTeams
@@ -76,7 +79,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 OnPropertyChanged(nameof(CanNotBeEdited));
             }
         }
-
+        #endregion
 
         public TeamsViewModel(IUserStore userStore)
         {
@@ -106,6 +109,9 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             return list;
         }
 
+        /// <summary>
+        /// Method is called when team is selected. Should fill players observable collection with the values of specific team
+        /// </summary>
         public void FillPlayersFromSelectedTeam()
         {
             if(_players.Count != 0)
@@ -138,7 +144,10 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
         void ISelectableProperties.DeleteSelectedObject(object parameter)
         {
-            throw new NotImplementedException();
+            //jeigu objektas zaidejas, reikia pasalinti ji is komandos
+            //jeigu objektas komanda, istrinti visa komanda
+
+            ;
         }
     }
 }

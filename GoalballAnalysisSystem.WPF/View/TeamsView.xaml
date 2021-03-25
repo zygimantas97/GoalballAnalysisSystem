@@ -138,24 +138,22 @@
                         <ImageBrush ImageSource="../Assets/player.png"/>
                     </Border.Background>
                 </Border>
-                <TextBox Margin="5" Text="{Binding SelectedPlayer.Name}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
-                <TextBox Margin="5" Text="{Binding SelectedPlayer.Surname}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
-                <TextBox Margin="5" Text="{Binding SelectedPlayer.Description}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
+                <TextBox Margin="5" Text="{Binding SelectedPlayer.Name}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="True"></TextBox>
+                <TextBox Margin="5" Text="{Binding SelectedPlayer.Surname}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="True"></TextBox>
+                <TextBox Margin="5" Text="{Binding SelectedPlayer.Description}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="True"></TextBox>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <ToggleButton Style="{StaticResource ToggleButtonEdit}"
-                                      Command="{Binding EditSelectedObjectCommand}"
-                                      Margin="5">
-                    </ToggleButton>
                     <Button 
-                            Content="Delete"
+                            Content="Remove from the team"
                             Margin="5"
                             Command="{Binding DeleteSelectedObjectCommand}"
-                            CommandParameter="{Binding SelectedPlayer}">
+                            CommandParameter="{Binding SelectedTeam}">
                     </Button>
 
                 </StackPanel>
+
             </StackPanel>
+            
 
 
         </Grid>

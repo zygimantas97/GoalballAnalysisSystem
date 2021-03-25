@@ -29,6 +29,13 @@
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
+    <Style x:Key="HeaderTwoBoldText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontFamily" Value="Monospace"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
     <Style x:Key="RegularText" TargetType="TextBlock">
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="FontFamily" Value="Monospace"/>

@@ -5,7 +5,8 @@
     <Color x:Key="DarkGrayColor">#444444</Color>
     <Color x:Key="LightBlueColor">#D9E1E2</Color>
     <Color x:Key="LightBlue2Color">#e9f1f2</Color>
-    <Color x:Key="BlueColor">#616675</Color>
+    <!--<Color x:Key="BlueColor">#616675</Color>-->
+    <Color x:Key="BlueColor">#3d5682</Color>
     <Color x:Key="DarkBlueColor">#3c4740</Color>
     <Color x:Key="LightYellowColor">#e6e6e1</Color>
     <Color x:Key="WhiteColor">White</Color>

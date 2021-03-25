@@ -17,14 +17,15 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     public class PlayersViewModel : BaseViewModel, ISelectableProperties
     {
-
+        #region Commands
         public ICommand LoginCommand { get; }
         public ICommand UpdateCurrentViewModelCommand { get; }
         public ICommand ChangeSelectedObjectCommand { get; }
         public ICommand EditSelectedObjectCommand { get; }
         public ICommand DeleteSelectedObjectCommand { get; }
+        #endregion
 
-
+        #region Definitions
         private readonly ObservableCollection<PlayerResponse> _listOfPlayers;
         public ObservableCollection<PlayerResponse> ListOfPlayers
         {
@@ -58,6 +59,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 OnPropertyChanged(nameof(CanNotBeEdited));
             }
         }
+        #endregion
 
         public PlayersViewModel()
         {

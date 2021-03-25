@@ -7,6 +7,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Models
 {
     public interface IGameAnalyzerConfigurator
     {
-        bool CheckPointInZoneOfInterest(Point point);
+        bool IsPointInZoneOfInterest(Point point);
+        Point GetPlaygroundOXY(Point point);
     }
 }

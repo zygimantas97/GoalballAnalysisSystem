@@ -49,8 +49,9 @@ namespace GoalballAnalysisSystem.GameProcessing.Models
             _leftEdgeRotated = new LinearEquation(bottomLeftRotated, topLeftRotated);
             _rightEdgeRotated = new LinearEquation(topRightRotated, bottomRightRotated);
 
-            var topEdgeMiddlePoint = Geometry.GetMiddlePoint(topLeftRotated, topRightRotated);
-            _baseLine = new LinearEquation(_basePoint, topEdgeMiddlePoint);
+            var topEdgeMiddlePoint = Geometry.GetMiddlePoint(topLeft, topRight);
+            var topEdgeMiddlePointRotated = Geometry.RotatePoint(_basePoint, topEdgeMiddlePoint, -_rotationSin, _rotationCos);
+            _baseLine = new LinearEquation(_basePoint, topEdgeMiddlePointRotated);
         }
 
         public static GameAnalyzerConfigurator Create(List<Point> points, int frameWidth, int frameHeight, double playgroundWidth, double playgroundHeight)
@@ -111,12 +112,20 @@ namespace GoalballAnalysisSystem.GameProcessing.Models
                 width = baseLineX - _leftEdgeRotated.GetX(rotatedPoint.Y);
             }
             double height = _basePoint.Y - _topEdgeRotated.GetY(rotatedPoint.X);
+
+            double x = rotatedPoint.X - baseLineX;
+            double y = rotatedPoint.Y - _basePoint.Y;
+
             var widthScaleEquation = new LinearEquation(0, 1, width, _playgroundWidth / width / 2);
             var heightScaleEquation = new LinearEquation(0, 1, height, _playgroundHeight / height);
 
-            // salculate scales
+            double widthScale = widthScaleEquation.GetY(Math.Abs(x));
+            double heightScale = heightScaleEquation.GetY(Math.Abs(y));
+
+            double scaledX = x * widthScale;
+            double scaledY = y * heightScale;
              
-            return new Point();
+            return new Point((int)Math.Round(scaledX + _playgroundWidth / 2), (int)Math.Round(scaledY + _playgroundHeight));
         }
     }
 }

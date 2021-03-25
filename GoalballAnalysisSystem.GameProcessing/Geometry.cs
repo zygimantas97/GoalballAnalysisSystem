@@ -14,7 +14,7 @@ namespace GoalballAnalysisSystem.GameProcessing
 
         public static Point GetMiddlePoint(Point point1, Point point2)
         {
-            return new Point((point1.X + point2.X) / 2, (point1.Y + point2.Y) / 2);
+            return new Point((int)Math.Round((double)(point1.X + point2.X) / 2), (int)Math.Round((double)(point1.Y + point2.Y) / 2));
         }
 
         public static double GetRotationSin(Point basePoint, Point targetPoint)
@@ -31,8 +31,8 @@ namespace GoalballAnalysisSystem.GameProcessing
         {
             int x = targetPoint.X - basePoint.X;
             int y = targetPoint.Y - basePoint.Y;
-            int rotatedX = (int)(x * rotationCos - y * rotationSin);
-            int rotatedY = (int)(x * rotationSin + y * rotationCos);
+            int rotatedX = (int)Math.Round(x * rotationCos - y * rotationSin);
+            int rotatedY = (int)Math.Round(x * rotationSin + y * rotationCos);
 
             return new Point(rotatedX + basePoint.X, rotatedY + basePoint.Y);
         }

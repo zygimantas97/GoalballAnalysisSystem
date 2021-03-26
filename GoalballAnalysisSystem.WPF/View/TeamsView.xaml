@@ -26,7 +26,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource TransparentButtonElement}"
-                                        Command="{Binding Path=DataContext.ChangeSelectedPlayer, ElementName=ListViewTeams}"
+                                        Command="{Binding Path=DataContext.ChangeSelectedObjectCommand, ElementName=ListViewTeams}"
                                         CommandParameter="{Binding Path=.}">
                                     <StackPanel Orientation="Horizontal" Style="{StaticResource DarkerStackPanel}">
                                         <Border Width="60" Height="60" CornerRadius="5" Margin="20, 20, 50, 20">
@@ -51,6 +51,112 @@
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
+
+        
+
+
+        <ScrollViewer x:Name="PlayersList" Grid.Row="1" Grid.Column="1">
+            <StackPanel>
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Text="Team players"
+                    Style="{StaticResource HeaderTwoText}"
+                    Margin="20 5 0 5"/>
+                <StackPanel>
+                    <ItemsControl x:Name="ListViewPlayers" ItemsSource="{Binding ListOfPlayers}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource TransparentButtonElement}"
+                                        Command="{Binding Path=DataContext.ChangeSelectedObjectCommand, ElementName=ListViewPlayers}"
+                                        CommandParameter="{Binding Path=.}">
+                                    <StackPanel Orientation="Horizontal" Style="{StaticResource DarkerStackPanel}">
+                                        <Border Width="60" Height="60" CornerRadius="5" Margin="20, 20, 50, 20">
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="../Assets/player.png"/>
+                                            </Border.Background>
+                                        </Border>
+                                        <StackPanel Orientation="Vertical" Margin="10">
+                                            <TextBlock Margin="5" Text="{Binding Path=Name}" HorizontalAlignment="Center"  Style="{StaticResource RegularText}"></TextBlock>
+                                            <TextBlock Margin="5" Text="{Binding Path=Surname}" HorizontalAlignment="Center"  Style="{StaticResource RegularText}"></TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid 
+            Grid.Row="1"
+            Grid.Column="2">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel 
+                Grid.Row="0"
+                Background="{StaticResource ThirdBackgroundBrush}" Margin="10, 0, 10, 10">
+                <Border Width="50" Height="50" CornerRadius="5" Margin="15, 15" HorizontalAlignment="Right">
+                    <Border.Background>
+                        <ImageBrush ImageSource="../Assets/team.png"/>
+                    </Border.Background>
+                </Border>
+                <TextBox Margin="5" Text="{Binding SelectedTeam.Name}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
+                <TextBox Margin="5" Text="{Binding SelectedTeam.Description}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
+                <TextBox Margin="5" Text="{Binding SelectedTeam.User}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <ToggleButton Style="{StaticResource ToggleButtonEdit}"
+                                      Command="{Binding EditSelectedObjectCommand}"
+                                      Margin="5">
+                    </ToggleButton>
+                    <Button 
+                            Content="Delete"
+                            Margin="5"
+                            Command="{Binding DeleteSelectedObjectCommand}"
+                            CommandParameter="{Binding SelectedTeam}">
+                    </Button>
+
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel 
+                Grid.Row="1"
+                Background="{StaticResource ThirdBackgroundBrush}" Margin="10, 0, 10, 10">
+                <Border Width="50" Height="50" CornerRadius="5" Margin="15, 15" HorizontalAlignment="Right">
+                    <Border.Background>
+                        <ImageBrush ImageSource="../Assets/player.png"/>
+                    </Border.Background>
+                </Border>
+                <TextBox Margin="5" Text="{Binding SelectedPlayer.Name}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="True"></TextBox>
+                <TextBox Margin="5" Text="{Binding SelectedPlayer.Surname}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="True"></TextBox>
+                <TextBox Margin="5" Text="{Binding SelectedPlayer.Description}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="True"></TextBox>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button 
+                            Content="Remove from the team"
+                            Margin="5"
+                            Command="{Binding DeleteSelectedObjectCommand}"
+                            CommandParameter="{Binding SelectedTeam}">
+                    </Button>
+
+                </StackPanel>
+
+            </StackPanel>
+            
+
+
+        </Grid>
 
     </Grid>
 </UserControl>

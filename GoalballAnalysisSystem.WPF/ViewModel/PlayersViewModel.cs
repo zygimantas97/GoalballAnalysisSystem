@@ -1,49 +1,65 @@
-﻿using GoalballAnalysisSystem.Domain.Models;
-using GoalballAnalysisSystem.WPF.Commands;
+﻿using GoalballAnalysisSystem.WPF.Commands;
 using GoalballAnalysisSystem.WPF.Services;
 using GoalballAnalysisSystem.WPF.State.Authenticators;
 using GoalballAnalysisSystem.WPF.State.Navigators;
 using GoalballAnalysisSystem.WPF.ViewModel;
+using GoalballAnalysisSystem.WPF.ViewModel.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using GoalballAnalysisSystem.API.Contracts.V1.Requests;
+using GoalballAnalysisSystem.API.Contracts.V1.Responses;
 
 namespace GoalballAnalysisSystem.WPF.ViewModel
 {
-    public class PlayersViewModel : BaseViewModel
+    public class PlayersViewModel : BaseViewModel, ISelectableProperties
     {
-
+        #region Commands
         public ICommand LoginCommand { get; }
         public ICommand UpdateCurrentViewModelCommand { get; }
-        public ICommand ChangeSelectedPlayer { get; }
-        public ICommand EditSelectedPlayer { get; }
-        public ICommand DeleteSelectedPlayer { get; }
-        public ICommand AddNewPlayerPlayer { get; }
+        public ICommand ChangeSelectedObjectCommand { get; }
+        public ICommand EditSelectedObjectCommand { get; }
+        public ICommand DeleteSelectedObjectCommand { get; }
+        #endregion
 
-        private readonly ObservableCollection<Player> _listOfPlayers;
+        #region Definitions
+        private readonly ObservableCollection<PlayerResponse> _listOfPlayers;
+        public ObservableCollection<PlayerResponse> ListOfPlayers
+        {
+            get { return _listOfPlayers; }
+        }
 
-        private Player _selectedPlayer;
-        public Player SelectedPlayer
+        private PlayerResponse _selectedPlayer;
+        public PlayerResponse SelectedPlayer
         {
             get
             {
                 return _selectedPlayer;
             }
-            private set
+            set
             {
                 _selectedPlayer = value;
                 OnPropertyChanged(nameof(SelectedPlayer));
             }
         }
 
-        public ObservableCollection<Player> ListOfPlayers
+        private bool _canNotBeEdited;
+        public bool CanNotBeEdited
         {
-            get { return _listOfPlayers; }
+            get
+            {
+                return _canNotBeEdited;
+            }
+            set
+            {
+                _canNotBeEdited = value;
+                OnPropertyChanged(nameof(CanNotBeEdited));
+            }
         }
-
+        #endregion
 
         public PlayersViewModel()
         {
@@ -51,19 +67,21 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             if (_listOfPlayers.Count != 0)
                 SelectedPlayer = _listOfPlayers[0];
 
+            ChangeSelectedObjectCommand = new ChangeSelecedInterfaceObject(this);
+            DeleteSelectedObjectCommand = new DeleteSelecedInterfaceObject(this);
+            EditSelectedObjectCommand = new TurnEditMode(this);
 
-
-            ChangeSelectedPlayer = new ChangeSelectedPlayer(this);
+            CanNotBeEdited = true;
         }
 
-        public ObservableCollection<Player> AddFakeData()
+        private static ObservableCollection<PlayerResponse> AddFakeData()
         {
-            ObservableCollection<Player> list = new ObservableCollection<Player>();
+            ObservableCollection<PlayerResponse> list = new ObservableCollection<PlayerResponse>();
             
 
             for(int i= 0; i< 50; i++)
             {
-                Player a = new Player();
+                PlayerResponse a = new PlayerResponse();
                 a.Name = "Vardas " + i;
                 a.Surname = "Pavarde " + i;
                 a.Id = i;
@@ -73,16 +91,21 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             return list;
         }
 
-        public void SelectPlayer(int Id)
+
+        public void ChangeEditMode()
         {
-            foreach (Player item in _listOfPlayers)
-            {
-                if(item.Id == Id)
-                {
-                    SelectedPlayer = item;
-                }
-            }
+            CanNotBeEdited = !CanNotBeEdited;
         }
 
+        void ISelectableProperties.ChangeSelectedObject(object parameter)
+        {
+            if (parameter is PlayerResponse)
+                SelectedPlayer = (PlayerResponse)parameter;
+        }
+
+        void ISelectableProperties.DeleteSelectedObject(object parameter)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

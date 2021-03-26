@@ -1,5 +1,4 @@
-﻿using GoalballAnalysisSystem.Domain.Models;
-using GoalballAnalysisSystem.Domain.Services;
+﻿using GoalballAnalysisSystem.API.Contracts.V1.Responses;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,11 +9,11 @@ namespace GoalballAnalysisSystem.WPF.State.Authenticators
 {
     public interface IAuthenticator
     {
-        User CurrentUser { get; }
+        AuthenticationResponse CurrentUser { get; }
         bool IsLoggedIn { get; }
         event Action StateChanged;
 
-        Task<RegistrationResult> Register(string name, string surname, string email, string password, string confirmPassword);
+        Task<AuthenticationResponse> Register(string name, string surname, string email, string password, string confirmPassword);
         Task<bool> Login(string email, string password);
         void Logout();
     }

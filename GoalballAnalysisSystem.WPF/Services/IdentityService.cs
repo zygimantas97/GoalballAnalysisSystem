@@ -24,7 +24,7 @@ namespace GoalballAnalysisSystem.WPF.Services
             _expirityDate = DateTime.Now;
         }
 
-        public async Task RegisterAsync(string userName, string email, string password)
+        public async Task<AuthenticationResponse> RegisterAsync(string userName, string email, string password)
         {
             var request = new RegistrationRequest
             {
@@ -45,6 +45,7 @@ namespace GoalballAnalysisSystem.WPF.Services
                     _token = authenticationResponse.Token;
                     _refreshToken = authenticationResponse.RefreshToken;
                     _expirityDate = authenticationResponse.ExpirityDate;
+                    return authenticationResponse;
                 }
                 else
                 {
@@ -54,7 +55,7 @@ namespace GoalballAnalysisSystem.WPF.Services
             }
         }
 
-        public async Task LoginAsync(string email, string password)
+        public async Task<AuthenticationResponse> LoginAsync(string email, string password)
         {
             var request = new LoginRequest
             {
@@ -74,6 +75,7 @@ namespace GoalballAnalysisSystem.WPF.Services
                     _token = authenticationResponse.Token;
                     _refreshToken = authenticationResponse.RefreshToken;
                     _expirityDate = authenticationResponse.ExpirityDate;
+                    return authenticationResponse;
                 }
                 else
                 {

@@ -13,8 +13,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     public class TeamsViewModel : BaseViewModel, ISelectableProperties
     {
-        private readonly IUserStore _userStore;
-
         #region Commands
         public ICommand ChangeSelectedObjectCommand { get; }
         public ICommand EditSelectedObjectCommand { get; }
@@ -81,7 +79,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         }
         #endregion
 
-        public TeamsViewModel(IUserStore userStore)
+        public TeamsViewModel()
         {
             _players = new ObservableCollection<PlayerResponse>();
             ChangeSelectedObjectCommand = new ChangeSelecedInterfaceObject(this);

@@ -1,4 +1,4 @@
-﻿using GoalballAnalysisSystem.Domain.Models;
+﻿using GoalballAnalysisSystem.API.Contracts.V1.Responses;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,9 +7,9 @@ namespace GoalballAnalysisSystem.WPF.State.Users
 {
     public class UserStore : IUserStore
     {
-        private User _currentUser;
+        private AuthenticationResponse _currentUser;
 
-        public User CurrentUser
+        public AuthenticationResponse CurrentUser
         {
             get { return _currentUser; }
             set

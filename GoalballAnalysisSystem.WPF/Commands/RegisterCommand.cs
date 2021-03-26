@@ -1,4 +1,4 @@
-﻿using GoalballAnalysisSystem.Domain.Services;
+﻿using GoalballAnalysisSystem.API.Contracts.V1.Responses;
 using GoalballAnalysisSystem.WPF.State.Authenticators;
 using GoalballAnalysisSystem.WPF.State.Navigators;
 using GoalballAnalysisSystem.WPF.ViewModel;
@@ -34,8 +34,8 @@ namespace GoalballAnalysisSystem.WPF.Commands
         public async void Execute(object parameter)
         {
             string[] passInfo = (string[])parameter;
-            RegistrationResult result = await _authenticator.Register(_registrationViewModel.Name, _registrationViewModel.Surname, _registrationViewModel.Email, passInfo[0], passInfo[1]);
-            if (result == RegistrationResult.Success)
+            AuthenticationResponse result = await _authenticator.Register(_registrationViewModel.Name, _registrationViewModel.Surname, _registrationViewModel.Email, passInfo[0], passInfo[1]);
+            if (result != null)
             {
                 _renavigator.Renavigate(ViewType.Login);
             }

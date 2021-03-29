@@ -25,8 +25,18 @@ namespace GoalballAnalysisSystem.GameProcessing.Models
         private readonly LinearEquation _leftEdgeRotated;
         private readonly LinearEquation _rightEdgeRotated;
 
+        public Point TopLeft { get; private set; }
+        public Point TopRight { get; private set; }
+        public Point BottomLeft { get; private set; }
+        public Point BottomRight { get; private set; }
+
         private GameAnalyzerConfigurator(Point topLeft, Point topRight, Point bottomLeft, Point bottomRight, double playgroundWidth, double playgroundHeight)
         {
+            TopLeft = topLeft;
+            TopRight = topRight;
+            BottomLeft = bottomLeft;
+            BottomRight = bottomRight;
+
             _playgroundWidth = playgroundWidth;
             _playgroundHeight = playgroundHeight;
 
@@ -86,6 +96,8 @@ namespace GoalballAnalysisSystem.GameProcessing.Models
 
         public bool IsPointInZoneOfInterest(Point point)
         {
+            if (point == null)
+                return false;
             if (_topEdge.GetY(point.X) > point.Y)
                 return false;
             if (_bottomEdge.GetY(point.X) < point.Y)
@@ -103,7 +115,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Models
 
             double width;
             double baseLineX = _baseLine.GetX(rotatedPoint.Y);
-            if(baseLineX < rotatedPoint.X)
+            if (baseLineX < rotatedPoint.X)
             {
                 width = _rightEdgeRotated.GetX(rotatedPoint.Y) - baseLineX;
             }
@@ -124,7 +136,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Models
 
             double scaledX = x * widthScale;
             double scaledY = y * heightScale;
-             
+
             return new Point((int)Math.Round(scaledX + _playgroundWidth / 2), (int)Math.Round(scaledY + _playgroundHeight));
         }
     }

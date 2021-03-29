@@ -16,10 +16,12 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <StackPanel x:Name="VideoStackPanel">
-                <WindowsFormsHost  Name="windowsFormsHost1"
-                                   Width="480"
-                                   Height="270">
-                    <WinFormControls1:ImageBox x:Name="VideoImageBox"
+                <WrapPanel>
+                    <WindowsFormsHost  Name="VideoWindowsFormsHost"
+                                       Width="480"
+                                       Height="270"
+                                       Margin="10 10 5 10">
+                        <WinFormControls1:ImageBox x:Name="VideoImageBox"
                                                Width="480"
                                                Height="270"
                                                SizeMode="Zoom"
@@ -28,7 +30,18 @@
                                                MouseUp="VideoImageBox_MouseUp"
                                                FunctionalMode="Minimum"
                                                Paint="VideoImageBox_Paint"/>
-                </WindowsFormsHost>
+                    </WindowsFormsHost>
+                    <WindowsFormsHost  Name="PlaygroundWindowsFormsHost"
+                                       Width="150"
+                                       Height="300"
+                                       Margin="5 10 10 10">
+                        <WinFormControls1:ImageBox x:Name="PlaygroundImageBox"
+                                               Width="150"
+                                               Height="300"
+                                               SizeMode="Zoom"
+                                               FunctionalMode="Minimum"/>
+                    </WindowsFormsHost>
+                </WrapPanel>
                 <TextBlock x:Name="progressTextBlock"
                            Text="{Binding Progress}"/>
             </StackPanel>

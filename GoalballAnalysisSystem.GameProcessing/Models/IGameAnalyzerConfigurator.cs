@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
+﻿using System.Drawing;
 
 namespace GoalballAnalysisSystem.GameProcessing.Models
 {
     public interface IGameAnalyzerConfigurator
     {
-        bool IsPointInZoneOfInterest(Point point);
+        Point BottomLeft { get; }
+        Point BottomRight { get; }
+        Point TopLeft { get; }
+        Point TopRight { get; }
+
         Point GetPlaygroundOXY(Point point);
+        bool IsPointInZoneOfInterest(Point point);
     }
 }

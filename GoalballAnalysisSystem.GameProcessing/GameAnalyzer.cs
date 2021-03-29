@@ -13,6 +13,8 @@ using GoalballAnalysisSystem.GameProcessing.ObjectDetection;
 using GoalballAnalysisSystem.GameProcessing.ObjectTracking;
 using GoalballAnalysisSystem.GameProcessing.Models;
 using GoalballAnalysisSystem.API.Contracts.V1.Requests;
+using GoalballAnalysisSystem.GameProcessing.Selector;
+using System.Linq;
 
 namespace GoalballAnalysisSystem.GameProcessing
 {
@@ -23,13 +25,14 @@ namespace GoalballAnalysisSystem.GameProcessing
         Finished
     }
 
-    public class GameAnalyzer
+    public class GameAnalyzer<T> where T : class
     {
         private readonly VideoCapture _videoCapture;
         private readonly Mat _cameraFeed = new Mat();
-        private readonly IGameAnalyzerConfigurator _gameZoneConfigurator;
+        private readonly IGameAnalyzerConfigurator _gameAnalyzerConfigurator;
         private readonly IObjectDetector _objectDetector;
-        private readonly IMOT<CreateGamePlayerRequest> _mot;
+        private readonly IMOT<T> _mot;
+        private readonly ISelector<T> _selector;
 
         public GameAnalyzerStatus Status { get; private set; }
         public int FPS { get; private set; }
@@ -37,7 +40,6 @@ namespace GoalballAnalysisSystem.GameProcessing
 
         public event EventHandler FrameChanged;
         public event EventHandler ProcessingFinished;
-        public event EventHandler ProjectionDetected;
 
         private Image<Bgr, byte> _currentFrame;
         public Image<Bgr, byte> CurrentFrame
@@ -54,14 +56,17 @@ namespace GoalballAnalysisSystem.GameProcessing
         public GameAnalyzer(string fileName,
                             IGameAnalyzerConfigurator gameAnalyzerConfigurator,
                             IObjectDetector objectDetector,
-                            IMOT<CreateGamePlayerRequest> mot)
+                            IMOT<T> mot,
+                            ISelector<T> selector)
         {
             _videoCapture = new VideoCapture(fileName);
             FPS = (int)_videoCapture.GetCaptureProperty(CapProp.Fps);
             FrameCount = (int)_videoCapture.GetCaptureProperty(CapProp.FrameCount);
 
+            _gameAnalyzerConfigurator = gameAnalyzerConfigurator;
             _objectDetector = objectDetector;
             _mot = mot;
+            _selector = selector;
         }
 
         public void Process()
@@ -100,8 +105,8 @@ namespace GoalballAnalysisSystem.GameProcessing
                     var detectedCategories = await _objectDetector.Detect(_cameraFeed);
                     foreach (var key in detectedCategories.Keys)
                     {
-                        var rectangles = detectedCategories[key];
-                        foreach(var rec in rectangles)
+                        var category = detectedCategories[key];
+                        foreach(var rec in category)
                         {
                             CvInvoke.Rectangle(_cameraFeed, rec, new MCvScalar(255, 0, 0), 3);
                         }
@@ -114,8 +119,23 @@ namespace GoalballAnalysisSystem.GameProcessing
                         CvInvoke.Rectangle(_cameraFeed, rectangle, new MCvScalar(255, 0, 0), 3);
                     }
 
+                    var location = detectedCategories
+                        .SelectMany(c => c.Value)
+                        .Select(rec => new Point(rec.X + rec.Width / 2, rec.Y + rec.Height / 2))
+                        .FirstOrDefault();
+
+                    if (_gameAnalyzerConfigurator.IsPointInZoneOfInterest(location))
+                    {
+                        var playgroundLocation = _gameAnalyzerConfigurator.GetPlaygroundOXY(location);
+                        var playgroundObjects = trackingObjects
+                            .ToDictionary(
+                                kvp => kvp.Key,
+                                kvp => _gameAnalyzerConfigurator.GetPlaygroundOXY(new Point(kvp.Value.X + kvp.Value.Width / 2, kvp.Value.Y + kvp.Value.Height / 2)));
+                        _selector.Update(playgroundLocation, playgroundObjects);
+                    }
+                    
                     CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();
-                    await Task.Delay(30);
+                    await Task.Delay(1000/FPS);
                 }
                 else
                 {

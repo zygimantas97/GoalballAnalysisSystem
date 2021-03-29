@@ -14,6 +14,9 @@ using Emgu.CV.Structure;
 using GoalballAnalysisSystem.GameProcessing.ObjectDetection.CustomVision;
 using System.Collections.Generic;
 using GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNX;
+using GoalballAnalysisSystem.API.Contracts.V1.Responses;
+using GoalballAnalysisSystem.GameProcessing.Selector;
+using System.Linq;
 
 namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 {
@@ -23,19 +26,26 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
         private Rectangle _selectedROI = Rectangle.Empty;
         private System.Drawing.Point _selectionStart;
 
-        private GameAnalyzer _gameAnalyzer;
+        private GameAnalyzer<TeamPlayerResponse> _gameAnalyzer;
         private IObjectDetector _objectDetector;
-        private IMOT<CreateGamePlayerRequest> _mot;
+        private IMOT<TeamPlayerResponse> _mot;
+        private ISelector<TeamPlayerResponse> _selector;
         private IGameAnalyzerConfigurator _gameAnalyzerConfigurator;
         private Mat _frame = new Mat();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private const int PLAYGROUND_WIDTH = 900;
+        private const int PLAYGROUND_HEIGHT = 1800;
+        private readonly Image<Bgr, byte> _playgroundImageBoxBackground;
+
         public MainWindow()
         {
             InitializeComponent();
-            Image<Bgr, byte> imageBoxBackground = new Image<Bgr, byte>(VideoImageBox.Width, VideoImageBox.Height, new Bgr(0, 0, 0));
-            VideoImageBox.Image = imageBoxBackground;
+            Image<Bgr, byte> videoImageBoxBackground = new Image<Bgr, byte>(VideoImageBox.Width, VideoImageBox.Height, new Bgr(0, 0, 0));
+            VideoImageBox.Image = videoImageBoxBackground;
+            _playgroundImageBoxBackground = new Image<Bgr, byte>(PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT, new Bgr(0, 0, 0));
+            PlaygroundImageBox.Image = _playgroundImageBoxBackground;
             DataContext = this;
         }
 
@@ -98,7 +108,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             }
         }
 
-        private void SelectVideoButton_Click(object sender, RoutedEventArgs e)
+        private async void SelectVideoButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             bool? result = openFileDialog.ShowDialog();
@@ -108,29 +118,73 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 capture.Read(_frame);
                 VideoImageBox.Image = _frame;
 
-                var points = new List<System.Drawing.Point>();
-                points.Add(new System.Drawing.Point(30, 25));
-                points.Add(new System.Drawing.Point(70, 25));
-                points.Add(new System.Drawing.Point(25, 75));
-                points.Add(new System.Drawing.Point(75, 75));
+                var playgroundDetector = new CustomVisionObjectDetector(new List<string>() { "TopLeft", "TopRight", "BottomLeft", "BottomRight" });
+                var playgroundDetections = await playgroundDetector.Detect(_frame);
+                var playgroundPoints = playgroundDetections
+                    .SelectMany(c => c.Value)
+                    .Select(rec => new System.Drawing.Point(rec.X + rec.Width / 2, rec.Y + rec.Height / 2))
+                    .ToList();
+                
+                _gameAnalyzerConfigurator = GameAnalyzerConfigurator.Create(playgroundPoints, _frame.Width, _frame.Height, PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT);
 
-                _gameAnalyzerConfigurator = GameAnalyzerConfigurator.Create(points, 100, 100, 900, 1800);
+                if(_gameAnalyzerConfigurator != null)
+                    DrawZoneOfInterest(_gameAnalyzerConfigurator);
 
                 _objectDetector = new ColorObjectDetector("ball");
-                _mot = new SOTBasedMOT<CreateGamePlayerRequest>();
+                _mot = new SOTBasedMOT<TeamPlayerResponse>();
+                _selector = new ProjectionSelector<TeamPlayerResponse>(0, 1800, 100);
 
-                _gameAnalyzer = new GameAnalyzer(openFileDialog.FileName,
-                    _gameAnalyzerConfigurator, _objectDetector, _mot);
+                _gameAnalyzer = new GameAnalyzer<TeamPlayerResponse>(openFileDialog.FileName,
+                    _gameAnalyzerConfigurator, _objectDetector, _mot, _selector);
 
                 _gameAnalyzer.FrameChanged += _gameAnalyzer_FrameChanged;
                 _gameAnalyzer.ProcessingFinished += _gameAnalyzer_ProcessingFinished;
-                _gameAnalyzer.ProjectionDetected += _gameAnalyzer_ProjectionDetected;
+                _selector.Selected += _selector_Selected;
             }
         }
 
-        private void _gameAnalyzer_ProjectionDetected(object sender, EventArgs e)
+        private void DrawZoneOfInterest(IGameAnalyzerConfigurator configurator, int diameter = 10)
         {
-            System.Windows.Forms.MessageBox.Show("Projection was detected");
+            var topLeftRectangle = new Rectangle()
+            {
+                X = configurator.TopLeft.X - diameter / 2,
+                Y = configurator.TopLeft.Y - diameter / 2,
+                Width = diameter,
+                Height = diameter
+            };
+            CvInvoke.Rectangle(_frame, topLeftRectangle, new MCvScalar(0, 0, 255), diameter);
+            var topRightRectangle = new Rectangle()
+            {
+                X = configurator.TopRight.X - diameter / 2,
+                Y = configurator.TopRight.Y - diameter / 2,
+                Width = diameter,
+                Height = diameter
+            };
+            CvInvoke.Rectangle(_frame, topRightRectangle, new MCvScalar(0, 0, 255), diameter);
+            var bottomLeftRectangle = new Rectangle()
+            {
+                X = configurator.BottomLeft.X - diameter / 2,
+                Y = configurator.BottomLeft.Y - diameter / 2,
+                Width = diameter,
+                Height = diameter
+            };
+            CvInvoke.Rectangle(_frame, bottomLeftRectangle, new MCvScalar(0, 0, 255), diameter);
+            var bottomRightRectangle = new Rectangle()
+            {
+                X = configurator.BottomRight.X - diameter / 2,
+                Y = configurator.BottomRight.Y -diameter / 2,
+                Width = diameter,
+                Height = diameter
+            };
+            CvInvoke.Rectangle(_frame, bottomRightRectangle, new MCvScalar(0, 0, 255), diameter);
+            VideoImageBox.Image = _frame;
+        }
+
+        private void _selector_Selected(object sender, SelectionEventArgs<TeamPlayerResponse> e)
+        {
+            var playground = _playgroundImageBoxBackground.Clone();
+            CvInvoke.Line(playground, e.SelectionStart, e.SelectionEnd, new MCvScalar(255, 255, 255), 5);
+            PlaygroundImageBox.Image = playground;
         }
 
         private void _gameAnalyzer_ProcessingFinished(object sender, EventArgs e)
@@ -180,11 +234,11 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                                                     (int)(_selectedROI.Height * verticalScale));
                 if (_gameAnalyzer.CurrentFrame != null)
                 {
-                    _mot.Add(new CreateGamePlayerRequest(), _gameAnalyzer.CurrentFrame.Mat, rectangle);
+                    _mot.Add(new TeamPlayerResponse(), _gameAnalyzer.CurrentFrame.Mat, rectangle);
                 }
                 else
                 {
-                    _mot.Add(new CreateGamePlayerRequest(), _frame, rectangle);
+                    _mot.Add(new TeamPlayerResponse(), _frame, rectangle);
                 }
                 _selectedROI = Rectangle.Empty;
                 VideoImageBox.Invalidate();
@@ -203,7 +257,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             if (result == true)
             {
                 var image = new Image<Bgr, byte>(openFileDialog.FileName);
-                var objectDetector = new CustomVisionObjectDetector(new List<string>() { "player" });
+                var objectDetector = new CustomVisionObjectDetector(new List<string>() { "TopLeft", "TopRight", "BottomLeft", "BottomRight" });
                 var detectedCategories = await objectDetector.Detect(image.Mat);
                 foreach(var key in detectedCategories.Keys)
                 {

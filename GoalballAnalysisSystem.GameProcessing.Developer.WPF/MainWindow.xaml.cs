@@ -27,16 +27,20 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
         private System.Drawing.Point _selectionStart;
 
         private GameAnalyzer<TeamPlayerResponse> _gameAnalyzer;
+        private IGameAnalyzerConfigurator _gameAnalyzerConfigurator;
         private IObjectDetector _objectDetector;
         private IMOT<TeamPlayerResponse> _mot;
         private ISelector<TeamPlayerResponse> _selector;
-        private IGameAnalyzerConfigurator _gameAnalyzerConfigurator;
         private Mat _frame = new Mat();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         private const int PLAYGROUND_WIDTH = 900;
         private const int PLAYGROUND_HEIGHT = 1800;
+        private const int SELECTION_ZONE_TOP = 300;
+        private const int SELECTION_ZONE_BOTTOM = 1200;
+        private const int MAX_SELECTION_DISTANCE = 100;
+
         private readonly Image<Bgr, byte> _playgroundImageBoxBackground;
 
         public MainWindow()
@@ -122,17 +126,17 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 var playgroundDetections = await playgroundDetector.Detect(_frame);
                 var playgroundPoints = playgroundDetections
                     .SelectMany(c => c.Value)
-                    .Select(rec => new System.Drawing.Point(rec.X + rec.Width / 2, rec.Y + rec.Height / 2))
+                    .Select(rec => Geometry.GetMiddlePoint(rec))
                     .ToList();
                 
                 _gameAnalyzerConfigurator = GameAnalyzerConfigurator.Create(playgroundPoints, _frame.Width, _frame.Height, PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT);
 
                 if(_gameAnalyzerConfigurator != null)
-                    DrawZoneOfInterest(_gameAnalyzerConfigurator);
+                    DrawSelectedZoneOfInterest(_gameAnalyzerConfigurator);
 
                 _objectDetector = new ColorObjectDetector("ball");
                 _mot = new SOTBasedMOT<TeamPlayerResponse>();
-                _selector = new ProjectionSelector<TeamPlayerResponse>(0, 1800, 100);
+                _selector = new ProjectionSelector<TeamPlayerResponse>(SELECTION_ZONE_TOP, SELECTION_ZONE_BOTTOM, MAX_SELECTION_DISTANCE);
 
                 _gameAnalyzer = new GameAnalyzer<TeamPlayerResponse>(openFileDialog.FileName,
                     _gameAnalyzerConfigurator, _objectDetector, _mot, _selector);
@@ -143,7 +147,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             }
         }
 
-        private void DrawZoneOfInterest(IGameAnalyzerConfigurator configurator, int diameter = 10)
+        private void DrawSelectedZoneOfInterest(IGameAnalyzerConfigurator configurator, int diameter = 10)
         {
             var topLeftRectangle = new Rectangle()
             {
@@ -183,14 +187,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
         private void _selector_Selected(object sender, SelectionEventArgs<TeamPlayerResponse> e)
         {
             var playground = _playgroundImageBoxBackground.Clone();
-            var rectangle = new Rectangle()
-            {
-                X = e.SelectionStart.X,
-                Y = e.SelectionStart.Y,
-                Width = 10,
-                Height = 10
-            };
-            CvInvoke.Rectangle(playground, rectangle, new MCvScalar(255, 255, 255), 5);
+            CvInvoke.Line(playground, e.SelectionStart, e.SelectionEnd, new MCvScalar(255, 255, 255), 5);
             PlaygroundImageBox.Image = playground;
         }
 
@@ -257,14 +254,14 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             _mot.RemoveAll();
         }
 
-        private async void DetectPlayersApiButton_Click(object sender, RoutedEventArgs e)
+        private async void DetectObjectsApiButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             bool? result = openFileDialog.ShowDialog();
             if (result == true)
             {
                 var image = new Image<Bgr, byte>(openFileDialog.FileName);
-                var objectDetector = new CustomVisionObjectDetector(new List<string>() { "TopLeft", "TopRight", "BottomLeft", "BottomRight" });
+                var objectDetector = new CustomVisionObjectDetector(new List<string>() { "player" });
                 var detectedCategories = await objectDetector.Detect(image.Mat);
                 foreach(var key in detectedCategories.Keys)
                 {
@@ -278,7 +275,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
             }
         }
 
-        private async void DetectPlayersOnnxButton_Click(object sender, RoutedEventArgs e)
+        private async void DetectObjectsOnnxButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             bool? result = openFileDialog.ShowDialog();

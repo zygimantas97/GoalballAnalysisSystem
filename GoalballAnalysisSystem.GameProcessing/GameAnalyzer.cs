@@ -121,17 +121,17 @@ namespace GoalballAnalysisSystem.GameProcessing
 
                     var locations = detectedCategories
                         .SelectMany(c => c.Value)
-                        .Select(rec => new Point(rec.X + rec.Width / 2, rec.Y + rec.Height / 2))
+                        .Select(rec => Geometry.GetMiddlePoint(rec))
                         .Where(p => _gameAnalyzerConfigurator.IsPointInZoneOfInterest(p));
 
-                    foreach(var loc in locations)
+                    var playgroundObjects = trackingObjects
+                        .ToDictionary(
+                            kvp => kvp.Key,
+                            kvp => _gameAnalyzerConfigurator.GetPlaygroundOXY(Geometry.GetMiddlePoint(kvp.Value)));
+                    foreach (var loc in locations)
                     {
                         var playgroundLocation = _gameAnalyzerConfigurator.GetPlaygroundOXY(loc);
-                        var playgroundObjects = trackingObjects
-                            .ToDictionary(
-                                kvp => kvp.Key,
-                                kvp => _gameAnalyzerConfigurator.GetPlaygroundOXY(new Point(kvp.Value.X + kvp.Value.Width / 2, kvp.Value.Y + kvp.Value.Height / 2)));
-                        _selector.Update(playgroundLocation, playgroundObjects);
+                        _selector.AddPoint(playgroundLocation, playgroundObjects);
                     }
                         
                     CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();

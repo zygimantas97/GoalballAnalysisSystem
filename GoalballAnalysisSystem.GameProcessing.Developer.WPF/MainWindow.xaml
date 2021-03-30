@@ -72,12 +72,12 @@
                         Click="RemoveAllTrackingObjectsButton_Click"/>
             </WrapPanel>
             <WrapPanel>
-                <Button Content="Detect players (API)"
-                        x:Name="DetectPlayersApiButton"
-                        Click="DetectPlayersApiButton_Click"/>
-                <Button Content="Detect players (ONNX)"
-                        x:Name="DetectPlayersOnnxButton"
-                        Click="DetectPlayersOnnxButton_Click"/>
+                <Button Content="Detect objects (API)"
+                        x:Name="DetectObjectsApiButton"
+                        Click="DetectObjectsApiButton_Click"/>
+                <Button Content="Detect objects (ONNX)"
+                        x:Name="DetectObjectsOnnxButton"
+                        Click="DetectObjectsOnnxButton_Click"/>
             </WrapPanel>
         </StackPanel>
         

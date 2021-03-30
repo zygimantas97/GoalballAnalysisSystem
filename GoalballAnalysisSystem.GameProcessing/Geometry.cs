@@ -17,6 +17,11 @@ namespace GoalballAnalysisSystem.GameProcessing
             return new Point((int)Math.Round((double)(point1.X + point2.X) / 2), (int)Math.Round((double)(point1.Y + point2.Y) / 2));
         }
 
+        public static Point GetMiddlePoint(Rectangle rectangle)
+        {
+            return new Point(rectangle.X + (int)Math.Round((double)rectangle.Width / 2), rectangle.Y + (int)Math.Round((double)rectangle.Height / 2));
+        }
+
         public static double GetRotationSin(Point basePoint, Point targetPoint)
         {
             return (targetPoint.Y - basePoint.Y) / GetDistanceBetweenPoints(basePoint, targetPoint);

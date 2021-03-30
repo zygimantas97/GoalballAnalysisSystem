@@ -10,8 +10,8 @@ namespace GoalballAnalysisSystem.GameProcessing.Selector
     {
         public event EventHandler<SelectionEventArgs<T>> Selected;
 
-        private readonly int _minHeight;
-        private readonly int _maxHeight;
+        private readonly int _top;
+        private readonly int _bottom;
         private readonly int _maxDistance;
 
         private Point _selectionStart;
@@ -19,30 +19,38 @@ namespace GoalballAnalysisSystem.GameProcessing.Selector
         private readonly List<Point> _selectionPoints = new List<Point>();
         private bool _isSelecting = false;
 
-        public ProjectionSelector(int minHeight, int maxHeight, int maxDistance)
+        public ProjectionSelector(int top, int bottom, int maxDistance)
         {
-            _minHeight = minHeight;
-            _maxHeight = maxHeight;
+            _top = top;
+            _bottom = bottom;
             _maxDistance = maxDistance;
         }
 
-        public void Update(Point location, Dictionary<T, Point> objects)
+        public void AddPoint(Point location, Dictionary<T, Point> objects)
         {
             if(!_isSelecting)
             {
-                if(location.Y < _minHeight || location.Y > _maxHeight)
+                if(location.Y < _top || location.Y > _bottom)
                 {
                     StartSelection(location, null);
                 }
             }
-            else if ((_selectionStart.Y < _minHeight && location.Y > _maxHeight) || (_selectionStart.Y > _maxHeight && location.Y < _minHeight))
+            else if ((_selectionStart.Y < _top && location.Y > _bottom) || (_selectionStart.Y > _bottom && location.Y < _top))
             {
                 EndSelection(location, null);
             }
             else
             {
-                // TODO: In some case need to restart selection
-                _selectionPoints.Add(location);
+                // TODO: update always when location.Y < _top || location.Y > _bottom
+                if((_selectionStart.Y < _top && location.Y < _top && location.Y > _selectionStart.Y) ||
+                   (_selectionStart.Y > _bottom && location.Y > _bottom && location.Y < _selectionStart.Y))
+                {
+                    StartSelection(location, null);
+                }
+                else
+                {
+                    _selectionPoints.Add(location);
+                }
             }
         }
 
@@ -56,6 +64,8 @@ namespace GoalballAnalysisSystem.GameProcessing.Selector
 
         private void EndSelection(Point location, T obj)
         {
+            // TODO: make equation representation of projection
+            // TODO: separate end of selection and emitting of event
             var eventArgs = new SelectionEventArgs<T>()
             {
                 SelectionStart = _selectionPoints.First(),

@@ -183,7 +183,14 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
         private void _selector_Selected(object sender, SelectionEventArgs<TeamPlayerResponse> e)
         {
             var playground = _playgroundImageBoxBackground.Clone();
-            CvInvoke.Line(playground, e.SelectionStart, e.SelectionEnd, new MCvScalar(255, 255, 255), 5);
+            var rectangle = new Rectangle()
+            {
+                X = e.SelectionStart.X,
+                Y = e.SelectionStart.Y,
+                Width = 10,
+                Height = 10
+            };
+            CvInvoke.Rectangle(playground, rectangle, new MCvScalar(255, 255, 255), 5);
             PlaygroundImageBox.Image = playground;
         }
 

@@ -119,21 +119,21 @@ namespace GoalballAnalysisSystem.GameProcessing
                         CvInvoke.Rectangle(_cameraFeed, rectangle, new MCvScalar(255, 0, 0), 3);
                     }
 
-                    var location = detectedCategories
+                    var locations = detectedCategories
                         .SelectMany(c => c.Value)
                         .Select(rec => new Point(rec.X + rec.Width / 2, rec.Y + rec.Height / 2))
-                        .FirstOrDefault();
+                        .Where(p => _gameAnalyzerConfigurator.IsPointInZoneOfInterest(p));
 
-                    if (_gameAnalyzerConfigurator.IsPointInZoneOfInterest(location))
+                    foreach(var loc in locations)
                     {
-                        var playgroundLocation = _gameAnalyzerConfigurator.GetPlaygroundOXY(location);
+                        var playgroundLocation = _gameAnalyzerConfigurator.GetPlaygroundOXY(loc);
                         var playgroundObjects = trackingObjects
                             .ToDictionary(
                                 kvp => kvp.Key,
                                 kvp => _gameAnalyzerConfigurator.GetPlaygroundOXY(new Point(kvp.Value.X + kvp.Value.Width / 2, kvp.Value.Y + kvp.Value.Height / 2)));
                         _selector.Update(playgroundLocation, playgroundObjects);
                     }
-                    
+                        
                     CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();
                     await Task.Delay(1000/FPS);
                 }

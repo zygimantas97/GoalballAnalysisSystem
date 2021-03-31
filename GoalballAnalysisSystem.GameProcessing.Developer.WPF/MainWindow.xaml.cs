@@ -4,19 +4,21 @@ using System;
 using System.Windows;
 using Microsoft.Win32;
 using Emgu.CV;
-using GoalballAnalysisSystem.GameProcessing.Models;
 using GoalballAnalysisSystem.GameProcessing.ObjectDetection.Color;
 using GoalballAnalysisSystem.GameProcessing.ObjectDetection;
 using GoalballAnalysisSystem.GameProcessing.ObjectTracking;
 using GoalballAnalysisSystem.API.Contracts.V1.Requests;
 using GoalballAnalysisSystem.GameProcessing.ObjectTracking.SOT;
+using GoalballAnalysisSystem.GameProcessing.Geometry.Equation;
 using Emgu.CV.Structure;
 using GoalballAnalysisSystem.GameProcessing.ObjectDetection.CustomVision;
 using System.Collections.Generic;
 using GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNX;
 using GoalballAnalysisSystem.API.Contracts.V1.Responses;
-using GoalballAnalysisSystem.GameProcessing.Selector;
 using System.Linq;
+using GoalballAnalysisSystem.GameProcessing.Geometry;
+using GoalballAnalysisSystem.GameProcessing.GameAnalysis;
+using GoalballAnalysisSystem.GameProcessing.Selection;
 
 namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 {
@@ -26,7 +28,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
         private Rectangle _selectedROI = Rectangle.Empty;
         private System.Drawing.Point _selectionStart;
 
-        private GameAnalyzer<TeamPlayerResponse> _gameAnalyzer;
+        private IGameAnalyzer<TeamPlayerResponse> _gameAnalyzer;
         private IGameAnalyzerConfigurator _gameAnalyzerConfigurator;
         private IObjectDetector _objectDetector;
         private IMOT<TeamPlayerResponse> _mot;
@@ -126,7 +128,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
                 var playgroundDetections = await playgroundDetector.Detect(_frame);
                 var playgroundPoints = playgroundDetections
                     .SelectMany(c => c.Value)
-                    .Select(rec => Geometry.GetMiddlePoint(rec))
+                    .Select(rec => Calculations.GetMiddlePoint(rec))
                     .ToList();
                 
                 _gameAnalyzerConfigurator = GameAnalyzerConfigurator.Create(playgroundPoints, _frame.Width, _frame.Height, PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT);
@@ -187,7 +189,17 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
         private void _selector_Selected(object sender, SelectionEventArgs<TeamPlayerResponse> e)
         {
             var playground = _playgroundImageBoxBackground.Clone();
-            CvInvoke.Line(playground, e.SelectionStart, e.SelectionEnd, new MCvScalar(255, 255, 255), 5);
+
+            double startY = e.SelectionStart.Y < e.SelectionEnd.Y ? 0 : PLAYGROUND_HEIGHT;
+            double endY = e.SelectionStart.Y < e.SelectionEnd.Y ? PLAYGROUND_HEIGHT : 0;
+
+            double startX = e.SelectionEquation.GetX(startY);
+            double endX = e.SelectionEquation.GetX(endY);
+
+            var startPoint = new System.Drawing.Point((int)Math.Round(startX), (int)Math.Round(startY));
+            var endPoint = new System.Drawing.Point((int)Math.Round(endX), (int)Math.Round(endY));
+
+            CvInvoke.Line(playground, startPoint, endPoint, new MCvScalar(255, 255, 255), 5);
             PlaygroundImageBox.Image = playground;
         }
 

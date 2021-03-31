@@ -1,6 +1,9 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Text;
 
-namespace GoalballAnalysisSystem.GameProcessing.Models
+namespace GoalballAnalysisSystem.GameProcessing.GameAnalysis
 {
     public interface IGameAnalyzerConfigurator
     {

@@ -1,29 +1,31 @@
-﻿using System;
+﻿using GoalballAnalysisSystem.GameProcessing.Geometry;
+using GoalballAnalysisSystem.GameProcessing.Geometry.Equation;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace GoalballAnalysisSystem.GameProcessing.Models
+namespace GoalballAnalysisSystem.GameProcessing.GameAnalysis
 {
     public class GameAnalyzerConfigurator : IGameAnalyzerConfigurator
     {
         private readonly Point _basePoint;
-        private readonly LinearEquation _baseLine;
+        private readonly IEquation _baseLine;
         private readonly double _rotationSin;
         private readonly double _rotationCos;
         private readonly double _playgroundWidth;
         private readonly double _playgroundHeight;
 
-        private readonly LinearEquation _topEdge;
-        private readonly LinearEquation _bottomEdge;
-        private readonly LinearEquation _leftEdge;
-        private readonly LinearEquation _rightEdge;
+        private readonly IEquation _topEdge;
+        private readonly IEquation _bottomEdge;
+        private readonly IEquation _leftEdge;
+        private readonly IEquation _rightEdge;
 
-        private readonly LinearEquation _topEdgeRotated;
-        private readonly LinearEquation _bottomEdgeRotated;
-        private readonly LinearEquation _leftEdgeRotated;
-        private readonly LinearEquation _rightEdgeRotated;
+        private readonly IEquation _topEdgeRotated;
+        private readonly IEquation _bottomEdgeRotated;
+        private readonly IEquation _leftEdgeRotated;
+        private readonly IEquation _rightEdgeRotated;
 
         public Point TopLeft { get; private set; }
         public Point TopRight { get; private set; }
@@ -45,22 +47,22 @@ namespace GoalballAnalysisSystem.GameProcessing.Models
             _leftEdge = new LinearEquation(bottomLeft, topLeft);
             _rightEdge = new LinearEquation(topRight, bottomRight);
 
-            _basePoint = Geometry.GetMiddlePoint(bottomLeft, bottomRight);
-            _rotationSin = Geometry.GetRotationSin(_basePoint, bottomRight);
-            _rotationCos = Geometry.GetRotationCos(_basePoint, bottomRight);
+            _basePoint = Calculations.GetMiddlePoint(bottomLeft, bottomRight);
+            _rotationSin = Calculations.GetRotationSin(_basePoint, bottomRight);
+            _rotationCos = Calculations.GetRotationCos(_basePoint, bottomRight);
 
-            var topLeftRotated = Geometry.RotatePoint(_basePoint, topLeft, -_rotationSin, _rotationCos);
-            var topRightRotated = Geometry.RotatePoint(_basePoint, topRight, -_rotationSin, _rotationCos);
-            var bottomLeftRotated = Geometry.RotatePoint(_basePoint, bottomLeft, -_rotationSin, _rotationCos);
-            var bottomRightRotated = Geometry.RotatePoint(_basePoint, bottomRight, -_rotationSin, _rotationCos);
+            var topLeftRotated = Calculations.RotatePoint(_basePoint, topLeft, -_rotationSin, _rotationCos);
+            var topRightRotated = Calculations.RotatePoint(_basePoint, topRight, -_rotationSin, _rotationCos);
+            var bottomLeftRotated = Calculations.RotatePoint(_basePoint, bottomLeft, -_rotationSin, _rotationCos);
+            var bottomRightRotated = Calculations.RotatePoint(_basePoint, bottomRight, -_rotationSin, _rotationCos);
 
             _topEdgeRotated = new LinearEquation(topLeftRotated, topRightRotated);
             _bottomEdgeRotated = new LinearEquation(bottomLeftRotated, bottomRightRotated);
             _leftEdgeRotated = new LinearEquation(bottomLeftRotated, topLeftRotated);
             _rightEdgeRotated = new LinearEquation(topRightRotated, bottomRightRotated);
 
-            var topEdgeMiddlePoint = Geometry.GetMiddlePoint(topLeft, topRight);
-            var topEdgeMiddlePointRotated = Geometry.RotatePoint(_basePoint, topEdgeMiddlePoint, -_rotationSin, _rotationCos);
+            var topEdgeMiddlePoint = Calculations.GetMiddlePoint(topLeft, topRight);
+            var topEdgeMiddlePointRotated = Calculations.RotatePoint(_basePoint, topEdgeMiddlePoint, -_rotationSin, _rotationCos);
             _baseLine = new LinearEquation(_basePoint, topEdgeMiddlePointRotated);
         }
 
@@ -70,19 +72,19 @@ namespace GoalballAnalysisSystem.GameProcessing.Models
 
             var topLeft = points
                 .Where(p => p.X < center.X && p.Y < center.Y)
-                .OrderByDescending(p => Geometry.GetDistanceBetweenPoints(p, center))
+                .OrderByDescending(p => Calculations.GetDistanceBetweenPoints(p, center))
                 .FirstOrDefault();
             var topRight = points
                 .Where(p => p.X > center.X && p.Y < center.Y)
-                .OrderByDescending(p => Geometry.GetDistanceBetweenPoints(p, center))
+                .OrderByDescending(p => Calculations.GetDistanceBetweenPoints(p, center))
                 .FirstOrDefault();
             var bottomLeft = points
                 .Where(p => p.X < center.X && p.Y > center.Y)
-                .OrderByDescending(p => Geometry.GetDistanceBetweenPoints(p, center))
+                .OrderByDescending(p => Calculations.GetDistanceBetweenPoints(p, center))
                 .FirstOrDefault();
             var bottomRight = points
                 .Where(p => p.X > center.X && p.Y > center.Y)
-                .OrderByDescending(p => Geometry.GetDistanceBetweenPoints(p, center))
+                .OrderByDescending(p => Calculations.GetDistanceBetweenPoints(p, center))
                 .FirstOrDefault();
 
             if (topLeft == null || topRight == null || bottomLeft == null || bottomRight == null)
@@ -111,7 +113,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Models
 
         public Point GetPlaygroundOXY(Point point)
         {
-            var rotatedPoint = Geometry.RotatePoint(_basePoint, point, -_rotationSin, _rotationCos);
+            var rotatedPoint = Calculations.RotatePoint(_basePoint, point, -_rotationSin, _rotationCos);
 
             double width;
             double baseLineX = _baseLine.GetX(rotatedPoint.Y);

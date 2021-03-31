@@ -10,21 +10,14 @@ using System.Text;
 using System.Threading.Tasks;
 using GoalballAnalysisSystem.GameProcessing.ObjectDetection;
 using GoalballAnalysisSystem.GameProcessing.ObjectTracking;
-using GoalballAnalysisSystem.GameProcessing.Models;
 using GoalballAnalysisSystem.API.Contracts.V1.Requests;
-using GoalballAnalysisSystem.GameProcessing.Selector;
 using System.Linq;
+using GoalballAnalysisSystem.GameProcessing.Geometry;
+using GoalballAnalysisSystem.GameProcessing.Selection;
 
-namespace GoalballAnalysisSystem.GameProcessing
+namespace GoalballAnalysisSystem.GameProcessing.GameAnalysis
 {
-    public enum GameAnalyzerStatus
-    {
-        Paused,
-        Processing,
-        Finished
-    }
-
-    public class GameAnalyzer<T> where T : class
+    public class GameAnalyzer<T> : IGameAnalyzer<T> where T : class
     {
         private readonly VideoCapture _videoCapture;
         private readonly Mat _cameraFeed = new Mat();
@@ -70,7 +63,7 @@ namespace GoalballAnalysisSystem.GameProcessing
 
         public void Process()
         {
-            if(Status == GameAnalyzerStatus.Paused)
+            if (Status == GameAnalyzerStatus.Paused)
             {
                 Status = GameAnalyzerStatus.Processing;
                 ProcessVideoStream();
@@ -79,7 +72,7 @@ namespace GoalballAnalysisSystem.GameProcessing
 
         public void Pause()
         {
-            if(Status == GameAnalyzerStatus.Processing)
+            if (Status == GameAnalyzerStatus.Processing)
             {
                 Status = GameAnalyzerStatus.Paused;
             }
@@ -87,7 +80,7 @@ namespace GoalballAnalysisSystem.GameProcessing
 
         public void Finish()
         {
-            if(Status == GameAnalyzerStatus.Paused)
+            if (Status == GameAnalyzerStatus.Paused)
             {
                 Status = GameAnalyzerStatus.Finished;
                 ProcessingFinished?.Invoke(this, EventArgs.Empty);
@@ -99,13 +92,13 @@ namespace GoalballAnalysisSystem.GameProcessing
             while (Status == GameAnalyzerStatus.Processing)
             {
                 _videoCapture.Read(_cameraFeed);
-                if(_cameraFeed != null)
+                if (_cameraFeed != null)
                 {
                     var detectedCategories = await _objectDetector.Detect(_cameraFeed);
                     foreach (var key in detectedCategories.Keys)
                     {
                         var category = detectedCategories[key];
-                        foreach(var rec in category)
+                        foreach (var rec in category)
                         {
                             CvInvoke.Rectangle(_cameraFeed, rec, new MCvScalar(255, 0, 0), 3);
                         }
@@ -120,26 +113,26 @@ namespace GoalballAnalysisSystem.GameProcessing
 
                     var locations = detectedCategories
                         .SelectMany(c => c.Value)
-                        .Select(rec => Geometry.GetMiddlePoint(rec))
+                        .Select(rec => Calculations.GetMiddlePoint(rec))
                         .Where(p => _gameAnalyzerConfigurator.IsPointInZoneOfInterest(p));
 
                     var playgroundObjects = trackingObjects
                         .ToDictionary(
                             kvp => kvp.Key,
-                            kvp => _gameAnalyzerConfigurator.GetPlaygroundOXY(Geometry.GetMiddlePoint(kvp.Value)));
+                            kvp => _gameAnalyzerConfigurator.GetPlaygroundOXY(Calculations.GetMiddlePoint(kvp.Value)));
                     foreach (var loc in locations)
                     {
                         var playgroundLocation = _gameAnalyzerConfigurator.GetPlaygroundOXY(loc);
                         _selector.AddLocation(playgroundLocation, playgroundObjects);
                     }
-                        
+
                     CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();
-                    await Task.Delay(1000/FPS);
+                    await Task.Delay(1000 / FPS);
                 }
                 else
                 {
                     Pause();
-                    Finish(); 
+                    Finish();
                 }
             }
         }

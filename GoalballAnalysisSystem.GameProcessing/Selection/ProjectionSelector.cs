@@ -1,11 +1,12 @@
-﻿using GoalballAnalysisSystem.GameProcessing.Models;
+﻿using GoalballAnalysisSystem.GameProcessing.Geometry;
+using GoalballAnalysisSystem.GameProcessing.Geometry.Equation;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace GoalballAnalysisSystem.GameProcessing.Selector
+namespace GoalballAnalysisSystem.GameProcessing.Selection
 {
     public class ProjectionSelector<T> : ISelector<T> where T : class
     {
@@ -42,9 +43,8 @@ namespace GoalballAnalysisSystem.GameProcessing.Selector
             }
             else
             {
-                // TODO: update always when location.Y < _top || location.Y > _bottom
-                if((_selectionStart.Y < _top && location.Y < _top && location.Y > _selectionStart.Y) ||
-                   (_selectionStart.Y > _bottom && location.Y > _bottom && location.Y < _selectionStart.Y))
+                if ((_selectionStart.Y < _top && location.Y < _top) ||
+                   (_selectionStart.Y > _bottom && location.Y > _bottom))
                 {
                     StartSelection(location, objects);
                 }
@@ -61,17 +61,18 @@ namespace GoalballAnalysisSystem.GameProcessing.Selector
             _selectionPoints.Clear();
             _selectionPoints.Add(location);
             _selectionStartObject = objects
-                .Where(kvp => _maxDistance >= Geometry.GetDistanceBetweenPoints(kvp.Value, location))
-                .OrderBy(kvp => Geometry.GetDistanceBetweenPoints(kvp.Value, location))
+                .Where(kvp => _maxDistance >= Calculations.GetDistanceBetweenPoints(kvp.Value, location))
+                .OrderBy(kvp => Calculations.GetDistanceBetweenPoints(kvp.Value, location))
                 .FirstOrDefault().Key;
             _isSelecting = true;
         }
 
         private void EndSelection(Point location, Dictionary<T, Point> objects)
         {
+            _selectionPoints.Add(location);
             var selectionEndObject = objects
-                .Where(kvp => _maxDistance >= Geometry.GetDistanceBetweenPoints(kvp.Value, location))
-                .OrderBy(kvp => Geometry.GetDistanceBetweenPoints(kvp.Value, location))
+                .Where(kvp => _maxDistance >= Calculations.GetDistanceBetweenPoints(kvp.Value, location))
+                .OrderBy(kvp => Calculations.GetDistanceBetweenPoints(kvp.Value, location))
                 .FirstOrDefault().Key;
             
             OnSelected(_selectionPoints, _selectionStartObject, selectionEndObject);

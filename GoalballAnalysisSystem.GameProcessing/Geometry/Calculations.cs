@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace GoalballAnalysisSystem.GameProcessing
+namespace GoalballAnalysisSystem.GameProcessing.Geometry
 {
-    public static class Geometry
+    public static class Calculations
     {
         public static double GetDistanceBetweenPoints(Point point1, Point point2)
         {

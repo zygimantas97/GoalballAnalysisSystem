@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace GoalballAnalysisSystem.GameProcessing.Models
+namespace GoalballAnalysisSystem.GameProcessing.Geometry.Equation
 {
     public class LinearEquation : IEquation
     {

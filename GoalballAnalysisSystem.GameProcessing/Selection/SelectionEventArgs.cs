@@ -1,10 +1,10 @@
-﻿using GoalballAnalysisSystem.GameProcessing.Models;
+﻿using GoalballAnalysisSystem.GameProcessing.Geometry.Equation;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace GoalballAnalysisSystem.GameProcessing.Selector
+namespace GoalballAnalysisSystem.GameProcessing.Selection
 {
     public class SelectionEventArgs<T> : EventArgs where T : class
     {

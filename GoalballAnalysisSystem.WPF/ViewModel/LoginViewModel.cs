@@ -33,6 +33,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         {
             LoginCommand = new LoginCommand(this, authenticator, renavigator);
             UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(renavigator);
+            Email = "gudauskas.julius@gmail.com";
         }
 
     }

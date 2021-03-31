@@ -8,6 +8,6 @@ namespace GoalballAnalysisSystem.GameProcessing.Selector
     {
         event EventHandler<SelectionEventArgs<T>> Selected;
 
-        void AddPoint(Point locationt, Dictionary<T, Point> objects);
+        void AddLocation(Point locationt, Dictionary<T, Point> objects);
     }
 }

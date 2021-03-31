@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GoalballAnalysisSystem.GameProcessing.Models;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -26,18 +27,18 @@ namespace GoalballAnalysisSystem.GameProcessing.Selector
             _maxDistance = maxDistance;
         }
 
-        public void AddPoint(Point location, Dictionary<T, Point> objects)
+        public void AddLocation(Point location, Dictionary<T, Point> objects)
         {
             if(!_isSelecting)
             {
                 if(location.Y < _top || location.Y > _bottom)
                 {
-                    StartSelection(location, null);
+                    StartSelection(location, objects);
                 }
             }
             else if ((_selectionStart.Y < _top && location.Y > _bottom) || (_selectionStart.Y > _bottom && location.Y < _top))
             {
-                EndSelection(location, null);
+                EndSelection(location, objects);
             }
             else
             {
@@ -45,7 +46,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Selector
                 if((_selectionStart.Y < _top && location.Y < _top && location.Y > _selectionStart.Y) ||
                    (_selectionStart.Y > _bottom && location.Y > _bottom && location.Y < _selectionStart.Y))
                 {
-                    StartSelection(location, null);
+                    StartSelection(location, objects);
                 }
                 else
                 {
@@ -54,27 +55,43 @@ namespace GoalballAnalysisSystem.GameProcessing.Selector
             }
         }
 
-        private void StartSelection(Point location, T obj)
+        private void StartSelection(Point location, Dictionary<T, Point> objects)
         {
             _selectionStart = location;
             _selectionPoints.Clear();
             _selectionPoints.Add(location);
+            _selectionStartObject = objects
+                .Where(kvp => _maxDistance >= Geometry.GetDistanceBetweenPoints(kvp.Value, location))
+                .OrderBy(kvp => Geometry.GetDistanceBetweenPoints(kvp.Value, location))
+                .FirstOrDefault().Key;
             _isSelecting = true;
         }
 
-        private void EndSelection(Point location, T obj)
+        private void EndSelection(Point location, Dictionary<T, Point> objects)
         {
-            // TODO: make equation representation of projection
-            // TODO: separate end of selection and emitting of event
-            var eventArgs = new SelectionEventArgs<T>()
-            {
-                SelectionStart = _selectionPoints.First(),
-                SelectionEnd = location
-            };
-            Selected?.Invoke(this, eventArgs);
+            var selectionEndObject = objects
+                .Where(kvp => _maxDistance >= Geometry.GetDistanceBetweenPoints(kvp.Value, location))
+                .OrderBy(kvp => Geometry.GetDistanceBetweenPoints(kvp.Value, location))
+                .FirstOrDefault().Key;
+            
+            OnSelected(_selectionPoints, _selectionStartObject, selectionEndObject);
 
             _selectionPoints.Clear();
+            _selectionStartObject = null;
             _isSelecting = false;
+        }
+
+        private void OnSelected(List<Point> selectionPoints, T selectionStartObject, T selectionEndObject)
+        {
+            var eventArgs = new SelectionEventArgs<T>()
+            {
+                SelectionStart = selectionPoints.First(),
+                SelectionEnd = selectionPoints.Last(),
+                SelectionEquation = new LinearEquation(selectionPoints.First(), selectionPoints.Last()),
+                SelectionStartObject = selectionStartObject,
+                SelectionEndObject = selectionEndObject
+            };
+            Selected?.Invoke(this, eventArgs);
         }
     }
 }

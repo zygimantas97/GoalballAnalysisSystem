@@ -1,7 +1,6 @@
 ﻿using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
-using GoalballAnalysisSystem.GameProcessing.PlayFieldTracker;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -131,7 +130,7 @@ namespace GoalballAnalysisSystem.GameProcessing
                     foreach (var loc in locations)
                     {
                         var playgroundLocation = _gameAnalyzerConfigurator.GetPlaygroundOXY(loc);
-                        _selector.AddPoint(playgroundLocation, playgroundObjects);
+                        _selector.AddLocation(playgroundLocation, playgroundObjects);
                     }
                         
                     CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();

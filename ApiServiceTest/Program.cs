@@ -22,10 +22,11 @@ namespace ApiServiceTest
             var gamesService = new GamesService(identityService);
             var gamePlayersService = new GamePlayersService(identityService);
             var projectionsService = new ProjectionsService(identityService);
-           // try
-           // {
-                await identityService.RegisterAsync("julius", "user@gas.com", "Password123!");
-               // await identityService.LoginAsync("user@gas.com", "Password123!");
+            var playerRolesService = new PlayerRolesService(identityService);
+            try
+            {
+                await identityService.LoginAsync("user@gas.com", "Password123!");
+                var playerRoles = await playerRolesService.GetPlayerRolesAsync();
 
                 //var teamResponse = await teamsService.CreateTeamAsync(new TeamRequest
                 //{
@@ -100,12 +101,12 @@ namespace ApiServiceTest
                 //Console.WriteLine("X1: " + deleteResponse.X1);
 
                 //Console.WriteLine("Ok");
-           // }
-            //catch(Exception e)
-           // {
-           //     Console.WriteLine("Error");
-           //     Console.WriteLine(e.Message);
-          //  }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Error");
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }

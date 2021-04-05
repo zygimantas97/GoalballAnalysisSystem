@@ -39,7 +39,9 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             var userId = HttpContext.GetUserId();
             return Ok(_mapper.Map<List<GameResponse>>(await _context.Games
                 .Include(g => g.HomeTeam).ThenInclude(ht => ht.TeamPlayers).ThenInclude(htp => htp.Player)
+                .Include(g => g.HomeTeam).ThenInclude(ht => ht.TeamPlayers).ThenInclude(htp => htp.Role)
                 .Include(g => g.GuestTeam).ThenInclude(gt => gt.TeamPlayers).ThenInclude(gtp => gtp.Player)
+                .Include(g => g.GuestTeam).ThenInclude(gt => gt.TeamPlayers).ThenInclude(gtp => gtp.Role)
                 .Where(g => g.IdentityUserId == userId)
                 .AsNoTracking()
                 .ToListAsync()));
@@ -58,7 +60,9 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             var userId = HttpContext.GetUserId();
             var game = await _context.Games
                 .Include(g => g.HomeTeam).ThenInclude(ht => ht.TeamPlayers).ThenInclude(htp => htp.Player)
+                .Include(g => g.HomeTeam).ThenInclude(ht => ht.TeamPlayers).ThenInclude(htp => htp.Role)
                 .Include(g => g.GuestTeam).ThenInclude(gt => gt.TeamPlayers).ThenInclude(gtp => gtp.Player)
+                .Include(g => g.GuestTeam).ThenInclude(gt => gt.TeamPlayers).ThenInclude(gtp => gtp.Role)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(g => g.Id == gameId && g.IdentityUserId == userId);
 
@@ -128,6 +132,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
                 {
                     homeTeam = await _context.Teams
                         .Include(t => t.TeamPlayers).ThenInclude(tp => tp.Player)
+                        .Include(t => t.TeamPlayers).ThenInclude(tp => tp.Role)
                         .AsNoTracking()
                         .SingleOrDefaultAsync(t => t.Id == request.HomeTeamId && t.IdentityUserId == userId);
                     if (homeTeam == null)
@@ -139,6 +144,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
                 {
                     guestTeam = await _context.Teams
                         .Include(t => t.TeamPlayers).ThenInclude(tp => tp.Player)
+                        .Include(t => t.TeamPlayers).ThenInclude(tp => tp.Role)
                         .AsNoTracking()
                         .SingleOrDefaultAsync(t => t.Id == request.GuestTeamId && t.IdentityUserId == userId);
                     if (guestTeam == null)
@@ -173,7 +179,9 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             var game = await _context.Games
                 .Include(g => g.GamePlayers)
                 .Include(g => g.HomeTeam).ThenInclude(ht => ht.TeamPlayers).ThenInclude(htp => htp.Player)
+                .Include(g => g.HomeTeam).ThenInclude(ht => ht.TeamPlayers).ThenInclude(htp => htp.Role)
                 .Include(g => g.GuestTeam).ThenInclude(gt => gt.TeamPlayers).ThenInclude(gtp => gtp.Player)
+                .Include(g => g.GuestTeam).ThenInclude(gt => gt.TeamPlayers).ThenInclude(gtp => gtp.Role)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(g => g.Id == gameId && g.IdentityUserId == userId);
             if (game == null)

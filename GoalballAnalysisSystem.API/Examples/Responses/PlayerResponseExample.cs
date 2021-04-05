@@ -34,7 +34,12 @@ namespace GoalballAnalysisSystem.API.Examples.Responses
                             Description = "Very good team",
                             TeamPlayers = null
                         },
-                        Player = null
+                        Player = null,
+                        Role = new PlayerRoleResponse
+                        {
+                            Id = 1,
+                            Name = "LeftStriker"
+                        }
                     }
                 }
             };

@@ -128,6 +128,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             var player = await _context.Players
                 .Include(p => p.PlayerTeams).ThenInclude(pt => pt.Team)
                 .Include(p => p.PlayerTeams).ThenInclude(pt => pt.Role)
+                .Include(p => p.PlayerTeams).ThenInclude(pt => pt.GamePlayers)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(p => p.Id == playerId && p.IdentityUserId == userId);
             if (player == null)

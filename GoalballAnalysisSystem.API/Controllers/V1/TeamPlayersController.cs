@@ -41,6 +41,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             return Ok(_mapper.Map<List<TeamPlayerResponse>>(await _context.TeamPlayers
                 .Include(tp => tp.Team)
                 .Include(tp => tp.Player)
+                .Include(tp => tp.Role)
                 .Where(tp => tp.Team.IdentityUserId == userId && tp.TeamId == teamId)
                 .AsNoTracking()
                 .ToListAsync()));
@@ -58,6 +59,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             return Ok(_mapper.Map<List<TeamPlayerResponse>>(await _context.TeamPlayers
                 .Include(tp => tp.Team)
                 .Include(tp => tp.Player)
+                .Include(tp => tp.Role)
                 .Where(tp => tp.Player.IdentityUserId == userId && tp.PlayerId == playerId)
                 .AsNoTracking()
                 .ToListAsync()));
@@ -77,6 +79,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             var teamPlayer = await _context.TeamPlayers
                 .Include(tp => tp.Team)
                 .Include(tp => tp.Player)
+                .Include(tp => tp.Role)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(tp => tp.Team.IdentityUserId == userId && tp.TeamId == teamId && tp.Player.IdentityUserId == userId && tp.PlayerId == playerId);
 
@@ -192,6 +195,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             await _context.SaveChangesAsync();
             teamPlayer.Team = team;
             teamPlayer.Player = player;
+            teamPlayer.Role = playerRole;
             return CreatedAtAction("GetTeamPlayer", new { teamId = teamPlayer.TeamId, playerId = teamPlayer.PlayerId }, _mapper.Map<TeamPlayerResponse>(teamPlayer));
         }
 
@@ -209,6 +213,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             var teamPlayer = await _context.TeamPlayers
                 .Include(tp => tp.Team)
                 .Include(tp => tp.Player)
+                .Include(tp => tp.Role)
                 .Include(tp => tp.GamePlayers)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(tp => tp.Team.IdentityUserId == userId && tp.TeamId == teamId && tp.Player.IdentityUserId == userId && tp.PlayerId == playerId);

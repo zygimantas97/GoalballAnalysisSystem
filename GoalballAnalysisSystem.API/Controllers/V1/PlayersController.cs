@@ -39,6 +39,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             var userId = HttpContext.GetUserId();
             return Ok(_mapper.Map<List<PlayerResponse>>(await _context.Players
                 .Include(p => p.PlayerTeams).ThenInclude(pt => pt.Team)
+                .Include(p => p.PlayerTeams).ThenInclude(pt => pt.Role)
                 .Where(p => p.IdentityUserId == userId)
                 .AsNoTracking()
                 .ToListAsync()));
@@ -57,6 +58,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             var userId = HttpContext.GetUserId();
             var player = await _context.Players
                 .Include(p => p.PlayerTeams).ThenInclude(pt => pt.Team)
+                .Include(p => p.PlayerTeams).ThenInclude(pt => pt.Role)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(p => p.Id == playerId && p.IdentityUserId == userId);
 
@@ -125,6 +127,8 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             var userId = HttpContext.GetUserId();
             var player = await _context.Players
                 .Include(p => p.PlayerTeams).ThenInclude(pt => pt.Team)
+                .Include(p => p.PlayerTeams).ThenInclude(pt => pt.Role)
+                .Include(p => p.PlayerTeams).ThenInclude(pt => pt.GamePlayers)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(p => p.Id == playerId && p.IdentityUserId == userId);
             if (player == null)

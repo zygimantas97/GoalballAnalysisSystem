@@ -42,6 +42,11 @@ namespace GoalballAnalysisSystem.API.Examples.Responses
                                 Country = "LTU",
                                 Description = "Very good player",
                                 PlayerTeams = null
+                            },
+                            Role = new PlayerRoleResponse
+                            {
+                                Id = 1,
+                                Name = "LeftStriker"
                             }
                         }
                     }
@@ -69,6 +74,11 @@ namespace GoalballAnalysisSystem.API.Examples.Responses
                                 Country = "GER",
                                 Description = "Very good player",
                                 PlayerTeams = null
+                            },
+                            Role = new PlayerRoleResponse
+                            {
+                                Id = 1,
+                                Name = "LeftStriker"
                             }
                         }
                     }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace GoalballAnalysisSystem.GameProcessing
+namespace GoalballAnalysisSystem.GameProcessing.Geometry
 {
-    public static class Geometry
+    public static class Calculations
     {
         public static double GetDistanceBetweenPoints(Point point1, Point point2)
         {
@@ -15,6 +15,11 @@ namespace GoalballAnalysisSystem.GameProcessing
         public static Point GetMiddlePoint(Point point1, Point point2)
         {
             return new Point((int)Math.Round((double)(point1.X + point2.X) / 2), (int)Math.Round((double)(point1.Y + point2.Y) / 2));
+        }
+
+        public static Point GetMiddlePoint(Rectangle rectangle)
+        {
+            return new Point(rectangle.X + (int)Math.Round((double)rectangle.Width / 2), rectangle.Y + (int)Math.Round((double)rectangle.Height / 2));
         }
 
         public static double GetRotationSin(Point basePoint, Point targetPoint)

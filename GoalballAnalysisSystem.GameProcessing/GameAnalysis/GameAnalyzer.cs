@@ -1,7 +1,6 @@
 ﻿using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
-using GoalballAnalysisSystem.GameProcessing.PlayFieldTracker;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,25 +10,21 @@ using System.Text;
 using System.Threading.Tasks;
 using GoalballAnalysisSystem.GameProcessing.ObjectDetection;
 using GoalballAnalysisSystem.GameProcessing.ObjectTracking;
-using GoalballAnalysisSystem.GameProcessing.Models;
 using GoalballAnalysisSystem.API.Contracts.V1.Requests;
+using System.Linq;
+using GoalballAnalysisSystem.GameProcessing.Geometry;
+using GoalballAnalysisSystem.GameProcessing.Selection;
 
-namespace GoalballAnalysisSystem.GameProcessing
+namespace GoalballAnalysisSystem.GameProcessing.GameAnalysis
 {
-    public enum GameAnalyzerStatus
-    {
-        Paused,
-        Processing,
-        Finished
-    }
-
-    public class GameAnalyzer
+    public class GameAnalyzer<T> : IGameAnalyzer<T> where T : class
     {
         private readonly VideoCapture _videoCapture;
         private readonly Mat _cameraFeed = new Mat();
-        private readonly IGameAnalyzerConfigurator _gameZoneConfigurator;
+        private readonly IGameAnalyzerConfigurator _gameAnalyzerConfigurator;
         private readonly IObjectDetector _objectDetector;
-        private readonly IMOT<CreateGamePlayerRequest> _mot;
+        private readonly IMOT<T> _mot;
+        private readonly ISelector<T> _selector;
 
         public GameAnalyzerStatus Status { get; private set; }
         public int FPS { get; private set; }
@@ -37,7 +32,6 @@ namespace GoalballAnalysisSystem.GameProcessing
 
         public event EventHandler FrameChanged;
         public event EventHandler ProcessingFinished;
-        public event EventHandler ProjectionDetected;
 
         private Image<Bgr, byte> _currentFrame;
         public Image<Bgr, byte> CurrentFrame
@@ -54,19 +48,22 @@ namespace GoalballAnalysisSystem.GameProcessing
         public GameAnalyzer(string fileName,
                             IGameAnalyzerConfigurator gameAnalyzerConfigurator,
                             IObjectDetector objectDetector,
-                            IMOT<CreateGamePlayerRequest> mot)
+                            IMOT<T> mot,
+                            ISelector<T> selector)
         {
             _videoCapture = new VideoCapture(fileName);
             FPS = (int)_videoCapture.GetCaptureProperty(CapProp.Fps);
             FrameCount = (int)_videoCapture.GetCaptureProperty(CapProp.FrameCount);
 
+            _gameAnalyzerConfigurator = gameAnalyzerConfigurator;
             _objectDetector = objectDetector;
             _mot = mot;
+            _selector = selector;
         }
 
         public void Process()
         {
-            if(Status == GameAnalyzerStatus.Paused)
+            if (Status == GameAnalyzerStatus.Paused)
             {
                 Status = GameAnalyzerStatus.Processing;
                 ProcessVideoStream();
@@ -75,7 +72,7 @@ namespace GoalballAnalysisSystem.GameProcessing
 
         public void Pause()
         {
-            if(Status == GameAnalyzerStatus.Processing)
+            if (Status == GameAnalyzerStatus.Processing)
             {
                 Status = GameAnalyzerStatus.Paused;
             }
@@ -83,7 +80,7 @@ namespace GoalballAnalysisSystem.GameProcessing
 
         public void Finish()
         {
-            if(Status == GameAnalyzerStatus.Paused)
+            if (Status == GameAnalyzerStatus.Paused)
             {
                 Status = GameAnalyzerStatus.Finished;
                 ProcessingFinished?.Invoke(this, EventArgs.Empty);
@@ -95,13 +92,13 @@ namespace GoalballAnalysisSystem.GameProcessing
             while (Status == GameAnalyzerStatus.Processing)
             {
                 _videoCapture.Read(_cameraFeed);
-                if(_cameraFeed != null)
+                if (_cameraFeed != null)
                 {
                     var detectedCategories = await _objectDetector.Detect(_cameraFeed);
                     foreach (var key in detectedCategories.Keys)
                     {
-                        var rectangles = detectedCategories[key];
-                        foreach(var rec in rectangles)
+                        var category = detectedCategories[key];
+                        foreach (var rec in category)
                         {
                             CvInvoke.Rectangle(_cameraFeed, rec, new MCvScalar(255, 0, 0), 3);
                         }
@@ -114,13 +111,28 @@ namespace GoalballAnalysisSystem.GameProcessing
                         CvInvoke.Rectangle(_cameraFeed, rectangle, new MCvScalar(255, 0, 0), 3);
                     }
 
+                    var locations = detectedCategories
+                        .SelectMany(c => c.Value)
+                        .Select(rec => Calculations.GetMiddlePoint(rec))
+                        .Where(p => _gameAnalyzerConfigurator.IsPointInZoneOfInterest(p));
+
+                    var playgroundObjects = trackingObjects
+                        .ToDictionary(
+                            kvp => kvp.Key,
+                            kvp => _gameAnalyzerConfigurator.GetPlaygroundOXY(Calculations.GetMiddlePoint(kvp.Value)));
+                    foreach (var loc in locations)
+                    {
+                        var playgroundLocation = _gameAnalyzerConfigurator.GetPlaygroundOXY(loc);
+                        _selector.AddLocation(playgroundLocation, playgroundObjects);
+                    }
+
                     CurrentFrame = _cameraFeed.ToImage<Bgr, byte>();
-                    await Task.Delay(30);
+                    await Task.Delay(1000 / FPS);
                 }
                 else
                 {
                     Pause();
-                    Finish(); 
+                    Finish();
                 }
             }
         }

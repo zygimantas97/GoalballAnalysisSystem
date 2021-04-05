@@ -41,6 +41,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
                 .Include(gp => gp.Game).ThenInclude(g => g.HomeTeam)
                 .Include(gp => gp.Game).ThenInclude(g => g.GuestTeam)
                 .Include(gp => gp.TeamPlayer).ThenInclude(tp => tp.Player)
+                .Include(gp => gp.TeamPlayer).ThenInclude(tp => tp.Role)
                 .Where(gp => gp.Game.IdentityUserId == userId && gp.GameId == gameId)
                 .AsNoTracking()
                 .ToListAsync()));
@@ -59,6 +60,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
                 .Include(gp => gp.Game).ThenInclude(g => g.HomeTeam)
                 .Include(gp => gp.Game).ThenInclude(g => g.GuestTeam)
                 .Include(gp => gp.TeamPlayer).ThenInclude(tp => tp.Player)
+                .Include(gp => gp.TeamPlayer).ThenInclude(tp => tp.Role)
                 .Where(gp => gp.Game.IdentityUserId == userId && gp.TeamId == teamId && gp.PlayerId == playerId)
                 .AsNoTracking()
                 .ToListAsync()));
@@ -79,6 +81,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
                 .Include(gp => gp.Game).ThenInclude(g => g.HomeTeam)
                 .Include(gp => gp.Game).ThenInclude(g => g.GuestTeam)
                 .Include(gp => gp.TeamPlayer).ThenInclude(tp => tp.Player)
+                .Include(gp => gp.TeamPlayer).ThenInclude(tp => tp.Role)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(gp => gp.Game.IdentityUserId == userId && gp.Id == gamePlayerId);
 
@@ -154,6 +157,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
 
             var teamPlayer = await _context.TeamPlayers
                 .Include(tp => tp.Player)
+                .Include(tp => tp.Role)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(tp => tp.Player.IdentityUserId == userId && tp.TeamId == request.TeamId && tp.PlayerId == request.PlayerId);
             if (teamPlayer == null)
@@ -189,6 +193,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
                 .Include(gp => gp.Game).ThenInclude(g => g.HomeTeam)
                 .Include(gp => gp.Game).ThenInclude(g => g.GuestTeam)
                 .Include(gp => gp.TeamPlayer).ThenInclude(tp => tp.Player)
+                .Include(gp => gp.TeamPlayer).ThenInclude(tp => tp.Role)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(gp => gp.Game.IdentityUserId == userId && gp.Id == gamePlayerId);
 

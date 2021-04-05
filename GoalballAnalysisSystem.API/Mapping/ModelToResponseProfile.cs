@@ -13,6 +13,7 @@ namespace GoalballAnalysisSystem.API.Mapping
         public ModelToResponseProfile()
         {
             CreateMap<Projection, ProjectionResponse>();
+            CreateMap<PlayerRole, PlayerRoleResponse>();
 
             CreateMap<GamePlayer, GamePlayerResponse>()
                 .ForMember(dest => dest.Game, opt =>
@@ -57,6 +58,11 @@ namespace GoalballAnalysisSystem.API.Mapping
                             Country = src.TeamPlayer.Player.Country,
                             Description = src.TeamPlayer.Player.Description,
                             PlayerTeams = null
+                        },
+                        Role = new PlayerRoleResponse
+                        {
+                            Id = src.TeamPlayer.Role.Id,
+                            Name = src.TeamPlayer.Role.Name
                         }
                     }));
             CreateMap<Game, GameResponse>()
@@ -82,6 +88,11 @@ namespace GoalballAnalysisSystem.API.Mapping
                                 Country = tp.Player.Country,
                                 Description = tp.Player.Description,
                                 PlayerTeams = null
+                            },
+                            Role = new PlayerRoleResponse
+                            {
+                                Id = tp.Role.Id,
+                                Name = tp.Role.Name
                             }
                         })
                     }))
@@ -107,6 +118,11 @@ namespace GoalballAnalysisSystem.API.Mapping
                                 Country = tp.Player.Country,
                                 Description = tp.Player.Description,
                                 PlayerTeams = null
+                            },
+                            Role = new PlayerRoleResponse
+                            {
+                                Id = tp.Role.Id,
+                                Name = tp.Role.Name
                             }
                         })
                     }));
@@ -126,7 +142,12 @@ namespace GoalballAnalysisSystem.API.Mapping
                             Description = tp.Team.Description,
                             TeamPlayers = null
                         },
-                        Player = null
+                        Player = null,
+                        Role = new PlayerRoleResponse
+                        {
+                            Id = tp.Role.Id,
+                            Name = tp.Role.Name
+                        }
                     })));
             CreateMap<TeamPlayer, TeamPlayerResponse>()
                 .ForMember(dest => dest.Team, opt =>
@@ -147,6 +168,12 @@ namespace GoalballAnalysisSystem.API.Mapping
                         Country = src.Player.Country,
                         Description = src.Player.Description,
                         PlayerTeams = null
+                    }))
+                .ForMember(dest => dest.Role, opt =>
+                    opt.MapFrom(src => new PlayerRoleResponse
+                    {
+                        Id = src.Role.Id,
+                        Name = src.Role.Name
                     }));
             CreateMap<Team, TeamResponse>()
                 .ForMember(dest => dest.TeamPlayers, opt =>
@@ -165,6 +192,11 @@ namespace GoalballAnalysisSystem.API.Mapping
                             Country = tp.Player.Country,
                             Description = tp.Player.Description,
                             PlayerTeams = null
+                        },
+                        Role = new PlayerRoleResponse
+                        {
+                            Id = tp.Role.Id,
+                            Name = tp.Role.Name
                         }
                     })));
         }

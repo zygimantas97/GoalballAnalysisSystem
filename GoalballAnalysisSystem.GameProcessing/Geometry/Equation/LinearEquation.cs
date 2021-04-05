@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace GoalballAnalysisSystem.GameProcessing.Models
+namespace GoalballAnalysisSystem.GameProcessing.Geometry.Equation
 {
-    public class LinearEquation
+    public class LinearEquation : IEquation
     {
         private readonly double _a;
         private readonly double _b;
@@ -13,7 +13,7 @@ namespace GoalballAnalysisSystem.GameProcessing.Models
         public LinearEquation(Point point1, Point point2)
             : this(point1.X, point1.Y, point2.X, point2.Y)
         {
-            
+
         }
 
         public LinearEquation(double x1, double y1, double x2, double y2)

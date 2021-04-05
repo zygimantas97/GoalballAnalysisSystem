@@ -13,5 +13,6 @@ namespace GoalballAnalysisSystem.API.Contracts.V1.Responses
         public long? RoleId { get; set; }
         public TeamResponse Team { get; set; }
         public PlayerResponse Player { get; set; }
+        public PlayerRoleResponse Role { get; set; }
     }
 }

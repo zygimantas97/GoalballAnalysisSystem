@@ -115,6 +115,7 @@
                                      Background="Transparent"
                                      SelectionTextBrush="Transparent"
                                      SelectionBrush="Transparent"
+                                         Password="Julius123+"
                                     x:Name="passwordBox"/>
                         </Grid>
 

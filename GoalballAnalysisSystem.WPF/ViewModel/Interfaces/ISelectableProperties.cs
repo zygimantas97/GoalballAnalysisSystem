@@ -10,6 +10,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel.Interfaces
         void ChangeSelectedObject(object parameter);
         void ChangeEditMode();
         void DeleteSelectedObject(object parameter);
+        void CreateNewObject();
 
     }
 }

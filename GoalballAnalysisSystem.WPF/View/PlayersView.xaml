@@ -10,95 +10,136 @@
     <Grid>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="650"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="700"/>
-            <RowDefinition Height="*"/>
-
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="7*"/>
                 <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
-            <ScrollViewer x:Name="PlayersList" Grid.Column="0">
-                <StackPanel>
+            <Grid Grid.Column="0">
+                <ScrollViewer x:Name="PlayersList">
                     <StackPanel>
-                        <ItemsControl x:Name="ListViewPlayers" ItemsSource="{Binding ListOfPlayers}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate >
-                                    <Button Style="{StaticResource TransparentButtonElement}"
-                                            Command="{Binding Path=DataContext.ChangeSelectedObjectCommand, ElementName=ListViewPlayers}"
-                                            CommandParameter="{Binding Path=.}">
-                                        <StackPanel Style="{StaticResource DarkerStackPanel}">
-                                            <Border Width="60" Height="60" CornerRadius="5" Margin="35, 20">
-                                                <Border.Background>
-                                                    <ImageBrush ImageSource="../Assets/player.png"/>
-                                                </Border.Background>
-                                            </Border>
-                                            <TextBlock Margin="5" Text="{Binding Path=Name}" HorizontalAlignment="Center"  Style="{StaticResource RegularText}"></TextBlock>
-                                            <TextBlock Margin="5, 5, 5, 20" Text="{Binding Path=Surname}" HorizontalAlignment="Center"  Style="{StaticResource RegularText}"></TextBlock>
-
-                                        </StackPanel>
-                                    </Button>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
+                        <StackPanel>
+                            <ItemsControl x:Name="ListViewPlayers" ItemsSource="{Binding ListOfPlayers}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate >
+                                        <Button Style="{StaticResource TransparentButtonElement}"
+                                                Command="{Binding Path=DataContext.ChangeSelectedObjectCommand, ElementName=ListViewPlayers}"
+                                                CommandParameter="{Binding Path=.}">
+                                            <StackPanel Style="{StaticResource DarkerStackPanel}">
+                                                <Border Width="60" Height="60" CornerRadius="5" Margin="35, 20">
+                                                    <Border.Background>
+                                                        <ImageBrush ImageSource="../Assets/player.png"/>
+                                                    </Border.Background>
+                                                </Border>
+                                                <TextBlock Margin="5" Text="{Binding Path=Name}" HorizontalAlignment="Center"  Style="{StaticResource RegularText}"></TextBlock>
+                                                <TextBlock Margin="5, 5, 5, 20" Text="{Binding Path=Surname}" HorizontalAlignment="Center"  Style="{StaticResource RegularText}"></TextBlock>
+                                            </StackPanel>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
                     </StackPanel>
-                </StackPanel>
-            </ScrollViewer>
-
-            <Grid Grid.Column="2">
+                </ScrollViewer>
+            </Grid>
+            <Grid Grid.Column="1">
                 <StackPanel Background="{StaticResource ThirdBackgroundBrush}" Margin="10, 0, 10, 10">
-                    <Border Width="130" Height="130" CornerRadius="5" Margin="15, 60">
-                        <Border.Background>
-                            <ImageBrush ImageSource="../Assets/player.png"/>
-                        </Border.Background>
-                    </Border>
-                    <TextBox Margin="5" Text="{Binding SelectedPlayer.Name}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
-                    <TextBox Margin="5" Text="{Binding SelectedPlayer.Surname}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
-                    <TextBox Margin="5" Text="{Binding SelectedPlayer.Description}" HorizontalAlignment="Center"  Style="{StaticResource HeaderTwoTextBox}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <StackPanel Orientation="Vertical">
+                                <Border Width="130" Height="130" CornerRadius="5" Margin="15, 15">
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="../Assets/player.png"/>
+                                    </Border.Background>
+                                </Border>
+                                <TextBlock Text="Selected Player" Style="{StaticResource HeaderTwoBoldText}" HorizontalAlignment="Center" Margin="0 0 0 30"/>
+                            </StackPanel>
+                        </Grid>
 
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <ToggleButton Style="{StaticResource ToggleButtonEdit}"
-                                      Command="{Binding EditSelectedObjectCommand}"
-                                      Margin="5">
-                        </ToggleButton>
-                        <!--<Button 
-                                Content="Edit"
-                                Margin="5"
-                                Command="{Binding EditSelectedPlayer}">
-                        </Button>-->
-                        <Button 
-                            Content="Delete"
-                            Margin="5"
-                            Command="{Binding DeleteSelectedObjectCommand}"
-                            CommandParameter="{Binding SelectedPlayer}">
-                        </Button>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-                        
+                            <TextBlock Grid.Column="0" Grid.Row="0" Margin="5, 20" Text="Name " HorizontalAlignment="Right" VerticalAlignment="Center"  Style="{StaticResource RegularText}"></TextBlock>
+                            <TextBlock Grid.Column="0" Grid.Row="1" Margin="5, 20" Text="Surname" HorizontalAlignment="Right" VerticalAlignment="Center"  Style="{StaticResource RegularText}"></TextBlock>
+                            <TextBlock Grid.Column="0" Grid.Row="2" Margin="5, 20" Text="Description " HorizontalAlignment="Right" VerticalAlignment="Center"   Style="{StaticResource RegularText}"></TextBlock>
 
-                    </StackPanel>
+                            <TextBox Grid.Column="1" Grid.Row="0" Margin="5" MinWidth="90" Text="{Binding SelectedPlayer.Name}" HorizontalAlignment="Left"  Style="{StaticResource HeaderThreeTextBoxEditable}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
+                            <TextBox Grid.Column="1" Grid.Row="1" Margin="5" MinWidth="90" Text="{Binding SelectedPlayer.Surname}" HorizontalAlignment="Left"  Style="{StaticResource HeaderThreeTextBoxEditable}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
+                            <TextBox Grid.Column="1" Grid.Row="2" Margin="5" MinWidth="90" Text="{Binding SelectedPlayer.Description}" HorizontalAlignment="Left"  Style="{StaticResource HeaderThreeTextBoxEditable}" IsReadOnly="{Binding CanNotBeEdited}"></TextBox>
+                        </Grid>
+                    </Grid>
+
+                    <Button 
+                        Content="Delete"
+                        Margin="5"
+                        HorizontalAlignment="Right"
+                        Command="{Binding DeleteSelectedObjectCommand}"
+                        CommandParameter="{Binding SelectedPlayer}"
+                        IsEnabled="{Binding CanNotBeEdited}">
+                    </Button>
+
                 </StackPanel>
 
-                <Button 
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
-                        Content="Add new"
-                        Margin="15"
-                        Command="{Binding Path=DataContext.AddNewPlayerCommand, ElementName=ListViewPlayers}">
-                </Button>
+                
 
             </Grid>
 
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <ToggleButton 
+                    Grid.Row="1"
+                    Style="{StaticResource ToggleButtonCreate}"
+                    Padding="20 10 20 10"
+                    FontSize="15"
+                    Margin="5"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Background="{StaticResource BlueButtonBrush}"
+                    Command="{Binding CreateNewObjectCommand}">
+                </ToggleButton>
+
+                <ToggleButton 
+                    Grid.Row="1"
+                    Style="{StaticResource ToggleButtonEdit}"
+                    Padding="20 10 20 10"
+                    FontSize="15"
+                    Margin="5"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Background="{StaticResource BlueButtonBrush}"
+                    Command="{Binding EditSelectedObjectCommand}">
+                </ToggleButton>
+
+            </StackPanel>
+            
 
         </Grid>
+
     </Grid>
 
     <!--</Border>-->

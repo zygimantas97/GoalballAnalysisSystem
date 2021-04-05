@@ -175,5 +175,10 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 SelectedProjection = Projections[_currentProjectionIndex];
             }
         }
+
+        public void CreateNewObject()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

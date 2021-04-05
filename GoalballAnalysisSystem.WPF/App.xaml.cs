@@ -45,8 +45,20 @@ namespace GoalballAnalysisSystem.WPF
 
             services.AddSingleton<CreateViewModel<HomeViewModel>>(s => { return () => new HomeViewModel(s.GetRequiredService<IRenavigator>()); });
             services.AddSingleton<CreateViewModel<GamesViewModel>>(s => { return () => new GamesViewModel(); });
-            services.AddSingleton<CreateViewModel<TeamsViewModel>>(s => { return () => new TeamsViewModel(); });
-            services.AddSingleton<CreateViewModel<PlayersViewModel>>(s => { return () => new PlayersViewModel(); });
+            services.AddSingleton<CreateViewModel<TeamsViewModel>>(s => 
+            { 
+                return () => new TeamsViewModel(
+                    s.GetRequiredService<TeamsService>(),
+                    s.GetRequiredService<TeamPlayersService>(),
+                    s.GetRequiredService<PlayersService>()); 
+            });
+            services.AddSingleton<CreateViewModel<PlayersViewModel>>(s => 
+            { 
+                return () => new PlayersViewModel(
+                    s.GetRequiredService<PlayersService>(),
+                    s.GetRequiredService<TeamPlayersService>(),
+                    s.GetRequiredService<TeamsService>()); 
+            });
             services.AddSingleton<CreateViewModel<CalibrationViewModel>>(s => { return () => new CalibrationViewModel(); });
             services.AddSingleton<CreateViewModel<LoginViewModel>>(s =>
             {

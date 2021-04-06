@@ -14,27 +14,27 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     public class RegistrationViewModel : BaseViewModel
     {
-        private string _name;
+        private string _message;
 
-        public string Name
+        public string Message
         {
-            get { return _name; }
+            get { return _message; }
             set
             {
-                _name = value;
-                OnPropertyChanged(nameof(Name));
+                _message = value;
+                OnPropertyChanged(nameof(Message));
             }
         }
 
-        private string _surname;
+        private string _username;
 
-        public string Surname
+        public string Username
         {
-            get { return _surname; }
+            get { return _username; }
             set
             {
-                _surname = value;
-                OnPropertyChanged(nameof(Surname));
+                _username = value;
+                OnPropertyChanged(nameof(Username));
             }
         }
 

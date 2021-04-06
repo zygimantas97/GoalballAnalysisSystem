@@ -34,10 +34,14 @@ namespace GoalballAnalysisSystem.WPF.Commands
         public async void Execute(object parameter)
         {
             string[] passInfo = (string[])parameter;
-            AuthenticationResponse result = await _authenticator.Register(_registrationViewModel.Name, _registrationViewModel.Surname, _registrationViewModel.Email, passInfo[0], passInfo[1]);
-            if (result != null)
+            try
             {
-                _renavigator.Renavigate(ViewType.Login);
+                await _authenticator.Register(_registrationViewModel.Username, _registrationViewModel.Email, passInfo[0], passInfo[1]);
+                _registrationViewModel.Message = "Registration was successfully completed";
+            }
+            catch (Exception e)
+            {
+                _registrationViewModel.Message = e.Message;
             }
         }
     }

@@ -59,7 +59,7 @@ namespace GoalballAnalysisSystem.API.Mapping
                             Description = src.TeamPlayer.Player.Description,
                             PlayerTeams = null
                         },
-                        Role = new PlayerRoleResponse
+                        Role = src.TeamPlayer.Role == null ? null : new PlayerRoleResponse
                         {
                             Id = src.TeamPlayer.Role.Id,
                             Name = src.TeamPlayer.Role.Name
@@ -89,7 +89,7 @@ namespace GoalballAnalysisSystem.API.Mapping
                                 Description = tp.Player.Description,
                                 PlayerTeams = null
                             },
-                            Role = new PlayerRoleResponse
+                            Role = tp.Role == null ? null : new PlayerRoleResponse
                             {
                                 Id = tp.Role.Id,
                                 Name = tp.Role.Name
@@ -119,7 +119,7 @@ namespace GoalballAnalysisSystem.API.Mapping
                                 Description = tp.Player.Description,
                                 PlayerTeams = null
                             },
-                            Role = new PlayerRoleResponse
+                            Role = tp.Role == null ? null : new PlayerRoleResponse
                             {
                                 Id = tp.Role.Id,
                                 Name = tp.Role.Name
@@ -143,7 +143,7 @@ namespace GoalballAnalysisSystem.API.Mapping
                             TeamPlayers = null
                         },
                         Player = null,
-                        Role = new PlayerRoleResponse
+                        Role = tp.Role == null ? null : new PlayerRoleResponse
                         {
                             Id = tp.Role.Id,
                             Name = tp.Role.Name
@@ -170,7 +170,7 @@ namespace GoalballAnalysisSystem.API.Mapping
                         PlayerTeams = null
                     }))
                 .ForMember(dest => dest.Role, opt =>
-                    opt.MapFrom(src => new PlayerRoleResponse
+                    opt.MapFrom(src => src.Role == null ? null : new PlayerRoleResponse
                     {
                         Id = src.Role.Id,
                         Name = src.Role.Name
@@ -193,7 +193,7 @@ namespace GoalballAnalysisSystem.API.Mapping
                             Description = tp.Player.Description,
                             PlayerTeams = null
                         },
-                        Role = new PlayerRoleResponse
+                        Role = tp.Role == null ? null : new PlayerRoleResponse
                         {
                             Id = tp.Role.Id,
                             Name = tp.Role.Name

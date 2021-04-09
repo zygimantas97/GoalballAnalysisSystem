@@ -1,4 +1,4 @@
-﻿using GoalballAnalysisSystem.WPF.ViewModel;
+﻿using GoalballAnalysisSystem.WPF.ViewModel.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,15 +6,15 @@ using System.Windows.Input;
 
 namespace GoalballAnalysisSystem.WPF.Commands
 {
-    class PreviousProjection : ICommand
+    class TurnEditModeCommand :ICommand
     {
-        public event EventHandler CanExecuteChanged;
-        private GamesViewModel _viewModel;
-
-        public PreviousProjection(GamesViewModel viewModel)
+        private readonly ISelectableProperties _viewModel;
+        public TurnEditModeCommand(ISelectableProperties viewModel)
         {
             _viewModel = viewModel;
         }
+
+        public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter)
         {
@@ -23,7 +23,7 @@ namespace GoalballAnalysisSystem.WPF.Commands
 
         public void Execute(object parameter)
         {
-            _viewModel.PreviousProjection();
+            _viewModel.ChangeEditMode(parameter);
         }
     }
 }

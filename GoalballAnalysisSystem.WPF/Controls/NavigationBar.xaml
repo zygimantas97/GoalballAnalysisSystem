@@ -72,6 +72,7 @@
                     Grid.Column="1"
                     HorizontalAlignment="Right"
                     Margin="0 0 10 0"
+                    Background="{StaticResource BlueButtonBrush}"
                     Command="{Binding LogoutCommand}"/>
         </Grid>
 

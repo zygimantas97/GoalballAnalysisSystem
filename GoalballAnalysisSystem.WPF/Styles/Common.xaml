@@ -11,6 +11,7 @@
     <Color x:Key="LightYellowColor">#e6e6e1</Color>
     <Color x:Key="WhiteColor">White</Color>
     <Color x:Key="RichBlue">#5b739d</Color>
+    <Color x:Key="RichRed">#61151a</Color>
 
     <!--Colors that are binded-->
     <Color x:Key="HeaderButtonNormalColor">#5b739d</Color>
@@ -21,6 +22,7 @@
     <SolidColorBrush x:Key="DarkButtonBrush" Color="{StaticResource DarkGrayColor}"/>
     <SolidColorBrush x:Key="BlueButtonBrush" Color="{StaticResource BlueColor}"/>
     <SolidColorBrush x:Key="DarkBlueButtonBrush" Color="{StaticResource DarkBlueColor}"/>
+    <SolidColorBrush x:Key="RichRedButtonBrush" Color="{StaticResource RichRed}"/>
 
     <SolidColorBrush x:Key="MainBackgroundBrush" Color="{StaticResource WhiteColor}"/>
     <SolidColorBrush x:Key="FirstBackgroundBrush" Color="{StaticResource WhiteColor}"/>
@@ -73,6 +75,9 @@
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource LightButtonBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Visibility" Value="Hidden"/>
             </Trigger>
         </Style.Triggers>
     </Style>

@@ -6,15 +6,15 @@ using System.Windows.Input;
 
 namespace GoalballAnalysisSystem.WPF.Commands
 {
-    class TurnEditMode :ICommand
+    class CreateObjectCommand : ICommand
     {
         private readonly ISelectableProperties _viewModel;
-        public TurnEditMode(ISelectableProperties viewModel)
+        public event EventHandler CanExecuteChanged;
+
+        public CreateObjectCommand(ISelectableProperties viewModel)
         {
             _viewModel = viewModel;
         }
-
-        public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter)
         {
@@ -23,7 +23,7 @@ namespace GoalballAnalysisSystem.WPF.Commands
 
         public void Execute(object parameter)
         {
-            _viewModel.ChangeEditMode();
+            _viewModel.CreateNewObject();
         }
     }
 }

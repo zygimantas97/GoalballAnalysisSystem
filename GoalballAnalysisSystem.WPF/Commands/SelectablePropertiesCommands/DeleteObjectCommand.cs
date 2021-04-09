@@ -1,4 +1,5 @@
-﻿using GoalballAnalysisSystem.WPF.ViewModel;
+﻿using GoalballAnalysisSystem.API.Contracts.V1.Responses;
+using GoalballAnalysisSystem.WPF.ViewModel.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,16 +7,15 @@ using System.Windows.Input;
 
 namespace GoalballAnalysisSystem.WPF.Commands
 {
-    class NextProjection : ICommand
+    class DeleteObjectCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
-        private GamesViewModel _viewModel;
 
-        public NextProjection(GamesViewModel viewModel)
+        private ISelectableProperties _viewModel;
+        public DeleteObjectCommand(ISelectableProperties viewModel)
         {
             _viewModel = viewModel;
         }
-
         public bool CanExecute(object parameter)
         {
             return true;
@@ -23,7 +23,7 @@ namespace GoalballAnalysisSystem.WPF.Commands
 
         public void Execute(object parameter)
         {
-            _viewModel.NextProjection();
+            _viewModel.DeleteSelectedObject(parameter);
         }
     }
 }

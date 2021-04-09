@@ -33,19 +33,9 @@ namespace GoalballAnalysisSystem.WPF.State.Authenticators
 
         public event Action StateChanged;
 
-        public async Task<bool> Login(string email, string password)
+        public async Task Login(string email, string password)
         {
-            bool success = true;
-            try
-            {
-                CurrentUser = await _identityService.LoginAsync(email, password);
-            }
-            catch (Exception ex)
-            {
-                success = false;
-            }
-
-            return success;
+            CurrentUser = await _identityService.LoginAsync(email, password);
         }
 
         public void Logout()
@@ -53,9 +43,11 @@ namespace GoalballAnalysisSystem.WPF.State.Authenticators
             CurrentUser = null;
         }
 
-        public async Task<AuthenticationResponse> Register(string userName, string surname, string email, string password, string confirmPassword)
+        public async Task Register(string username, string email, string password, string confirmPassword)
         {
-            return await _identityService.RegisterAsync(userName, email, password);
+            if (password != confirmPassword)
+                throw new Exception("Passwords does not match");
+            var result = await _identityService.RegisterAsync(username, email, password);
         }
     }
 }

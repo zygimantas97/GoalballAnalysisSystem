@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using GoalballAnalysisSystem.API.Contracts.V1.Requests;
 using GoalballAnalysisSystem.API.Contracts.V1.Responses;
+using System.Threading;
 
 namespace GoalballAnalysisSystem.WPF.ViewModel
 {
@@ -23,9 +24,13 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         public ICommand ChangeSelectedObjectCommand { get; }
         public ICommand EditSelectedObjectCommand { get; }
         public ICommand DeleteSelectedObjectCommand { get; }
+        public ICommand CreateNewObjectCommand { get; }
         #endregion
 
         #region Definitions
+        private SynchronizationContext _uiContext;
+        private PlayersService _playersService;
+
         private readonly ObservableCollection<PlayerResponse> _listOfPlayers;
         public ObservableCollection<PlayerResponse> ListOfPlayers
         {
@@ -43,69 +48,172 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 _selectedPlayer = value;
                 OnPropertyChanged(nameof(SelectedPlayer));
+                if(value != null)
+                {
+                    CanBeEdited = true;
+                    CanBeDeleted = true;
+                }
+                else
+                {
+                    CanBeEdited = false;
+                    CanBeDeleted = false;
+                }
             }
         }
 
-        private bool _canNotBeEdited;
-        public bool CanNotBeEdited
+        private bool _editModeOff;
+        public bool EditModeOff
         {
             get
             {
-                return _canNotBeEdited;
+                return _editModeOff;
             }
             set
             {
-                _canNotBeEdited = value;
-                OnPropertyChanged(nameof(CanNotBeEdited));
+                _editModeOff = value;
+                OnPropertyChanged(nameof(EditModeOff));
+            }
+        }
+
+        private bool _canBeCreated;
+        public bool CanBeCreated
+        {
+            get
+            {
+                return _canBeCreated;
+            }
+            set
+            {
+                _canBeCreated = value;
+                OnPropertyChanged(nameof(CanBeCreated));
+            }
+        }
+
+        private bool _canBeEdited;
+        public bool CanBeEdited
+        {
+            get
+            {
+                return _canBeEdited;
+            }
+            set
+            {
+                _canBeEdited = value;
+                OnPropertyChanged(nameof(CanBeEdited));
+            }
+        }
+
+        private bool _canBeDeleted;
+        public bool CanBeDeleted
+        {
+            get
+            {
+                return _canBeDeleted;
+            }
+            set
+            {
+                _canBeDeleted = value;
+                OnPropertyChanged(nameof(CanBeDeleted));
             }
         }
         #endregion
 
-        public PlayersViewModel()
+        public PlayersViewModel(PlayersService playersService)
         {
-            _listOfPlayers = AddFakeData();
-            if (_listOfPlayers.Count != 0)
-                SelectedPlayer = _listOfPlayers[0];
+            _uiContext = SynchronizationContext.Current;
+            _playersService = playersService;
+            _listOfPlayers = new ObservableCollection<PlayerResponse>();
 
-            ChangeSelectedObjectCommand = new ChangeSelecedInterfaceObject(this);
-            DeleteSelectedObjectCommand = new DeleteSelecedInterfaceObject(this);
-            EditSelectedObjectCommand = new TurnEditMode(this);
+            Task.Run(() => this.RefreshPlayersList()).Wait();
 
-            CanNotBeEdited = true;
+            ChangeSelectedObjectCommand = new SelectObjectCommand(this);
+            DeleteSelectedObjectCommand = new DeleteObjectCommand(this);
+            EditSelectedObjectCommand = new TurnEditModeCommand(this);
+            CreateNewObjectCommand = new CreateObjectCommand(this);
+
+            EditModeOff = true;
+            CanBeCreated = true;
+            CanBeEdited = false;
+            CanBeDeleted = false;
         }
 
-        private static ObservableCollection<PlayerResponse> AddFakeData()
+        public async void ChangeEditMode(object parameter)
         {
-            ObservableCollection<PlayerResponse> list = new ObservableCollection<PlayerResponse>();
+            EditModeOff = !EditModeOff;
+            CanBeCreated = !CanBeCreated;
+            CanBeDeleted = !CanBeDeleted;
             
-
-            for(int i= 0; i< 50; i++)
+            if (parameter is PlayerResponse && EditModeOff && SelectedPlayer != null) //edit has been finished
             {
-                PlayerResponse a = new PlayerResponse();
-                a.Name = "Vardas " + i;
-                a.Surname = "Pavarde " + i;
-                a.Id = i;
-                list.Add(a);
+                PlayerRequest playerToEdit = new PlayerRequest
+                {
+                    Name = SelectedPlayer.Name,
+                    Surname = SelectedPlayer.Surname,
+                    Country = SelectedPlayer.Country,
+                    Description = SelectedPlayer.Description
+                };
+
+                await _playersService.UpdatePlayerAsync(SelectedPlayer.Id, playerToEdit);
             }
-
-            return list;
         }
 
-
-        public void ChangeEditMode()
-        {
-            CanNotBeEdited = !CanNotBeEdited;
-        }
-
-        void ISelectableProperties.ChangeSelectedObject(object parameter)
+        public void ChangeSelectedObject(object parameter)
         {
             if (parameter is PlayerResponse)
                 SelectedPlayer = (PlayerResponse)parameter;
         }
 
-        void ISelectableProperties.DeleteSelectedObject(object parameter)
+        public async void DeleteSelectedObject(object parameter)
         {
-            throw new NotImplementedException();
+            if (parameter is PlayerResponse)
+            {
+                var success = await _playersService.DeletePlayerAsync(SelectedPlayer.Id);
+                if (success != null)
+                {
+                    Task.Run(() => this.RefreshPlayersList()).Wait();
+                    SelectedPlayer = null;
+                }
+            }
+        }
+
+        public async void RefreshPlayersList()
+        {
+            var playersList = await _playersService.GetPlayersAsync();
+
+            _uiContext.Send(x => _listOfPlayers.Clear(), null);
+
+            foreach (var player in playersList)
+            {
+                _uiContext.Send(x => _listOfPlayers.Add(player), null);
+            }
+        }
+
+        public async void CreateNewObject()
+        {
+            EditModeOff = !EditModeOff;
+
+            if (!EditModeOff)
+            {
+                SelectedPlayer = new PlayerResponse();
+                CanBeEdited = false;
+                CanBeDeleted = false;
+            }
+
+            if (EditModeOff) //edit has been finished
+            {
+
+                var newPlayer = new PlayerRequest
+                {
+                    Name = SelectedPlayer.Name,
+                    Surname = SelectedPlayer.Surname,
+                    Country = SelectedPlayer.Country,
+                    Description = SelectedPlayer.Description
+                };
+
+                var createdPlayer = await _playersService.CreatePlayerAsync(newPlayer);
+                SelectedPlayer = createdPlayer;
+                RefreshPlayersList();
+            }
         }
     }
 }

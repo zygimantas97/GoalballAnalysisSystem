@@ -36,6 +36,13 @@
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
+    <Style x:Key="HeaderThreeText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontFamily" Value="Monospace"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="FontWeight" Value="18"/>
+    </Style>
+
     <Style x:Key="RegularText" TargetType="TextBlock">
         <Setter Property="FontSize" Value="15"/>
         <Setter Property="FontFamily" Value="Monospace"/>
@@ -58,6 +65,31 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="HeaderThreeTextBox" TargetType="TextBox">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontFamily" Value="Monospace"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="FontWeight" Value="18"/>
+    </Style>
+
+    <Style x:Key="HeaderThreeTextBoxEditable" TargetType="TextBox">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontFamily" Value="Monospace"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="FontWeight" Value="18"/>
+        <Style.Triggers>
+            <Trigger Property="IsReadOnly" Value="False">
+                <Setter Property="Foreground" Value="Black"/>
+                <Setter Property="Background" Value="{StaticResource SecondBackgroundBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
 
     <Style x:Key="RegularTextBox" TargetType="TextBox">
         <Setter Property="FontSize" Value="15"/>
@@ -109,7 +141,6 @@
         </Setter>
     </Style>
 
-
     <Style x:Key="DarkerStackPanel" TargetType="StackPanel">
         <!--<Setter Property="Background" Value="{StaticResource SecondBackgroundBrush}"/>-->
         <Style.Triggers>
@@ -155,7 +186,43 @@
             <Trigger Property="ToggleButton.IsChecked" Value="False">
                 <Setter Property="ToggleButton.Content" Value="Edit"></Setter>
             </Trigger>
+            <Trigger Property="ToggleButton.IsEnabled" Value="False">
+                <Setter Property="Visibility" Value="Hidden"></Setter>
+            </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="ToggleButtonCreate" TargetType="ToggleButton">
+        <Setter Property="Background" Value="{StaticResource DarkButtonBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Padding" Value="10 5"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border CornerRadius="3" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" Margin="{TemplateBinding Margin}">
+                        <ContentPresenter/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource LightButtonBrush}"/>
+            </Trigger>
+            <Trigger Property="ToggleButton.IsChecked" Value="True">
+                <Setter Property="ToggleButton.Content" Value="Done"></Setter>
+            </Trigger>
+            <Trigger Property="ToggleButton.IsChecked" Value="False">
+                <Setter Property="ToggleButton.Content" Value="Create"></Setter>
+            </Trigger>
+            <Trigger Property="ToggleButton.IsEnabled" Value="False">
+                <Setter Property="Visibility" Value="Hidden"></Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
 
 </ResourceDictionary>

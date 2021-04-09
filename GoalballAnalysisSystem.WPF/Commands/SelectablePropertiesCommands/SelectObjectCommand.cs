@@ -7,12 +7,12 @@ using System.Windows.Input;
 
 namespace GoalballAnalysisSystem.WPF.Commands
 {
-    class ChangeSelecedInterfaceObject : ICommand
+    class SelectObjectCommand : ICommand
     {
         private readonly ISelectableProperties _viewModel;
         public event EventHandler CanExecuteChanged;
 
-        public ChangeSelecedInterfaceObject(ISelectableProperties viewModel)
+        public SelectObjectCommand(ISelectableProperties viewModel)
         {
             _viewModel = viewModel;
         }

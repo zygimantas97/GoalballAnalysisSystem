@@ -8,8 +8,9 @@ namespace GoalballAnalysisSystem.WPF.ViewModel.Interfaces
     interface ISelectableProperties
     {
         void ChangeSelectedObject(object parameter);
-        void ChangeEditMode();
+        void ChangeEditMode(object parameter);
         void DeleteSelectedObject(object parameter);
+        void CreateNewObject();
 
     }
 }

@@ -14,6 +14,18 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     public class LoginViewModel : BaseViewModel
     {
+        private string _message;
+
+        public string Message
+        {
+            get { return _message; }
+            set
+            {
+                _message = value;
+                OnPropertyChanged(nameof(Message));
+            }
+        }
+
         private string _email;
 
         public string Email

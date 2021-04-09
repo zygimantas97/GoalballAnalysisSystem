@@ -131,6 +131,8 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
                 .Include(t => t.GuestGames)
                 .Include(t => t.TeamPlayers).ThenInclude(tp => tp.Player)
                 .Include(t => t.TeamPlayers).ThenInclude(tp => tp.Role)
+                .Include(t => t.TeamPlayers).ThenInclude(tp => tp.GamePlayers).ThenInclude(gp => gp.OffenseProjections)
+                .Include(t => t.TeamPlayers).ThenInclude(tp => tp.GamePlayers).ThenInclude(gp => gp.DefenseProjections)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(t => t.Id == teamId && t.IdentityUserId == userId);
             if (team == null)

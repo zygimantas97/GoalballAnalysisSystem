@@ -32,10 +32,15 @@ namespace GoalballAnalysisSystem.WPF.Commands
 
         public async void Execute(object parameter)
         {
-            bool success = await _authenticator.Login(_loginViewModel.Email, parameter.ToString());
-            if (success)
+            try
             {
+                await _authenticator.Login(_loginViewModel.Email, parameter.ToString());
+                _loginViewModel.Message = "";
                 _renavigator.Renavigate(ViewType.Home);
+            }
+            catch (Exception e)
+            {
+                _loginViewModel.Message = e.Message;
             }
         }
     }

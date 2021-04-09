@@ -28,22 +28,13 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         #endregion
 
         #region Definitions
-
-        SynchronizationContext uiContext;
+        private SynchronizationContext _uiContext;
         private PlayersService _playersService;
-        private TeamPlayersService _teamPlayersService;
-        private TeamsService _teamsService;
 
         private readonly ObservableCollection<PlayerResponse> _listOfPlayers;
         public ObservableCollection<PlayerResponse> ListOfPlayers
         {
             get { return _listOfPlayers; }
-        }
-
-        private readonly ObservableCollection<TeamPlayerResponse> _listOfTeamPlayers;
-        public ObservableCollection<TeamPlayerResponse> ListOfTeamPlayers
-        {
-            get { return _listOfTeamPlayers; }
         }
 
         private PlayerResponse _selectedPlayer;
@@ -57,65 +48,102 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 _selectedPlayer = value;
                 OnPropertyChanged(nameof(SelectedPlayer));
-                RefreshTeamPlayersList();
+                if(value != null)
+                {
+                    CanBeEdited = true;
+                    CanBeDeleted = true;
+                }
+                else
+                {
+                    CanBeEdited = false;
+                    CanBeDeleted = false;
+                }
             }
         }
 
-        private bool _canNotBeEdited;
-        public bool CanNotBeEdited
+        private bool _editModeOff;
+        public bool EditModeOff
         {
             get
             {
-                return _canNotBeEdited;
+                return _editModeOff;
             }
             set
             {
-                _canNotBeEdited = value;
-                OnPropertyChanged(nameof(CanNotBeEdited));
+                _editModeOff = value;
+                OnPropertyChanged(nameof(EditModeOff));
             }
         }
 
-        private bool _canNotBeCreated;
-        public bool CanNotBeCreated
+        private bool _canBeCreated;
+        public bool CanBeCreated
         {
             get
             {
-                return _canNotBeCreated;
+                return _canBeCreated;
             }
             set
             {
-                _canNotBeCreated = value;
-                OnPropertyChanged(nameof(CanNotBeCreated));
+                _canBeCreated = value;
+                OnPropertyChanged(nameof(CanBeCreated));
+            }
+        }
+
+        private bool _canBeEdited;
+        public bool CanBeEdited
+        {
+            get
+            {
+                return _canBeEdited;
+            }
+            set
+            {
+                _canBeEdited = value;
+                OnPropertyChanged(nameof(CanBeEdited));
+            }
+        }
+
+        private bool _canBeDeleted;
+        public bool CanBeDeleted
+        {
+            get
+            {
+                return _canBeDeleted;
+            }
+            set
+            {
+                _canBeDeleted = value;
+                OnPropertyChanged(nameof(CanBeDeleted));
             }
         }
         #endregion
 
-        public PlayersViewModel(PlayersService playersService, TeamPlayersService teamPlayersService, TeamsService teamsService)
+        public PlayersViewModel(PlayersService playersService)
         {
-            uiContext = SynchronizationContext.Current;
+            _uiContext = SynchronizationContext.Current;
             _playersService = playersService;
-            _teamPlayersService = teamPlayersService;
-            _teamsService = teamsService;
             _listOfPlayers = new ObservableCollection<PlayerResponse>();
-            _listOfTeamPlayers = new ObservableCollection<TeamPlayerResponse>();
 
             Task.Run(() => this.RefreshPlayersList()).Wait();
 
-            ChangeSelectedObjectCommand = new ChangeSelecedInterfaceObject(this);
-            DeleteSelectedObjectCommand = new DeleteSelecedInterfaceObject(this);
-            EditSelectedObjectCommand = new TurnEditMode(this);
-            CreateNewObjectCommand = new CreateSelectedInterfaceObject(this);
+            ChangeSelectedObjectCommand = new SelectObjectCommand(this);
+            DeleteSelectedObjectCommand = new DeleteObjectCommand(this);
+            EditSelectedObjectCommand = new TurnEditModeCommand(this);
+            CreateNewObjectCommand = new CreateObjectCommand(this);
 
-            CanNotBeEdited = true;
-            CanNotBeCreated = true;
+            EditModeOff = true;
+            CanBeCreated = true;
+            CanBeEdited = false;
+            CanBeDeleted = false;
         }
 
-
-        public async void ChangeEditMode()
+        public async void ChangeEditMode(object parameter)
         {
-            CanNotBeEdited = !CanNotBeEdited;
-
-            if (CanNotBeEdited && SelectedPlayer != null) //edit has been finished
+            EditModeOff = !EditModeOff;
+            CanBeCreated = !CanBeCreated;
+            CanBeDeleted = !CanBeDeleted;
+            
+            if (parameter is PlayerResponse && EditModeOff && SelectedPlayer != null) //edit has been finished
             {
                 PlayerRequest playerToEdit = new PlayerRequest
                 {
@@ -145,18 +173,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                     Task.Run(() => this.RefreshPlayersList()).Wait();
                     SelectedPlayer = null;
                 }
-
-            }
-
-            if (parameter is TeamPlayerResponse)
-            {
-                TeamPlayerResponse teamPlayerResponse = (TeamPlayerResponse)parameter;
-                var teamPlayerSuccess = await _teamPlayersService.DeleteTeamPlayerAsync(teamPlayerResponse.TeamId, teamPlayerResponse.PlayerId);
-                if (teamPlayerSuccess != null)
-                {
-                    Task.Run(() => this.RefreshTeamPlayersList()).Wait();
-                }
-
             }
         }
 
@@ -164,41 +180,26 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         {
             var playersList = await _playersService.GetPlayersAsync();
 
-            uiContext.Send(x => _listOfPlayers.Clear(), null);
+            _uiContext.Send(x => _listOfPlayers.Clear(), null);
 
             foreach (var player in playersList)
             {
-                uiContext.Send(x => _listOfPlayers.Add(player), null);
-            }
-
-        }
-
-        public async void RefreshTeamPlayersList()
-        {
-            if (SelectedPlayer != null)
-            {
-                var teamPlayers = await _teamPlayersService.GetTeamPlayersByPlayerAsync(SelectedPlayer.Id);
-
-                uiContext.Send(x => _listOfTeamPlayers.Clear(), null);
-
-                foreach (var teamPlayer in teamPlayers)
-                {
-                    _listOfTeamPlayers.Add(teamPlayer);
-                }
+                _uiContext.Send(x => _listOfPlayers.Add(player), null);
             }
         }
 
         public async void CreateNewObject()
         {
+            EditModeOff = !EditModeOff;
 
-            CanNotBeEdited = !CanNotBeEdited;
-
-            if (!CanNotBeEdited)
+            if (!EditModeOff)
             {
                 SelectedPlayer = new PlayerResponse();
+                CanBeEdited = false;
+                CanBeDeleted = false;
             }
 
-            if (CanNotBeEdited) //edit has been finished
+            if (EditModeOff) //edit has been finished
             {
 
                 var newPlayer = new PlayerRequest
@@ -213,43 +214,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 SelectedPlayer = createdPlayer;
                 RefreshPlayersList();
             }
-
-
-            //Test data package
-
-            //PlayerRequest player = new PlayerRequest { Name = "Jonas", Surname = "Jonauskas", Country = "LT", Description = "Player of Lithaunia team" };
-            //PlayerRequest player2 = new PlayerRequest { Name = "Saulius", Surname = "Sauliauskas", Country = "LT", Description = "Player of Lithuania team" };
-            //PlayerRequest player3 = new PlayerRequest { Name = "Rimas", Surname = "Rimauskas", Country = "LT", Description = "Player of Lithuania team" };
-
-
-            //PlayerRequest player4 = new PlayerRequest { Name = "John", Surname = "Jhonson", Country = "USA", Description = "Player of USA team" };
-            //PlayerRequest player5 = new PlayerRequest { Name = "Sam", Surname = "Samith", Country = "USA", Description = "Player of USA team" };
-            //PlayerRequest player6 = new PlayerRequest { Name = "Manny", Surname = "Manson", Country = "USA", Description = "Player of USA team" };
-
-            //TeamRequest team = new TeamRequest { Name = "LTU One", Country = "Lithuania", Description = "First team of Lithuania" };
-            //TeamRequest team2 = new TeamRequest { Name = "USA One", Country = "United States", Description = "First team of USA" };
-
-            //var successTeam1 = await _teamsService.CreateTeamAsync(team);
-            //var successTeam2 = await _teamsService.CreateTeamAsync(team2);
-
-            //var successPlayer1 = await _playersService.CreatePlayerAsync(player);
-            //var successPlayer2 = await _playersService.CreatePlayerAsync(player2);
-            //var successPlayer3 = await _playersService.CreatePlayerAsync(player3);
-            //var successPlayer4 = await _playersService.CreatePlayerAsync(player4);
-            //var successPlayer5 = await _playersService.CreatePlayerAsync(player5);
-            //var successPlayer6 = await _playersService.CreatePlayerAsync(player6);
-
-            //Task.Run(() => this.RefreshPlayersList()).Wait();
-
-            //await _teamPlayersService.CreateTeamPlayerAsync(successTeam1.Id, successPlayer1.Id, new TeamPlayerRequest { Number = 1 });
-            //await _teamPlayersService.CreateTeamPlayerAsync(successTeam1.Id, successPlayer2.Id, new TeamPlayerRequest { Number = 2 });
-            //await _teamPlayersService.CreateTeamPlayerAsync(successTeam1.Id, successPlayer3.Id, new TeamPlayerRequest { Number = 3 });
-            //await _teamPlayersService.CreateTeamPlayerAsync(successTeam2.Id, successPlayer4.Id, new TeamPlayerRequest { Number = 1 });
-            //await _teamPlayersService.CreateTeamPlayerAsync(successTeam2.Id, successPlayer5.Id, new TeamPlayerRequest { Number = 2 });
-            //await _teamPlayersService.CreateTeamPlayerAsync(successTeam2.Id, successPlayer6.Id, new TeamPlayerRequest { Number = 3 });
-
-
         }
-
     }
 }

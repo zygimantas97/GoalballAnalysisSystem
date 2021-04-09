@@ -186,6 +186,9 @@
             <Trigger Property="ToggleButton.IsChecked" Value="False">
                 <Setter Property="ToggleButton.Content" Value="Edit"></Setter>
             </Trigger>
+            <Trigger Property="ToggleButton.IsEnabled" Value="False">
+                <Setter Property="Visibility" Value="Hidden"></Setter>
+            </Trigger>
         </Style.Triggers>
     </Style>
 
@@ -214,6 +217,9 @@
             </Trigger>
             <Trigger Property="ToggleButton.IsChecked" Value="False">
                 <Setter Property="ToggleButton.Content" Value="Create"></Setter>
+            </Trigger>
+            <Trigger Property="ToggleButton.IsEnabled" Value="False">
+                <Setter Property="Visibility" Value="Hidden"></Setter>
             </Trigger>
         </Style.Triggers>
     </Style>

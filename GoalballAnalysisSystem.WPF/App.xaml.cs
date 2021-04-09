@@ -44,7 +44,12 @@ namespace GoalballAnalysisSystem.WPF
             services.AddSingleton<IGoalballAnalysisSystemViewModelFactory, GoalballAnalysisSystemViewModelFactory>();            
 
             services.AddSingleton<CreateViewModel<HomeViewModel>>(s => { return () => new HomeViewModel(s.GetRequiredService<IRenavigator>()); });
-            services.AddSingleton<CreateViewModel<GamesViewModel>>(s => { return () => new GamesViewModel(); });
+            services.AddSingleton<CreateViewModel<GamesViewModel>>(s => 
+            { 
+                return () => new GamesViewModel(
+                    s.GetRequiredService<GamesService>(),
+                    s.GetRequiredService<ProjectionsService>()); 
+            });
             services.AddSingleton<CreateViewModel<TeamsViewModel>>(s => 
             { 
                 return () => new TeamsViewModel(
@@ -53,11 +58,9 @@ namespace GoalballAnalysisSystem.WPF
                     s.GetRequiredService<PlayersService>()); 
             });
             services.AddSingleton<CreateViewModel<PlayersViewModel>>(s => 
-            { 
+            {
                 return () => new PlayersViewModel(
-                    s.GetRequiredService<PlayersService>(),
-                    s.GetRequiredService<TeamPlayersService>(),
-                    s.GetRequiredService<TeamsService>()); 
+                    s.GetRequiredService<PlayersService>());
             });
             services.AddSingleton<CreateViewModel<CalibrationViewModel>>(s => { return () => new CalibrationViewModel(); });
             services.AddSingleton<CreateViewModel<LoginViewModel>>(s =>

@@ -95,8 +95,6 @@
                                      Margin="15 15 15 15"
                                      BorderBrush="Transparent"
                                      Background="Transparent"
-                                     SelectionTextBrush="Transparent"
-                                     SelectionBrush="Transparent"
                                      Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" Visibility="Visible"/>
 
                         </Grid>
@@ -120,9 +118,6 @@
                                      Margin="15 15 15 15"
                                      BorderBrush="Transparent"
                                      Background="Transparent"
-                                     SelectionTextBrush="Transparent"
-                                     SelectionBrush="Transparent"
-                                         Password="Julius123+"
                                     x:Name="passwordBox"/>
                         </Grid>
 

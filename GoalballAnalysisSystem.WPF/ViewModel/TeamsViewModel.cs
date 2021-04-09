@@ -27,7 +27,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         #endregion
 
         #region Definitions
-        
+
 
         SynchronizationContext uiContext;
 
@@ -69,6 +69,17 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
                 Task.Run(() => this.RefreshPlayersList()).Wait();
                 Task.Run(() => this.RefreshAvailablePlayersList()).Wait();
+
+                if(value != null)
+                {
+                    CanBeEditedTeam = true;
+                    CanBeDeletedTeam = true;
+                }
+                else
+                {
+                    CanBeEditedTeam = false;
+                    CanBeDeletedTeam = false;
+                }
             }
         }
 
@@ -99,6 +110,18 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 _selectedTeamPlayer = value;
                 OnPropertyChanged(nameof(SelectedTeamPlayer));
+                Task.Run(() => this.RefreshAvailablePlayersList()).Wait();
+
+                if (value != null)
+                {
+                    CanBeEditedTeamPlayer = true;
+                    CanBeDeletedTeamPlayer = true;
+                }
+                else
+                {
+                    CanBeEditedTeamPlayer = false;
+                    CanBeDeletedTeamPlayer = false;
+                }
 
             }
         }
@@ -118,17 +141,102 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         }
 
 
-        private bool _canNotBeEdited;
-        public bool CanNotBeEdited
+        private bool _teamEditModeOff;
+        public bool TeamEditModeOff
         {
             get
             {
-                return _canNotBeEdited;
+                return _teamEditModeOff;
             }
             set
             {
-                _canNotBeEdited = value;
-                OnPropertyChanged(nameof(CanNotBeEdited));
+                _teamEditModeOff = value;
+                OnPropertyChanged(nameof(TeamEditModeOff));
+            }
+        }
+
+
+        private bool _teamPlayerEditModeOff;
+        public bool TeamPlayerEditModeOff
+        {
+            get
+            {
+                return _teamPlayerEditModeOff;
+            }
+            set
+            {
+                _teamPlayerEditModeOff = value;
+                OnPropertyChanged(nameof(TeamPlayerEditModeOff));
+            }
+        }
+
+        private bool _canBeCreatedTeam;
+        public bool CanBeCreatedTeam
+        {
+            get
+            {
+                return _canBeCreatedTeam;
+            }
+            set
+            {
+                _canBeCreatedTeam = value;
+                OnPropertyChanged(nameof(CanBeCreatedTeam));
+            }
+        }
+
+        private bool _canBeEditedTeam;
+        public bool CanBeEditedTeam
+        {
+            get
+            {
+                return _canBeEditedTeam;
+            }
+            set
+            {
+                _canBeEditedTeam = value;
+                OnPropertyChanged(nameof(CanBeEditedTeam));
+            }
+        }
+
+        private bool _canBeEditedTeamPlayer;
+        public bool CanBeEditedTeamPlayer
+        {
+            get
+            {
+                return _canBeEditedTeamPlayer;
+            }
+            set
+            {
+                _canBeEditedTeamPlayer = value;
+                OnPropertyChanged(nameof(CanBeEditedTeamPlayer));
+            }
+        }
+
+        private bool _canBeDeletedTeam;
+        public bool CanBeDeletedTeam
+        {
+            get
+            {
+                return _canBeDeletedTeam;
+            }
+            set
+            {
+                _canBeDeletedTeam = value;
+                OnPropertyChanged(nameof(CanBeDeletedTeam));
+            }
+        }
+
+        private bool _canBeDeletedTeamPlayer;
+        public bool CanBeDeletedTeamPlayer
+        {
+            get
+            {
+                return _canBeDeletedTeamPlayer;
+            }
+            set
+            {
+                _canBeDeletedTeamPlayer = value;
+                OnPropertyChanged(nameof(CanBeDeletedTeamPlayer));
             }
         }
         #endregion
@@ -143,34 +251,62 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             _listOfPlayers = new ObservableCollection<PlayerResponse>();
             _listOfAvailablePlayers = new ObservableCollection<PlayerResponse>();
             _listOfTeams = new ObservableCollection<TeamResponse>();
-            ChangeSelectedObjectCommand = new ChangeSelecedInterfaceObject(this);
-            DeleteSelectedObjectCommand = new DeleteSelecedInterfaceObject(this);
-            EditSelectedObjectCommand = new TurnEditMode(this);
+            ChangeSelectedObjectCommand = new SelectObjectCommand(this);
+            DeleteSelectedObjectCommand = new DeleteObjectCommand(this);
+            EditSelectedObjectCommand = new TurnEditModeCommand(this);
             CreateNewTeamPlayerCommand = new CreateNewTeamPlayer(this, teamPlayersService);
-            CreateSelectedObjectCommand = new CreateSelectedInterfaceObject(this);
+            CreateSelectedObjectCommand = new CreateObjectCommand(this);
             Task.Run(() => this.RefreshTeamsList()).Wait();
 
-            CanNotBeEdited = true;
+            TeamEditModeOff = true;
+            TeamPlayerEditModeOff = true;
+
+            CanBeCreatedTeam = true;
+            CanBeEditedTeam = false;
+            CanBeDeletedTeam = false;
+
+            CanBeEditedTeamPlayer = false;
+            CanBeDeletedTeamPlayer = false;
+
         }
 
 
-        public async void ChangeEditMode()
+        public async void ChangeEditMode(object parameter)
         {
-            CanNotBeEdited = !CanNotBeEdited;
+            CanBeCreatedTeam = !CanBeCreatedTeam;
+            CanBeDeletedTeam = !CanBeDeletedTeam;
+            
+            if(SelectedTeamPlayer != null)
+                CanBeDeletedTeamPlayer = !CanBeDeletedTeamPlayer;
 
-            if (CanNotBeEdited) //edit has been finished
+            if (parameter is TeamResponse)
             {
-                if (SelectedTeam != null)
+                TeamEditModeOff = !TeamEditModeOff;
+                if (SelectedTeamPlayer != null)
+                    CanBeEditedTeamPlayer = !CanBeEditedTeamPlayer;
+
+                if (TeamEditModeOff)
                 {
-                    TeamRequest teamToEdit = new TeamRequest
+                    if (SelectedTeam != null)
                     {
-                        Name = SelectedTeam.Name,
-                        Country = SelectedTeam.Country,
-                        Description = SelectedTeam.Description
-                    };
+                        TeamRequest teamToEdit = new TeamRequest
+                        {
+                            Name = SelectedTeam.Name,
+                            Country = SelectedTeam.Country,
+                            Description = SelectedTeam.Description
+                        };
+                        await _teamsService.UpdateTeamAsync(SelectedTeam.Id, teamToEdit);
+                    }
+                }
+            }
 
-                    await _teamsService.UpdateTeamAsync(SelectedTeam.Id, teamToEdit);
+            if (parameter is TeamPlayerResponse)
+            {
+                TeamPlayerEditModeOff = !TeamPlayerEditModeOff;
+                CanBeEditedTeam = !CanBeEditedTeam;
 
+                if (TeamPlayerEditModeOff)
+                {
                     if (SelectedTeamPlayer != null && SelectedPlayer != null)
                     {
                         TeamPlayerRequest teamPlayerToEdit = new TeamPlayerRequest
@@ -185,7 +321,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
         }
 
-
         public void ChangeSelectedObject(object parameter)
         {
             if (parameter is TeamResponse)
@@ -195,13 +330,10 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 SelectedPlayer = (PlayerResponse)parameter;
             }
-
         }
 
         public async void DeleteSelectedObject(object parameter)
         {
-            //jeigu objektas zaidejas, reikia pasalinti ji is komandos
-            //jeigu objektas komanda, istrinti visa komanda
 
             if (parameter is TeamResponse)
             {
@@ -210,6 +342,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 {
                     Task.Run(() => this.RefreshTeamsList()).Wait();
                     Task.Run(() => this.RefreshPlayersList()).Wait();
+
                     SelectedTeam = null;
                     SelectedTeamPlayer = null;
                     SelectedPlayer = null;
@@ -223,11 +356,44 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 if (success != null)
                 {
                     Task.Run(() => this.RefreshPlayersList()).Wait();
-                    Task.Run(() => this.RefreshAvailablePlayersList()).Wait();
                     SelectedTeamPlayer = null;
                     SelectedPlayer = null;
                 }
-                    
+
+            }
+        }
+
+        public async void CreateNewObject()
+        {
+            TeamEditModeOff = !TeamEditModeOff;
+
+            SelectedTeamPlayer = null;
+            SelectedPlayer = null;
+
+            CanBeDeletedTeamPlayer = false;
+            CanBeEditedTeamPlayer = false;
+
+            if (!TeamEditModeOff)
+            {
+                SelectedTeam = new TeamResponse();
+                CanBeEditedTeam = false;
+                CanBeDeletedTeam = false;
+            }
+
+            if (TeamEditModeOff) //edit has been finished
+            {
+                var newTeam = new TeamRequest
+                {
+                    Name = SelectedTeam.Name,
+                    Country = SelectedTeam.Country,
+                    Description = SelectedTeam.Description
+                };
+
+                var createdTeam = await _teamsService.CreateTeamAsync(newTeam);
+                SelectedTeam = createdTeam;
+                RefreshTeamsList();
+                RefreshPlayersList();
+                RefreshAvailablePlayersList();
             }
         }
 
@@ -246,7 +412,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
         public async void RefreshPlayersList()
         {
-            if(SelectedTeam != null)
+            if (SelectedTeam != null)
             {
                 var teamPlayers = await _teamPlayersService.GetTeamPlayersByTeamAsync(SelectedTeam.Id);
                 uiContext.Send(x => _listOfPlayers.Clear(), null);
@@ -261,7 +427,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
         public async void RefreshAvailablePlayersList()
         {
-            if(SelectedTeam != null)
+            if (SelectedTeam != null)
             {
                 var players = await _playersService.GetPlayersAsync();
                 var teamPlayers = await _teamPlayersService.GetTeamPlayersByTeamAsync(SelectedTeam.Id);
@@ -285,7 +451,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                         uiContext.Send(x => _listOfAvailablePlayers.Add(player), null);
                 }
             }
-            
+
         }
 
         private async void RefreshTeamPlayer()
@@ -294,37 +460,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 var teamPlayers = await _teamPlayersService.GetTeamPlayerAsync(SelectedTeam.Id, SelectedPlayer.Id);
                 SelectedTeamPlayer = teamPlayers;
-            }
-        }
-
-        public async void GenerateFakeTeam()
-        {
-            await _teamsService.CreateTeamAsync(new TeamRequest { Name = "Komanda", Country = "LTU", Description = "Team from lithuania" });
-        }
-
-        public async void CreateNewObject()
-        {
-            CanNotBeEdited = !CanNotBeEdited;
-
-            if (!CanNotBeEdited)
-            {
-                SelectedTeam = new TeamResponse();
-            }
-
-            if (CanNotBeEdited) //edit has been finished
-            {
-                var newTeam = new TeamRequest
-                {
-                    Name = SelectedTeam.Name,
-                    Country = SelectedTeam.Country,
-                    Description = SelectedTeam.Description
-                };
-
-                var createdTeam = await _teamsService.CreateTeamAsync(newTeam);
-                SelectedTeam = createdTeam;
-                RefreshTeamsList();
-                RefreshPlayersList();
-                RefreshAvailablePlayersList();
             }
         }
     }

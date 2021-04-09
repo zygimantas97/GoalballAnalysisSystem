@@ -28,7 +28,7 @@
             <controls:NavigationBar/>
         </Grid>
         
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled">
             <ContentControl Content="{Binding CurrentViewModel}"/>
         </ScrollViewer>
         

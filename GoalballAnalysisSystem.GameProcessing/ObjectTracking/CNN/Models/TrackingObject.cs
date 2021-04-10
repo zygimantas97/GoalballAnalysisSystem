@@ -42,61 +42,6 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectTracking.CNN.Models
             }
         }
 
-        public void LinearRegression(List<double> xVals, List<double> yVals, out double rSquared, out double yIntercept, out double slope)
-        {
-            if (xVals.Count != yVals.Count)
-            {
-                throw new Exception("Input values should be with the same length.");
-            }
-
-            double sumOfX = 0;
-            double sumOfY = 0;
-            double sumOfXSq = 0;
-            double sumOfYSq = 0;
-            double sumCodeviates = 0;
-
-            int counter = 0;
-            foreach (var item in xVals)
-            {
-                var x = xVals[counter];
-                var y = yValues[counter];
-                sumCodeviates += x * y;
-                sumOfX += x;
-                sumOfY += y;
-                sumOfXSq += x * x;
-                sumOfYSq += y * y;
-                counter++;
-            }
-
-            var count = xVals.Count;
-            var ssX = sumOfXSq - ((sumOfX * sumOfX) / count);
-            var ssY = sumOfYSq - ((sumOfY * sumOfY) / count);
-
-            var rNumerator = (count * sumCodeviates) - (sumOfX * sumOfY);
-            var rDenom = (count * sumOfXSq - (sumOfX * sumOfX)) * (count * sumOfYSq - (sumOfY * sumOfY));
-            var sCo = sumCodeviates - ((sumOfX * sumOfY) / count);
-
-            var meanX = sumOfX / count;
-            var meanY = sumOfY / count;
-            var dblR = rNumerator / Math.Sqrt(rDenom);
-
-            rSquared = dblR * dblR;
-            yIntercept = meanY - ((sCo / ssX) * meanX);
-            slope = sCo / ssX;
-        }
-
-        public double Distance(Rectangle rect)
-        {
-            double x = rect.X + (rect.Width / 2);
-            double y = rect.Y + (rect.Height / 2);
-            double rSquared, yIntercept, slope;
-
-            LinearRegression(xValues, yValues, out rSquared, out yIntercept, out slope);
-
-            var Distance = Math.Abs(slope * x - (1 * y) + yIntercept) / Math.Pow(slope * slope + 1, 0.5);
-            return Distance;
-        }
-
         public double DistanceToPreviousPoint(Rectangle rect, int index)
         {
             double distance = 0;

@@ -33,12 +33,12 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         private SynchronizationContext _uiContext;
         private GamesService _gamesService;
         private ProjectionsService _projectionsService;
+        private GamePlayersService _gamePlayersService;
+        private TeamsService _teamsService;
+        private TeamPlayersService _teamPlayersService;
+        private PlayersService _playersService;
 
-        private readonly ObservableCollection<GameResponse> _listOfGames;
-        public ObservableCollection<GameResponse> ListOfGames
-        {
-            get { return _listOfGames; }
-        }
+        
 
         private GameResponse _selectedGame;
         public GameResponse SelectedGame
@@ -66,10 +66,32 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
         }
 
-        private ObservableCollection<ProjectionResponse> _listOfProjections;
-        public ObservableCollection<ProjectionResponse> ListOfProjections
+        private TeamResponse _selectedHomeTeam;
+        public TeamResponse SelectedHomeTeam
         {
-            get { return _listOfProjections; }
+            get
+            {
+                return _selectedHomeTeam;
+            }
+            set
+            {
+                _selectedHomeTeam = value;
+                OnPropertyChanged(nameof(SelectedHomeTeam));
+            }
+        }
+
+        private TeamResponse _selecteGuestTeam;
+        public TeamResponse SelectedGuestTeam
+        {
+            get
+            {
+                return _selecteGuestTeam;
+            }
+            set
+            {
+                _selecteGuestTeam = value;
+                OnPropertyChanged(nameof(SelectedGuestTeam));
+            }
         }
 
         private ProjectionResponse _selectedProjection;
@@ -88,6 +110,30 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         }
 
         private int _currentProjectionIndex;
+
+        private readonly ObservableCollection<GameResponse> _listOfGames;
+        public ObservableCollection<GameResponse> ListOfGames
+        {
+            get { return _listOfGames; }
+        }
+
+        private ObservableCollection<ProjectionResponse> _listOfProjections;
+        public ObservableCollection<ProjectionResponse> ListOfProjections
+        {
+            get { return _listOfProjections; }
+        }
+
+        private ObservableCollection<TeamPlayerResponse> _listOfTeamPlayers;
+        public ObservableCollection<TeamPlayerResponse> ListOfTeamPlayers
+        {
+            get { return _listOfTeamPlayers; }
+        }
+
+        private ObservableCollection<TeamPlayerResponse> _listOfPlayers;
+        public ObservableCollection<TeamPlayerResponse> ListOfPlayers
+        {
+            get { return _listOfPlayers; }
+        }
 
 
         private bool _editModeOff;
@@ -133,11 +179,15 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         }
         #endregion
 
-        public GamesViewModel(GamesService gameService, ProjectionsService projectionService)
+        public GamesViewModel(GamesService gameService, ProjectionsService projectionService, GamePlayersService gamePlayersService, TeamsService teamsService, TeamPlayersService teamPlayersService, PlayersService playersService)
         {
             _uiContext = SynchronizationContext.Current;
             _gamesService = gameService;
             _projectionsService = projectionService;
+            _gamePlayersService = gamePlayersService;
+            _teamsService = teamsService;
+            _teamPlayersService = teamPlayersService;
+            _playersService = playersService;
 
             _listOfProjections = new ObservableCollection<ProjectionResponse>();
             _listOfGames = new ObservableCollection<GameResponse>();

@@ -139,7 +139,6 @@ namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 
                 _objectDetector = new ColorObjectDetector("ball");
                 _mot = new SOTBasedMOT<TeamPlayerResponse>();
-                //_mot = new CNNBasedMOT<TeamPlayerResponse>(_objectDetector);
                 _selector = new ProjectionSelector<TeamPlayerResponse>(SELECTION_ZONE_TOP, SELECTION_ZONE_BOTTOM, MAX_SELECTION_DISTANCE);
 
                 _gameAnalyzer = new GameAnalyzer<TeamPlayerResponse>(openFileDialog.FileName,

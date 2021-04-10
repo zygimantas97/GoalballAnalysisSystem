@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:GoalballAnalysisSystem.WPF.View"
         xmlns:controls="clr-namespace:GoalballAnalysisSystem.WPF.Controls"
         mc:Ignorable="d"
-        Title="Goalball Analysis System" Height="450" Width="800"
+        Title="Goalball Analysis System" Height="600" Width="800"
         Background="{StaticResource MainBackgroundBrush}"
-        MinWidth="1000" MinHeight="800">
+        MinWidth="1000" MinHeight="300">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>

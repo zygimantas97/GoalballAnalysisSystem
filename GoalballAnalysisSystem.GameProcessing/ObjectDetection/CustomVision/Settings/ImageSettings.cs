@@ -6,7 +6,7 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.CustomVision.Set
 {
     public static class ImageSettings
     {
-        public const int ImageHeight = 1;
         public const int ImageWidth = 1;
+        public const int ImageHeight = 1;
     }
 }

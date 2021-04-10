@@ -48,6 +48,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 _selectedPlayer = value;
                 OnPropertyChanged(nameof(SelectedPlayer));
+
                 if(value != null)
                 {
                     CanBeEdited = true;

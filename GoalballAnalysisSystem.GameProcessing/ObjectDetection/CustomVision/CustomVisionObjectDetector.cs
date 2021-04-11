@@ -18,9 +18,9 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.CustomVision
     public class CustomVisionObjectDetector : IObjectDetector
     {
         private readonly List<string> _targetLabels;
-        private readonly float _probabilityThreshold;
+        private readonly double _probabilityThreshold;
 
-        public CustomVisionObjectDetector(List<string> targetLabels, float probabilityThreshold = 0.1f)
+        public CustomVisionObjectDetector(List<string> targetLabels, double probabilityThreshold = 0.1)
         {
             _targetLabels = targetLabels;
             _probabilityThreshold = probabilityThreshold;

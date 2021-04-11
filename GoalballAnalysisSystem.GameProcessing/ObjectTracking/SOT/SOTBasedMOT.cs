@@ -1,5 +1,6 @@
 ﻿using Emgu.CV;
 using Emgu.CV.Tracking;
+using GoalballAnalysisSystem.GameProcessing.Geometry;
 using GoalballAnalysisSystem.GameProcessing.ObjectTracking.SOT.Models;
 using System;
 using System.Collections.Generic;
@@ -52,11 +53,11 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectTracking.SOT
         {
             if(_trackingObjects.Count > 0)
             {
-                double minDistance = GetDistanceBetweenPoints(location, _trackingObjects[0].Center);
+                double minDistance = Calculations.GetDistanceBetweenPoints(location, _trackingObjects[0].Center);
                 int index = 0;
                 for (int i = 1; i < _trackingObjects.Count; i++)
                 {
-                    double distance = GetDistanceBetweenPoints(location, _trackingObjects[i].Center);
+                    double distance = Calculations.GetDistanceBetweenPoints(location, _trackingObjects[i].Center);
                     if (distance < minDistance)
                     {
                         minDistance = distance;
@@ -102,14 +103,6 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectTracking.SOT
             }
 
             return tracker;
-        }
-
-        private static double GetDistanceBetweenPoints(Point point1, Point point2)
-        {
-            double diffX = point1.X - point2.X;
-            double diffY = point1.Y - point2.Y;
-            double distance = Math.Pow((Math.Pow(diffX, 2) + Math.Pow(diffY, 2)), 0.5);
-            return distance;
         }
     }
 }

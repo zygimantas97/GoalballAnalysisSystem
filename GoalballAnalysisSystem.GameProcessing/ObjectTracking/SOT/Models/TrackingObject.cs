@@ -1,5 +1,6 @@
 ﻿using Emgu.CV;
 using Emgu.CV.Tracking;
+using GoalballAnalysisSystem.GameProcessing.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -18,7 +19,7 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectTracking.SOT.Models
         {
             get
             {
-                return new Point(BoundingBox.X + BoundingBox.Width / 2, BoundingBox.Y + BoundingBox.Height / 2);
+                return Calculations.GetMiddlePoint(BoundingBox);
             }
         }
 

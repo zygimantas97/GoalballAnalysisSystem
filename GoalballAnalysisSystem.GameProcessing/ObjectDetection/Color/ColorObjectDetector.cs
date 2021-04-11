@@ -62,7 +62,7 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.Color
             return detectedObjects;
         }
 
-        private Mat RemoveNoise(Mat frame)
+        private static Mat RemoveNoise(Mat frame)
         {
             Mat erodeElement = CvInvoke.GetStructuringElement(Emgu.CV.CvEnum.ElementShape.Rectangle,
                                                               new System.Drawing.Size(ModelSettings.ErodeElementSize, ModelSettings.ErodeElementSize),

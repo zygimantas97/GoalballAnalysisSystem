@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.Color.Settings
 {
-    public class ModelSettings
+    public static class ModelSettings
     {
         public const int ErodeElementSize = 3;
         public const int DilateElementSize = 8;

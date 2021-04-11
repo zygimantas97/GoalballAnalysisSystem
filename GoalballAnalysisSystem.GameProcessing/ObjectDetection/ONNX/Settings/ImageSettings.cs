@@ -6,7 +6,7 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNX.Settings
 {
     public static class ImageSettings
     {
-        public const int ImageHeight = 416;
         public const int ImageWidth = 416;
+        public const int ImageHeight = 416;
     }
 }

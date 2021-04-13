@@ -84,6 +84,11 @@ namespace GoalballAnalysisSystem.WPF.View
             PlaygroundImageBox.Image = _playgroundImageBoxBackground;
         }
 
+        private void OnSelectPlayerButtonClick(object sender, RoutedEventArgs e)
+        {
+            ;
+        }
+
         private Image<Bgr, byte> Playground()
         {
             Image<Bgr, byte> playgroundImageBoxBackground = new Image<Bgr, byte>(PLAYGROUND_WIDTH + 2 * XPADDING, PLAYGROUND_HEIGHT + 2 * YPADDING, new Bgr(255, 255, 255)); //two times from both sides

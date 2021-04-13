@@ -6,32 +6,38 @@
         xmlns:local="clr-namespace:GoalballAnalysisSystem.WPF.View"
         xmlns:controls="clr-namespace:GoalballAnalysisSystem.WPF.Controls"
         mc:Ignorable="d"
-        Title="Goalball Analysis System" Height="600" Width="800"
+        Title="Goalball Analysis System"
+        Height="800"
+        Width="1000"
         Background="{StaticResource MainBackgroundBrush}"
-        MinWidth="1000" MinHeight="300">
+        MinWidth="1000"
+        MinHeight="300">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
             <Grid.Style>
                 <Style TargetType="Grid">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsLoggedIn}" Value="False">
-                            <Setter Property="Visibility" Value="Collapsed"/>
+                        <DataTrigger Binding="{Binding IsLoggedIn}"
+                                     Value="False">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Grid.Style>
-            <controls:NavigationBar/>
+            <controls:NavigationBar />
         </Grid>
-        
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled">
-            <ContentControl Content="{Binding CurrentViewModel}"/>
+
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Disabled"
+                      HorizontalScrollBarVisibility="Disabled">
+            <ContentControl Content="{Binding CurrentViewModel}" />
         </ScrollViewer>
-        
-                        
+
     </Grid>
 </Window>

@@ -1,55 +1,56 @@
 ﻿<UserControl x:Class="GoalballAnalysisSystem.WPF.View.TeamsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:GoalballAnalysisSystem.WPF.View"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
 
-        <ScrollViewer x:Name="TeamsList" 
-                      Grid.Row="0" 
+        <ScrollViewer x:Name="TeamsList"
+                      Grid.Row="0"
                       Grid.Column="0">
-            <ItemsControl x:Name="ListViewTeams" 
+            <ItemsControl x:Name="ListViewTeams"
                           ItemsSource="{Binding ListOfTeams}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button Style="{StaticResource TransparentButtonElement}"
                                 Command="{Binding Path=DataContext.ChangeSelectedObjectCommand, ElementName=ListViewTeams}"
                                 CommandParameter="{Binding Path=.}">
-                            <StackPanel Orientation="Horizontal" 
-                                        Style="{StaticResource DarkerStackPanel}" 
+                            <StackPanel Orientation="Horizontal"
+                                        Style="{StaticResource DarkerStackPanel}"
                                         Width="300">
-                                <Border Width="60" 
-                                        Height="60" 
-                                        CornerRadius="5" 
+                                <Border Width="60"
+                                        Height="60"
+                                        CornerRadius="5"
                                         Margin="20, 20, 50, 20">
                                     <Border.Background>
-                                        <ImageBrush ImageSource="../Assets/team.png"/>
+                                        <ImageBrush ImageSource="../Assets/team.png" />
                                     </Border.Background>
                                 </Border>
-                                <StackPanel Orientation="Vertical" 
+                                <StackPanel Orientation="Vertical"
                                             Margin="10">
-                                    <TextBlock Margin="5" 
-                                               Text="{Binding Path=Name}" 
-                                               HorizontalAlignment="Left"  
-                                               Style="{StaticResource RegularText}"/>
-                                    <TextBlock Margin="5" 
-                                               Text="{Binding Path=Country}" 
-                                               HorizontalAlignment="Left"  
-                                               Style="{StaticResource RegularText}"/>
+                                    <TextBlock Margin="5"
+                                               Text="{Binding Path=Name}"
+                                               HorizontalAlignment="Left"
+                                               Style="{StaticResource RegularText}" />
+                                    <TextBlock Margin="5"
+                                               Text="{Binding Path=Country}"
+                                               HorizontalAlignment="Left"
+                                               Style="{StaticResource RegularText}" />
                                 </StackPanel>
                             </StackPanel>
                         </Button>
@@ -57,14 +58,14 @@
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel/>
+                        <WrapPanel />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </ScrollViewer>
 
-        <ScrollViewer x:Name="PlayersList" 
-                      Grid.Row="0" 
+        <ScrollViewer x:Name="PlayersList"
+                      Grid.Row="0"
                       Grid.Column="1">
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
@@ -77,17 +78,19 @@
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top"
                             Background="{StaticResource BlueButtonBrush}"
-                            Command="{Binding CreateNewTeamPlayerCommand}"/>
+                            Command="{Binding CreateNewTeamPlayerCommand}" />
                     <ComboBox Grid.Row="1"
                               Width="170"
                               Height="25"
-                              Name="Players" ItemsSource="{Binding ListOfAvailablePlayers}" SelectedItem="{Binding SelectedComboBoxItem}">
+                              Name="Players"
+                              ItemsSource="{Binding ListOfAvailablePlayers}"
+                              SelectedItem="{Binding SelectedComboBoxItem}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Path=Name}"/>
-                                    <TextBlock Text=" "/>
-                                    <TextBlock Text="{Binding Path=Surname}"/>
+                                    <TextBlock Text="{Binding Path=Name}" />
+                                    <TextBlock Text=" " />
+                                    <TextBlock Text="{Binding Path=Surname}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
@@ -98,36 +101,36 @@
                            Grid.Column="1"
                            Text="Team players"
                            Style="{StaticResource HeaderTwoText}"
-                           Margin="20 5 0 5"/>
+                           Margin="20 5 0 5" />
                 <StackPanel>
-                    <ItemsControl x:Name="ListViewPlayers" 
+                    <ItemsControl x:Name="ListViewPlayers"
                                   ItemsSource="{Binding ListOfPlayers}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Button Style="{StaticResource TransparentButtonElement}"
                                         Command="{Binding Path=DataContext.ChangeSelectedObjectCommand, ElementName=ListViewPlayers}"
                                         CommandParameter="{Binding Path=.}">
-                                    <StackPanel Orientation="Horizontal" 
-                                                Style="{StaticResource DarkerStackPanel}" 
+                                    <StackPanel Orientation="Horizontal"
+                                                Style="{StaticResource DarkerStackPanel}"
                                                 Width="300">
-                                        <Border Width="60" 
-                                                Height="60" 
-                                                CornerRadius="5" 
+                                        <Border Width="60"
+                                                Height="60"
+                                                CornerRadius="5"
                                                 Margin="20, 20, 50, 20">
                                             <Border.Background>
-                                                <ImageBrush ImageSource="../Assets/player.png"/>
+                                                <ImageBrush ImageSource="../Assets/player.png" />
                                             </Border.Background>
                                         </Border>
-                                        <StackPanel Orientation="Vertical" 
+                                        <StackPanel Orientation="Vertical"
                                                     Margin="10">
-                                            <TextBlock Margin="5" 
-                                                       Text="{Binding Path=Name}" 
-                                                       HorizontalAlignment="Center"  
-                                                       Style="{StaticResource RegularText}"/>
-                                            <TextBlock Margin="5" 
-                                                       Text="{Binding Path=Surname}" 
-                                                       HorizontalAlignment="Center"  
-                                                       Style="{StaticResource RegularText}"/>
+                                            <TextBlock Margin="5"
+                                                       Text="{Binding Path=Name}"
+                                                       HorizontalAlignment="Center"
+                                                       Style="{StaticResource RegularText}" />
+                                            <TextBlock Margin="5"
+                                                       Text="{Binding Path=Surname}"
+                                                       HorizontalAlignment="Center"
+                                                       Style="{StaticResource RegularText}" />
                                         </StackPanel>
                                     </StackPanel>
                                 </Button>
@@ -135,247 +138,248 @@
                         </ItemsControl.ItemTemplate>
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <WrapPanel/>
+                                <WrapPanel />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
-        <ScrollViewer Grid.Column="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Grid 
-            Grid.Row="0"
-            Grid.Column="2">
+        <ScrollViewer Grid.Column="2"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto">
+            <Grid Grid.Row="0"
+                  Grid.Column="2">
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0"
-                        Background="{StaticResource ThirdBackgroundBrush}" 
-                        Margin="10, 0, 0, 10">
+                            Background="{StaticResource ThirdBackgroundBrush}"
+                            Margin="10, 0, 0, 10">
 
                     <Grid Margin="10">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
-                            <Border Width="50" 
-                                Height="50" 
-                                CornerRadius="5" 
-                                Margin="15, 5" 
-                                HorizontalAlignment="Right">
+                            <Border Width="50"
+                                    Height="50"
+                                    CornerRadius="5"
+                                    Margin="15, 5"
+                                    HorizontalAlignment="Right">
                                 <Border.Background>
-                                    <ImageBrush ImageSource="../Assets/team.png"/>
+                                    <ImageBrush ImageSource="../Assets/team.png" />
                                 </Border.Background>
                             </Border>
-                            <TextBlock Text="Team" 
-                                   Style="{StaticResource HeaderTwoBoldText}" 
-                                   HorizontalAlignment="Center" 
-                                   VerticalAlignment="Center" 
-                                   Margin="10 0 0 0"/>
+                            <TextBlock Text="Team"
+                                       Style="{StaticResource HeaderTwoBoldText}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Margin="10 0 0 0" />
                         </Grid>
 
                         <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Column="0" 
-                                   Grid.Row="0" 
-                                   Margin="5" 
-                                   Text="Name " 
-                                   HorizontalAlignment="Right" 
-                                   VerticalAlignment="Center"  
-                                   Style="{StaticResource RegularText}"/>
-                            <TextBlock Grid.Column="0" 
-                                   Grid.Row="1" 
-                                   Margin="5" 
-                                   Text="Country" 
-                                   HorizontalAlignment="Right" 
-                                   VerticalAlignment="Center"  
-                                   Style="{StaticResource RegularText}"/>
-                            <TextBlock Grid.Column="0" 
-                                   Grid.Row="2" 
-                                   Margin="5" 
-                                   Text="Description " 
-                                   HorizontalAlignment="Right" 
-                                   VerticalAlignment="Center"   
-                                   Style="{StaticResource RegularText}"/>
+                            <TextBlock Grid.Column="0"
+                                       Grid.Row="0"
+                                       Margin="5"
+                                       Text="Name "
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       Style="{StaticResource RegularText}" />
+                            <TextBlock Grid.Column="0"
+                                       Grid.Row="1"
+                                       Margin="5"
+                                       Text="Country"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       Style="{StaticResource RegularText}" />
+                            <TextBlock Grid.Column="0"
+                                       Grid.Row="2"
+                                       Margin="5"
+                                       Text="Description "
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       Style="{StaticResource RegularText}" />
 
-                            <TextBox Grid.Column="1" 
-                                 Grid.Row="0" 
-                                 Margin="5" 
-                                 MinWidth="150" 
-                                 Text="{Binding SelectedTeam.Name}" 
-                                 HorizontalAlignment="Left"  
-                                 Style="{StaticResource HeaderThreeTextBoxEditable}" 
-                                 IsReadOnly="{Binding TeamEditModeOff}"/>
-                            <TextBox Grid.Column="1" 
-                                 Grid.Row="1" 
-                                 Margin="5" 
-                                 MinWidth="150" 
-                                 Text="{Binding SelectedTeam.Country}" 
-                                 HorizontalAlignment="left"  
-                                 Style="{StaticResource HeaderThreeTextBoxEditable}" 
-                                 IsReadOnly="{Binding TeamEditModeOff}"/>
-                            <TextBox Grid.Column="1" 
-                                 Grid.Row="2" 
-                                 Margin="5" 
-                                 MinWidth="150" 
-                                 Text="{Binding SelectedTeam.Description}" 
-                                 HorizontalAlignment="left"  
-                                 Style="{StaticResource HeaderThreeTextBoxEditable}" 
-                                 IsReadOnly="{Binding TeamEditModeOff}"/>
+                            <TextBox Grid.Column="1"
+                                     Grid.Row="0"
+                                     Margin="5"
+                                     MinWidth="150"
+                                     Text="{Binding SelectedTeam.Name}"
+                                     HorizontalAlignment="Left"
+                                     Style="{StaticResource HeaderThreeTextBoxEditable}"
+                                     IsReadOnly="{Binding TeamEditModeOff}" />
+                            <TextBox Grid.Column="1"
+                                     Grid.Row="1"
+                                     Margin="5"
+                                     MinWidth="150"
+                                     Text="{Binding SelectedTeam.Country}"
+                                     HorizontalAlignment="left"
+                                     Style="{StaticResource HeaderThreeTextBoxEditable}"
+                                     IsReadOnly="{Binding TeamEditModeOff}" />
+                            <TextBox Grid.Column="1"
+                                     Grid.Row="2"
+                                     Margin="5"
+                                     MinWidth="150"
+                                     Text="{Binding SelectedTeam.Description}"
+                                     HorizontalAlignment="left"
+                                     Style="{StaticResource HeaderThreeTextBoxEditable}"
+                                     IsReadOnly="{Binding TeamEditModeOff}" />
                         </Grid>
                     </Grid>
 
-                    <StackPanel Orientation="Horizontal" 
-                            HorizontalAlignment="Center" 
-                            Margin="0 10">
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Margin="0 10">
                         <ToggleButton Grid.Row="1"
-                                  Style="{StaticResource ToggleButtonCreate}"
-                                  Margin="5"
-                                  Background="{StaticResource BlueButtonBrush}"
-                                  Command="{Binding CreateSelectedObjectCommand}"
-                                  IsEnabled="{Binding CanBeCreatedTeam}"/>
+                                      Style="{StaticResource ToggleButtonCreate}"
+                                      Margin="5"
+                                      Background="{StaticResource BlueButtonBrush}"
+                                      Command="{Binding CreateSelectedObjectCommand}"
+                                      IsEnabled="{Binding CanBeCreatedTeam}" />
                         <ToggleButton Grid.Row="1"
-                                  Style="{StaticResource ToggleButtonEdit}"
-                                  Margin="5"
-                                  Background="{StaticResource BlueButtonBrush}"
-                                  Command="{Binding EditSelectedObjectCommand}"
-                                  CommandParameter="{Binding SelectedTeam}"
-                                  IsEnabled="{Binding CanBeEditedTeam}"/>
+                                      Style="{StaticResource ToggleButtonEdit}"
+                                      Margin="5"
+                                      Background="{StaticResource BlueButtonBrush}"
+                                      Command="{Binding EditSelectedObjectCommand}"
+                                      CommandParameter="{Binding SelectedTeam}"
+                                      IsEnabled="{Binding CanBeEditedTeam}" />
                         <Button HorizontalAlignment="Right"
-                            VerticalAlignment="Bottom"
-                            Content="Delete"
-                            Margin="5"
-                            Background="{StaticResource RichRedButtonBrush}"
-                            Command="{Binding DeleteSelectedObjectCommand}"
-                            CommandParameter="{Binding SelectedTeam}"
-                            IsEnabled="{Binding CanBeDeletedTeam}"/>
+                                VerticalAlignment="Bottom"
+                                Content="Delete"
+                                Margin="5"
+                                Background="{StaticResource RichRedButtonBrush}"
+                                Command="{Binding DeleteSelectedObjectCommand}"
+                                CommandParameter="{Binding SelectedTeam}"
+                                IsEnabled="{Binding CanBeDeletedTeam}" />
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Grid.Row="1"
-                        Background="{StaticResource ThirdBackgroundBrush}" 
-                        Margin="10, 0, 0, 0">
+                            Background="{StaticResource ThirdBackgroundBrush}"
+                            Margin="10, 0, 0, 0">
 
                     <Grid Margin="10">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
-                            <Border Width="50" 
-                                Height="50" 
-                                CornerRadius="5" 
-                                Margin="15, 5" 
-                                HorizontalAlignment="Right">
+                            <Border Width="50"
+                                    Height="50"
+                                    CornerRadius="5"
+                                    Margin="15, 5"
+                                    HorizontalAlignment="Right">
                                 <Border.Background>
-                                    <ImageBrush ImageSource="../Assets/player.png"/>
+                                    <ImageBrush ImageSource="../Assets/player.png" />
                                 </Border.Background>
                             </Border>
-                            <TextBlock Text="Player" 
-                                   Style="{StaticResource HeaderTwoBoldText}"
-                                   HorizontalAlignment="Center" 
-                                   VerticalAlignment="Center" 
-                                   Margin="10 0 0 0"/>
+                            <TextBlock Text="Player"
+                                       Style="{StaticResource HeaderTwoBoldText}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Margin="10 0 0 0" />
                         </Grid>
 
                         <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Column="0" 
-                                   Grid.Row="0" 
-                                   Margin="5" 
-                                   Text="Name " 
-                                   HorizontalAlignment="Right" 
-                                   VerticalAlignment="Center"  
-                                   Style="{StaticResource RegularText}"/>
-                            <TextBlock Grid.Column="0" 
-                                   Grid.Row="1" 
-                                   Margin="5" 
-                                   Text="Surname" 
-                                   HorizontalAlignment="Right" 
-                                   VerticalAlignment="Center"  
-                                   Style="{StaticResource RegularText}"/>
-                            <TextBlock Grid.Column="0" 
-                                   Grid.Row="2" 
-                                   Margin="5" 
-                                   Text="Description " 
-                                   HorizontalAlignment="Right" 
-                                   VerticalAlignment="Center"   
-                                   Style="{StaticResource RegularText}"/>
-                            <TextBlock Grid.Column="0" 
-                                   Grid.Row="3" 
-                                   Margin="5" 
-                                   Text="Number " 
-                                   HorizontalAlignment="Right" 
-                                   VerticalAlignment="Center"   
-                                   Style="{StaticResource RegularText}"/>
+                            <TextBlock Grid.Column="0"
+                                       Grid.Row="0"
+                                       Margin="5"
+                                       Text="Name "
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       Style="{StaticResource RegularText}" />
+                            <TextBlock Grid.Column="0"
+                                       Grid.Row="1"
+                                       Margin="5"
+                                       Text="Surname"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       Style="{StaticResource RegularText}" />
+                            <TextBlock Grid.Column="0"
+                                       Grid.Row="2"
+                                       Margin="5"
+                                       Text="Description "
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       Style="{StaticResource RegularText}" />
+                            <TextBlock Grid.Column="0"
+                                       Grid.Row="3"
+                                       Margin="5"
+                                       Text="Number "
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       Style="{StaticResource RegularText}" />
 
-                            <TextBlock Grid.Column="1" 
-                                   Grid.Row="0" 
-                                   Margin="5" 
-                                   Text="{Binding SelectedPlayer.Name}" 
-                                   HorizontalAlignment="Left"  
-                                   Style="{StaticResource HeaderThreeText}"/>
-                            <TextBlock Grid.Column="1" 
-                                   Grid.Row="1" 
-                                   Margin="5" 
-                                   Text="{Binding SelectedPlayer.Surname}" 
-                                   HorizontalAlignment="Left"  
-                                   Style="{StaticResource HeaderThreeText}"/>
-                            <TextBlock Grid.Column="1" 
-                                   Grid.Row="2" 
-                                   Margin="5" 
-                                   Text="{Binding SelectedPlayer.Description}" 
-                                   HorizontalAlignment="Left"  
-                                   Style="{StaticResource HeaderThreeText}"/>
-                            <TextBox Grid.Column="1" 
-                                 Grid.Row="3" 
-                                 Margin="5" 
-                                 MinWidth="150" 
-                                 Text="{Binding SelectedTeamPlayer.Number}" 
-                                 HorizontalAlignment="Left"  
-                                 Style="{StaticResource HeaderThreeTextBoxEditable}" 
-                                 IsReadOnly="{Binding TeamPlayerEditModeOff}"/>
+                            <TextBlock Grid.Column="1"
+                                       Grid.Row="0"
+                                       Margin="5"
+                                       Text="{Binding SelectedPlayer.Name}"
+                                       HorizontalAlignment="Left"
+                                       Style="{StaticResource HeaderThreeText}" />
+                            <TextBlock Grid.Column="1"
+                                       Grid.Row="1"
+                                       Margin="5"
+                                       Text="{Binding SelectedPlayer.Surname}"
+                                       HorizontalAlignment="Left"
+                                       Style="{StaticResource HeaderThreeText}" />
+                            <TextBlock Grid.Column="1"
+                                       Grid.Row="2"
+                                       Margin="5"
+                                       Text="{Binding SelectedPlayer.Description}"
+                                       HorizontalAlignment="Left"
+                                       Style="{StaticResource HeaderThreeText}" />
+                            <TextBox Grid.Column="1"
+                                     Grid.Row="3"
+                                     Margin="5"
+                                     MinWidth="150"
+                                     Text="{Binding SelectedTeamPlayer.Number}"
+                                     HorizontalAlignment="Left"
+                                     Style="{StaticResource HeaderThreeTextBoxEditable}"
+                                     IsReadOnly="{Binding TeamPlayerEditModeOff}" />
                         </Grid>
                     </Grid>
 
-                    <StackPanel Orientation="Horizontal" 
-                            HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center">
                         <ToggleButton Grid.Row="1"
-                                  Style="{StaticResource ToggleButtonEdit}"
-                                  Margin="5"
-                                  Background="{StaticResource BlueButtonBrush}"
-                                  Command="{Binding EditSelectedObjectCommand}"
-                                  CommandParameter="{Binding SelectedTeamPlayer}"
-                                  IsEnabled="{Binding CanBeEditedTeamPlayer}"/>
+                                      Style="{StaticResource ToggleButtonEdit}"
+                                      Margin="5"
+                                      Background="{StaticResource BlueButtonBrush}"
+                                      Command="{Binding EditSelectedObjectCommand}"
+                                      CommandParameter="{Binding SelectedTeamPlayer}"
+                                      IsEnabled="{Binding CanBeEditedTeamPlayer}" />
                         <Button HorizontalAlignment="Right"
-                            VerticalAlignment="Bottom"
-                            Content="Remove"
-                            Margin="5"
-                            Background="{StaticResource RichRedButtonBrush}"
-                            Command="{Binding DeleteSelectedObjectCommand}"
-                            CommandParameter="{Binding SelectedTeamPlayer}"
-                            IsEnabled="{Binding CanBeDeletedTeamPlayer}"/>
+                                VerticalAlignment="Bottom"
+                                Content="Remove"
+                                Margin="5"
+                                Background="{StaticResource RichRedButtonBrush}"
+                                Command="{Binding DeleteSelectedObjectCommand}"
+                                CommandParameter="{Binding SelectedTeamPlayer}"
+                                IsEnabled="{Binding CanBeDeletedTeamPlayer}" />
                     </StackPanel>
                 </StackPanel>
             </Grid>

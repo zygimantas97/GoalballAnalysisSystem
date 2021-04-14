@@ -37,9 +37,10 @@ namespace GoalballAnalysisSystem.WPF.Commands
             };
 
             var createdGame = await _gamesService.CreateGameAsync(gameToCreate);
+            _calibrationViewModel.SelectedGame = createdGame; //sets id
+
             _calibrationViewModel.CanBeCreated = false;
             _calibrationViewModel.EditModeOff = true;
-
         }
     }
 }

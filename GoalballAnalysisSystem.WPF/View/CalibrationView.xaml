@@ -6,32 +6,32 @@
              xmlns:local="clr-namespace:GoalballAnalysisSystem.WPF.View"
              xmlns:view="clr-namespace:GoalballAnalysisSystem.WPF.View"
              xmlns:viewmodel="clr-namespace:GoalballAnalysisSystem.WPF.ViewModel"
+             xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+             xmlns:WinFormHost="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+             xmlns:WinFormControls1="clr-namespace:Emgu.CV.UI;assembly=Emgu.CV.Platform.NetCore"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Auto">
+        <Grid Margin="10">
 
-    <UserControl.Resources>
-        <viewmodel:CalibrationViewModel x:Key="vm" />
-    </UserControl.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-    <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
-        <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Auto">
-
-            <Grid Grid.Column="0">
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Auto"
+                          Grid.Column="0">
 
                 <Grid Grid.Row="0"
+                      Grid.Column="0"
                       Background="{StaticResource ThirdBackgroundBrush}">
 
                     <Grid.RowDefinitions>
@@ -136,7 +136,7 @@
                                       VerticalAlignment="Center"
                                       ItemsSource="{Binding ListOfAvailableHomeTeams}"
                                       SelectedItem="{Binding SelectedHomeTeam}"
-                                      IsReadOnly="{Binding EditModeOff}">
+                                      IsEnabled="{Binding CanBeCreated}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -156,7 +156,7 @@
                                       VerticalAlignment="Center"
                                       ItemsSource="{Binding ListOfAvailableHomeTeams}"
                                       SelectedItem="{Binding SelectedGuestTeam}"
-                                      IsReadOnly="{Binding EditModeOff}">
+                                      IsEnabled="{Binding CanBeCreated}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -177,15 +177,104 @@
                                     HorizontalAlignment="Left"
                                     Command="{Binding CreateNewGameCommand}"
                                     IsEnabled="{Binding CanBeCreated}" />
+                            <Button Content="Select video"
+                                    x:Name="SelectVideoButton"
+                                    Click="SelectVideoButton_Click"
+                                    IsEnabled="{Binding CanBeVideoSelected}" />
 
                         </Grid>
                     </StackPanel>
                 </Grid>
 
+            </ScrollViewer>
+
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Background="{StaticResource ThirdBackgroundBrush}"
+                            Grid.Column="0"
+                            Margin="10 0"
+                            VerticalAlignment="Top">
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Top">
+                        <Button Content="+"
+                                x:Name="MakeBiggerButton"
+                                Command="{Binding IncreaseWindowSizeCommand}"
+                                Margin="0 0 5 0" />
+                        <Button Content="-"
+                                x:Name="MakeSmallerButton"
+                                Command="{Binding DecreaseWindowSizeCommand}" />
+                    </StackPanel>
+
+                    <StackPanel HorizontalAlignment="Center"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Top">
+
+                        <WindowsFormsHost Name="PlaygroundWindowsFormsHost"
+                                          Width="{Binding WindowWidth}"
+                                          Height="{Binding WindowHeight}">
+                            <WinFormControls1:ImageBox x:Name="VideoImageBox"
+                                                       Width="480"
+                                                       Height="270"
+                                                       SizeMode="Zoom"
+                                                       MouseDown="VideoImageBox_MouseDown"
+                                                       MouseMove="VideoImageBox_MouseMove"
+                                                       MouseUp="VideoImageBox_MouseUp"
+                                                       FunctionalMode="Minimum"
+                                                       Paint="VideoImageBox_Paint" />
+
+                        </WindowsFormsHost>
+
+                    </StackPanel>
+
+                    <WrapPanel HorizontalAlignment="Center">
+                        <Button Content="Start"
+                                x:Name="StartResumeButton"
+                                Click="StartResumeButton_Click" />
+                        <Button Content="Pause"
+                                x:Name="PauseButton"
+                                Click="PauseButton_Click" />
+                        <Button Content="Finish"
+                                x:Name="FinishButton"
+                                Click="FinishButton_Click" />
+
+                    </WrapPanel>
+                    <WrapPanel>
+
+                    </WrapPanel>
+                    <WrapPanel>
+                        <Button Content="Add tracking object"
+                                x:Name="AddTrackingObjectButton"
+                                Click="AddTrackingObjectButton_Click" />
+                        <Button Content="Remove all tracking objects"
+                                x:Name="RemoveAllTrackingObjectsButton"
+                                Click="RemoveAllTrackingObjectsButton_Click" />
+                    </WrapPanel>
+                    <WrapPanel>
+                        <Button Content="Detect objects (API)"
+                                x:Name="DetectObjectsApiButton"
+                                Click="DetectObjectsApiButton_Click" />
+                        <Button Content="Detect objects (ONNX)"
+                                x:Name="DetectObjectsOnnxButton"
+                                Click="DetectObjectsOnnxButton_Click" />
+                    </WrapPanel>
+
+                </StackPanel>
+
+                <StackPanel Background="{StaticResource ThirdBackgroundBrush}"
+                            Grid.Column="1">
+                    <TextBlock Text="Create a Game"
+                               Style="{StaticResource HeaderTwoBoldText}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+
             </Grid>
 
-        </ScrollViewer>
-
-    </Grid>
+        </Grid>
+    </ScrollViewer>
 
 </UserControl>

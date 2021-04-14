@@ -14,6 +14,8 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
     {
 
         public ICommand CreateNewGameCommand { get; set; }
+        public ICommand IncreaseWindowSizeCommand { get; set; }
+        public ICommand DecreaseWindowSizeCommand { get; set; }
 
         private TeamsService _teamsService;
 
@@ -78,8 +80,26 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 _canBeCreated = value;
                 OnPropertyChanged(nameof(CanBeCreated));
+                if (!_canBeCreated)
+                    CanBeVideoSelected = true;
+
             }
         }
+
+        private bool _canBeVideoSelected;
+        public bool CanBeVideoSelected
+        {
+            get
+            {
+                return _canBeVideoSelected;
+            }
+            set
+            {
+                _canBeVideoSelected = value;
+                OnPropertyChanged(nameof(CanBeVideoSelected));
+            }
+        }
+
         private bool _editModeOff;
         public bool EditModeOff
         {
@@ -94,6 +114,34 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
         }
 
+        private int _windowWidth;
+        public int WindowWidth
+        {
+            get
+            {
+                return _windowWidth;
+            }
+            set
+            {
+                _windowWidth = value;
+                OnPropertyChanged(nameof(WindowWidth));
+            }
+        }
+
+        private int _windowHeight;
+        public int WindowHeight
+        {
+            get
+            {
+                return _windowHeight;
+            }
+            set
+            {
+                _windowHeight = value;
+                OnPropertyChanged(nameof(WindowHeight));
+            }
+        }
+
         public CalibrationViewModel(GamesService gamesService, TeamsService teamService)
         {
             _teamsService = teamService;
@@ -105,8 +153,14 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             SelectedGuestTeam = new TeamResponse();
 
             CreateNewGameCommand = new CreateGameCommand(this, gamesService);
+            IncreaseWindowSizeCommand = new IncreaseWindowSizeCommand(this);
+            DecreaseWindowSizeCommand = new DecreaseWindowSizeCommand(this);
             CanBeCreated = true;
             EditModeOff = false;
+            CanBeVideoSelected = false;
+
+            WindowWidth = 480;
+            WindowHeight = 270;
 
             RefreshTeamsList();
         }

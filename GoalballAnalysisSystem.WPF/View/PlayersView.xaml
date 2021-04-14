@@ -22,7 +22,7 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
-                <ScrollViewer x:Name="PlayersList">
+                <ScrollViewer x:Name="PlayersList" VerticalScrollBarVisibility="Auto">
                     <ItemsControl x:Name="ListViewPlayers"
                                   ItemsSource="{Binding ListOfPlayers}">
                         <ItemsControl.ItemTemplate>

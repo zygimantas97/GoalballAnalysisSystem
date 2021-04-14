@@ -133,7 +133,8 @@
                                              Margin="15 15 15 15"
                                              BorderBrush="Transparent"
                                              Background="Transparent"
-                                             x:Name="passwordBox" />
+                                             x:Name="passwordBox"
+                                             Password="Julius123+"/>
                             </Grid>
                         </Grid>
 

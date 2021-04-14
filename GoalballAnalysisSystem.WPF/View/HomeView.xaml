@@ -10,57 +10,54 @@
              mc:Ignorable="d"
              d:DesignHeight="350"
              d:DesignWidth="600">
-    <Grid>
-
-        <Grid.RowDefinitions>
-            <RowDefinition Height="5*" />
-            <RowDefinition Height="3*" />
-        </Grid.RowDefinitions>
-
-        <TextBlock x:Name="TitleTextBlock"
-                   Style="{StaticResource HeaderOneText}"
-                   Text="GoallBall Analysis System"
-                   Grid.Column="1"
-                   Margin="30"
-                   HorizontalAlignment="Center" />
-
-        <Grid Grid.Row="1">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Auto"
+                  Margin="30">
+        <Grid>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="2*" />
-                <RowDefinition Height="3*" />
-                <RowDefinition Height="2*" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*" />
-                <ColumnDefinition Width="3*" />
-                <ColumnDefinition Width="3*" />
-                <ColumnDefinition Width="3*" />
-                <ColumnDefinition Width="3*" />
-            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="TitleTextBlock"
+                       Style="{StaticResource HeaderOneText}"
+                       Text="GoallBall Analysis System"
+                       Grid.Row="0"
+                       HorizontalAlignment="Center" />
 
-            <Button x:Name="FromFileButton"
+            <!--<StackPanel Grid.Row="1">
+
+                <TextBlock Style="{StaticResource HeaderTwoText}"
+                           Text="Analyze your video and get statistical data"
+                           HorizontalAlignment="Right" />
+
+                <TextBlock Style="{StaticResource HeaderTwoText}"
+                           Text="Manage your games, players, teams"
+                           HorizontalAlignment="Right" />
+                <TextBlock Style="{StaticResource HeaderTwoText}"
+                           Text="dddd"
+                           HorizontalAlignment="Right" />
+
+            </StackPanel>-->
+
+            <Button x:Name="ProcessVideoButton"
+                    Width="200"
+                    Height="75"
                     Style="{StaticResource BigButtonElement}"
+                    Background="{StaticResource BlueButtonBrush}"
                     Grid.Column="1"
                     Grid.Row="1"
                     Command="{Binding UpdateCurrentViewModelCommand}"
-                    CommandParameter="{x:Static nav:ViewType.Calibration}">
-                <TextBlock Text="From file"
-                           Style="{StaticResource HeaderTwoText}"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center" />
-            </Button>
-            <Button x:Name="LiveButton"
-                    Style="{StaticResource BigButtonElement}"
-                    Grid.Column="3"
-                    Grid.Row="1">
-                <TextBlock Text="Live"
-                           Style="{StaticResource HeaderTwoText}"
+                    CommandParameter="{x:Static nav:ViewType.Calibration}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom">
+                <TextBlock Text="Process a video"
+                           Style="{StaticResource HeaderTwoBoldText}"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center" />
             </Button>
 
         </Grid>
-    </Grid>
+    </ScrollViewer>
 </UserControl>

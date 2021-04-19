@@ -19,27 +19,27 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
     [TestFixture]
     public class IdentityControllerTests : ControllerTestBase
     {
-        /*
         [Test]
         public async Task Register_WithValidEmailUsernameAndPassword_ReturnsOk()
         {
             // Arrange
-            string expectedEmail = "TestEmail";
-            string expectedUsername = "TestUsername";
+            string email = "TestEmail";
+            string username = "TestUsername";
             string password = "TestPassword";
 
             var request = new RegistrationRequest
             {
-                Email = expectedEmail,
+                Email = email,
                 Password = password,
-                UserName = expectedUsername
+                UserName = username
 
             };
 
             Mock<IIdentityService> mock = new Mock<IIdentityService>();
-            mock.Setup(s => s.RegisterAsync(expectedEmail, password, expectedUsername)).ReturnsAsync(new AuthenticationResult() { Success = true });
+            mock.Setup(s => s.RegisterAsync(email, password, username)).ReturnsAsync(new AuthenticationResult() { Success = true });
             
             var identityController = new IdentityController(mock.Object);
+            
             // Act
             var actionResult = await identityController.Register(request);
             var objectResult = actionResult as ObjectResult;
@@ -47,56 +47,53 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Assert
             Assert.NotNull(objectResult);
             Assert.AreEqual(200, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
         public async Task Register_WithNotValidEmailUsernameAndPassword_ReturnsBadRequest()
         {
             // Arrange
-            string expectedEmail = "TestEmail";
-            string expectedUsername = "TestUsername";
+            string email = "TestEmail";
+            string username = "TestUsername";
             string password = "TestPassword";
 
             var request = new RegistrationRequest
             {
-                Email = expectedEmail,
+                Email = email,
                 Password = password,
-                UserName = expectedUsername
+                UserName = username
 
             };
 
             Mock<IIdentityService> mock = new Mock<IIdentityService>();
-            mock.Setup(s => s.RegisterAsync(expectedEmail, password, expectedUsername)).ReturnsAsync(new AuthenticationResult() { Success = false, Errors = new List<string>() { "error" } });
+            mock.Setup(s => s.RegisterAsync(email, password, username)).ReturnsAsync(new AuthenticationResult() { Success = false, Errors = new List<string>() { "error" } });
 
             var identityController = new IdentityController(mock.Object);
+            
             // Act
             var actionResult = await identityController.Register(request);
             var objectResult = actionResult as ObjectResult;
 
             // Assert
+            Assert.NotNull(objectResult);
             Assert.AreEqual(400, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
         public async Task Login_WithValidEmailUsernameAndPassword_ReturnsOk()
         {
             // Arrange
-            string expectedEmail = "TestEmail";
+            string email = "TestEmail";
             string password = "TestPassword";
-            string expectedUsername = "TestUsername";
 
-            var request = new RegistrationRequest
+            var request = new LoginRequest
             {
-                Email = expectedEmail,
+                Email = email,
                 Password = password,
-                UserName = expectedUsername
-
             };
 
             Mock<IIdentityService> mock = new Mock<IIdentityService>();
-            mock.Setup(s => s.LoginAsync(expectedEmail, password)).ReturnsAsync(new AuthenticationResult() { Success = true });
+            mock.Setup(s => s.LoginAsync(email, password)).ReturnsAsync(new AuthenticationResult() { Success = true });
 
             var identityController = new IdentityController(mock.Object);
 
@@ -107,27 +104,23 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Assert
             Assert.NotNull(objectResult);
             Assert.AreEqual(200, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
         public async Task Login_WithNotValidEmailUsernameAndPassword_ReturnsBadRequest()
         {
             // Arrange
-            string expectedEmail = "TestEmail";
+            string email = "TestEmail";
             string password = "TestPassword";
-            string expectedUsername = "TestUsername";
 
-            var request = new RegistrationRequest
+            var request = new LoginRequest
             {
-                Email = expectedEmail,
+                Email = email,
                 Password = password,
-                UserName = expectedUsername
-
             };
 
             Mock<IIdentityService> mock = new Mock<IIdentityService>();
-            mock.Setup(s => s.LoginAsync(expectedEmail, password)).ReturnsAsync(new AuthenticationResult() { Success = false, Errors = new List<string>() { "error" } });
+            mock.Setup(s => s.LoginAsync(email, password)).ReturnsAsync(new AuthenticationResult() { Success = false, Errors = new List<string>() { "error" } });
 
             var identityController = new IdentityController(mock.Object);
 
@@ -138,11 +131,10 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Assert
             Assert.NotNull(objectResult);
             Assert.AreEqual(400, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
-        public async Task RefreshTokens_WithValidEmailUsernameAndPassword_ReturnsOk()
+        public async Task RefreshToken_WithValidTokens_ReturnsOk()
         {
             // Arrange
             string token = "TestToken";
@@ -155,11 +147,9 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
 
             };
 
-
             Mock<IIdentityService> mock = new Mock<IIdentityService>();
             mock.Setup(s => s.RefreshTokenAsync(token, refreshToken)).ReturnsAsync(new AuthenticationResult() { Success = true });
             
-
             var identityController = new IdentityController(mock.Object);
 
             // Act
@@ -169,11 +159,10 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Assert
             Assert.NotNull(objectResult);
             Assert.AreEqual(200, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
-        public async Task RefreshTokens_WithNotValidEmailUsernameAndPassword_ReturnsBadRequest()
+        public async Task RefreshTokens_WithNotValidTokens_ReturnsBadRequest()
         {
             // Arrange
             string token = "TestToken";
@@ -183,7 +172,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             {
                 Token = token,
                 RefreshToken = refreshToken
-
             };
 
             Mock<IIdentityService> mock = new Mock<IIdentityService>();
@@ -198,8 +186,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Assert
             Assert.NotNull(objectResult);
             Assert.AreEqual(400, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
-        */
     }
 }

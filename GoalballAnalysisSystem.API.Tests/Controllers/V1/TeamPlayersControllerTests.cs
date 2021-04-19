@@ -34,10 +34,19 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
 
             for (int i = 0; i < countOfTeamPlayers; i++)
             {
+                var player = new Player
+                {
+                    IdentityUserId = "test_user",
+                    Name = "Test Player"
+                };
+                _context.Players.Add(player);
+                await _context.SaveChangesAsync();
+                _context.Entry(player).State = EntityState.Detached;
+
                 var teamPlayer = new TeamPlayer
                 {
                     TeamId = team.Id,
-                    PlayerId = i + 1
+                    PlayerId = player.Id
                 };
                 _context.TeamPlayers.Add(teamPlayer);
                 await _context.SaveChangesAsync();
@@ -54,7 +63,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             Assert.AreEqual(200, objectResult.StatusCode);
             Assert.IsInstanceOf<List<TeamPlayerResponse>>(objectResult.Value);
             Assert.AreEqual(countOfTeamPlayers, (objectResult.Value as List<TeamPlayerResponse>).Count);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -74,7 +82,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             Assert.AreEqual(200, objectResult.StatusCode);
             Assert.IsInstanceOf<List<TeamPlayerResponse>>(objectResult.Value);
             Assert.AreEqual(countOfTeamPlayers, (objectResult.Value as List<TeamPlayerResponse>).Count);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -93,6 +100,15 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
 
             for (int i = 0; i < countOfTeamPlayers; i++)
             {
+                var team = new Team
+                {
+                    IdentityUserId = "test_user",
+                    Name = "Test Team"
+                };
+                _context.Teams.Add(team);
+                await _context.SaveChangesAsync();
+                _context.Entry(team).State = EntityState.Detached;
+
                 var teamPlayer = new TeamPlayer
                 {
                     TeamId = i + 1,
@@ -113,7 +129,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             Assert.AreEqual(200, objectResult.StatusCode);
             Assert.IsInstanceOf<List<TeamPlayerResponse>>(objectResult.Value);
             Assert.AreEqual(countOfTeamPlayers, (objectResult.Value as List<TeamPlayerResponse>).Count);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -133,7 +148,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             Assert.AreEqual(200, objectResult.StatusCode);
             Assert.IsInstanceOf<List<TeamPlayerResponse>>(objectResult.Value);
             Assert.AreEqual(countOfTeamPlayers, (objectResult.Value as List<TeamPlayerResponse>).Count);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -167,7 +181,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             await _context.SaveChangesAsync();
             var teamPlayersController = CreateController<TeamPlayersController>();
 
-
             // Act
             var actionResult = await teamPlayersController.GetTeamPlayer(team.Id, player.Id);
             var objectResult = actionResult as ObjectResult;
@@ -178,7 +191,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             Assert.IsInstanceOf<TeamPlayerResponse>(objectResult.Value);
             Assert.AreEqual(teamPlayer.TeamId, (objectResult.Value as TeamPlayerResponse).TeamId);
             Assert.AreEqual(teamPlayer.PlayerId, (objectResult.Value as TeamPlayerResponse).PlayerId);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -196,7 +208,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Assert
             Assert.NotNull(objectResult);
             Assert.AreEqual(404, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -250,7 +261,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             Assert.NotNull(statusCodeResult);
             Assert.AreEqual(204, statusCodeResult.StatusCode);
             Assert.AreEqual(teamPlayerRequest.Number, updatedTeamPlayer.Number);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -276,7 +286,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Assert
             Assert.NotNull(objectResult);
             Assert.AreEqual(404, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -328,7 +337,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Assert
             Assert.NotNull(objectResult);
             Assert.AreEqual(404, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -380,7 +388,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Assert
             Assert.NotNull(objectResult);
             Assert.AreEqual(400, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -425,7 +432,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             Assert.AreEqual(team.Id, (objectResult.Value as TeamPlayerResponse).TeamId);
             Assert.AreEqual(player.Id, (objectResult.Value as TeamPlayerResponse).PlayerId);
             Assert.AreEqual(1, _context.TeamPlayers.Count());
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -459,7 +465,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Assert
             Assert.NotNull(objectResult);
             Assert.AreEqual(404, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -493,7 +498,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Assert
             Assert.NotNull(objectResult);
             Assert.AreEqual(404, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -545,7 +549,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Assert
             Assert.NotNull(objectResult);
             Assert.AreEqual(400, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -587,7 +590,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Assert
             Assert.NotNull(objectResult);
             Assert.AreEqual(404, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -628,7 +630,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Assert
             Assert.NotNull(objectResult);
             Assert.AreEqual(400, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -674,7 +675,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             Assert.AreEqual(teamPlayer.TeamId, (objectResult.Value as TeamPlayerResponse).TeamId);
             Assert.AreEqual(teamPlayer.PlayerId, (objectResult.Value as TeamPlayerResponse).PlayerId);
             Assert.AreEqual(0, _context.TeamPlayers.Count());
-            this.mockRepository.VerifyAll();
         }
 
         [Test]
@@ -693,7 +693,6 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
             // Assert
             Assert.NotNull(objectResult);
             Assert.AreEqual(404, objectResult.StatusCode);
-            this.mockRepository.VerifyAll();
         }
     }
 }

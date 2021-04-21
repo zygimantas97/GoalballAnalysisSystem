@@ -25,7 +25,7 @@ namespace GoalballAnalysisSystem.API.Data
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected async override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Player>(entity =>
             {
@@ -159,7 +159,7 @@ namespace GoalballAnalysisSystem.API.Data
                     Id = 3,
                     Name = "Center"
                 });
-
+            
             base.OnModelCreating(builder);
         }
     }

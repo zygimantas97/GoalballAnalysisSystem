@@ -187,8 +187,24 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
                 return NotFound(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to find game by given Id" } } });
             }
 
+            foreach(var gamePlayer in game.GamePlayers)
+            {
+                _context.GamePlayers.Remove(gamePlayer);
+            }
+
             _context.Games.Remove(game);
             await _context.SaveChangesAsync();
+
+            var roles = await _context.PlayerRoles.AsNoTracking().ToListAsync();
+            foreach(var htp in game.HomeTeam.TeamPlayers)
+            {
+                htp.Role = roles.SingleOrDefault(r => r.Id == htp.RoleId);
+            }
+            foreach(var gtp in game.GuestTeam.TeamPlayers)
+            {
+                gtp.Role = roles.SingleOrDefault(r => r.Id == gtp.RoleId);
+            }
+
             return Ok(_mapper.Map<GameResponse>(game));
         }
     }

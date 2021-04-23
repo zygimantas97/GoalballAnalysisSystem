@@ -178,6 +178,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             var userId = HttpContext.GetUserId();
             var game = await _context.Games
                 .Include(g => g.GamePlayers)
+                .Include(g => g.Projections)
                .Include(g => g.HomeTeam).ThenInclude(ht => ht.TeamPlayers).ThenInclude(htp => htp.Player)
                .Include(g => g.GuestTeam).ThenInclude(gt => gt.TeamPlayers).ThenInclude(gtp => gtp.Player)
                .AsNoTracking()
@@ -187,10 +188,7 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
                 return NotFound(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to find game by given Id" } } });
             }
 
-            foreach(var gamePlayer in game.GamePlayers)
-            {
-                _context.GamePlayers.Remove(gamePlayer);
-            }
+            _context.Projections.RemoveRange(game.Projections);
 
             _context.Games.Remove(game);
             await _context.SaveChangesAsync();

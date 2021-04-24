@@ -70,9 +70,11 @@ namespace GoalballAnalysisSystem.WPF
             { 
                 return () => new ProcessingViewModel(
                     s.GetRequiredService<GamesService>(),
+                    s.GetRequiredService<GamePlayersService>(),
                     s.GetRequiredService<TeamsService>(),
                     s.GetRequiredService<PlayersService>(),
-                    s.GetRequiredService<TeamPlayersService>()); 
+                    s.GetRequiredService<TeamPlayersService>(),
+                    s.GetRequiredService<ProjectionsService>()); 
             });
             services.AddSingleton<CreateViewModel<LoginViewModel>>(s =>
             {

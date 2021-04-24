@@ -1,4 +1,5 @@
-﻿using GoalballAnalysisSystem.API.Contracts.V1.Responses;
+﻿using GoalballAnalysisSystem.API.Contracts.V1.Requests;
+using GoalballAnalysisSystem.API.Contracts.V1.Responses;
 using GoalballAnalysisSystem.WPF.Commands;
 using GoalballAnalysisSystem.WPF.Services;
 using System;
@@ -20,6 +21,8 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         private TeamsService _teamsService;
         private PlayersService _playersService;
         private TeamPlayersService _teamplayersService;
+        private GamePlayersService _gamePlayersService;
+        private ProjectionsService _projectionService;
 
         SynchronizationContext uiContext;
 
@@ -29,11 +32,13 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             get { return _listOfAvailableHomeTeams; }
         }
 
-        private ObservableCollection<PlayerResponse> _listOfAvailablePlayers;
-        public ObservableCollection<PlayerResponse> ListOfAvailablePlayers
+        private ObservableCollection<TeamPlayerResponse> _listOfAvailableTeamPlayers;
+        public ObservableCollection<TeamPlayerResponse> ListOfAvailableTeamPlayers
         {
-            get { return _listOfAvailablePlayers; }
+            get { return _listOfAvailableTeamPlayers; }
         }
+
+        private List<GamePlayerResponse> _gamePlayers;
 
         private GameResponse _selectedGame;
         public GameResponse SelectedGame
@@ -47,6 +52,20 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 _selectedGame = value;
                 OnPropertyChanged(nameof(SelectedGame));
                 RefreshPlayersList();
+            }
+        }
+
+        private TeamPlayerResponse _selecteTeamPlayer;
+        public TeamPlayerResponse SelectedTeamPlayer
+        {
+            get
+            {
+                return _selecteTeamPlayer;
+            }
+            set
+            {
+                _selecteTeamPlayer = value;
+                OnPropertyChanged(nameof(SelectedTeamPlayer));
             }
         }
 
@@ -238,15 +257,18 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
 
 
-        public ProcessingViewModel(GamesService gamesService, TeamsService teamService, PlayersService playersService, TeamPlayersService teamPlayersService)
+        public ProcessingViewModel(GamesService gamesService, GamePlayersService gamePlayersService, TeamsService teamService, PlayersService playersService, TeamPlayersService teamPlayersService, ProjectionsService projectionService)
         {
+            _gamePlayersService = gamePlayersService;
             _teamsService = teamService;
             _playersService = playersService;
             _teamplayersService = teamPlayersService;
+            _projectionService = projectionService;
             uiContext = SynchronizationContext.Current;
 
             _listOfAvailableHomeTeams = new ObservableCollection<TeamResponse>();
-            _listOfAvailablePlayers = new ObservableCollection<PlayerResponse>();
+            _listOfAvailableTeamPlayers = new ObservableCollection<TeamPlayerResponse>();
+            _gamePlayers = new List<GamePlayerResponse>();
             SelectedGame = new GameResponse();
             SelectedHomeTeam = new TeamResponse();
             SelectedGuestTeam = new TeamResponse();
@@ -285,7 +307,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
         private async void RefreshPlayersList()
         {
-            uiContext.Send(x => _listOfAvailablePlayers.Clear(), null);
+            uiContext.Send(x => _listOfAvailableTeamPlayers.Clear(), null);
             if (SelectedGame != null)
             {
 
@@ -295,8 +317,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
                     foreach (var teamPlayer in teamPlayers)
                     {
-                        var player = await _playersService.GetPlayerAsync(teamPlayer.PlayerId);
-                        uiContext.Send(x => _listOfAvailablePlayers.Add(player), null);
+                        uiContext.Send(x => _listOfAvailableTeamPlayers.Add(teamPlayer), null);
                     }
                 }
 
@@ -306,11 +327,64 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
                     foreach (var teamPlayer in teamPlayers)
                     {
-                        var player = await _playersService.GetPlayerAsync(teamPlayer.PlayerId);
-                        uiContext.Send(x => _listOfAvailablePlayers.Add(player), null);
+                        uiContext.Send(x => _listOfAvailableTeamPlayers.Add(teamPlayer), null);
                     }
                 }
             }
+
+        }
+        public async void CreateGamePlayer()
+        {
+            var gamePlayer = new CreateGamePlayerRequest
+            {
+                TeamId = SelectedTeamPlayer.TeamId,
+                PlayerId = SelectedTeamPlayer.PlayerId,
+                GameId = SelectedGame.Id
+            };
+            
+
+            var createdGamePlayer = await _gamePlayersService.CreateGamePlayerAsync(gamePlayer);
+            _gamePlayers.Add(createdGamePlayer);
+
+        }
+
+        public async void CreateProjection(TeamPlayerResponse offensive, TeamPlayerResponse defensive, int x1, int x2, int y1, int y2)
+        {
+            GamePlayerResponse offensivePlayer = null;
+            GamePlayerResponse defensivePlayer = null;
+
+            //find created game player
+            foreach (var gamePlayer in _gamePlayers)
+            {
+                if (offensive != null)
+                {
+                    if (gamePlayer.PlayerId == offensive.PlayerId)
+                        offensivePlayer = gamePlayer;
+                }
+
+                if (defensive != null)
+                {
+                    if (gamePlayer.PlayerId == defensive.PlayerId)
+                        defensivePlayer = gamePlayer;
+                }
+
+            }
+
+            var projection = new ProjectionRequest
+            {
+                GameId = SelectedGame.Id,
+                X1 = x1,
+                X2 = x2,
+                Y1 = y1,
+                Y2 = y2
+            };
+
+            if (offensivePlayer != null)
+                projection.OffenseGamePlayerId = offensivePlayer.Id;
+            if (defensivePlayer != null)
+                projection.DefenseGamePlayerId = defensivePlayer.Id;
+
+            var createProjection = await _projectionService.CreateProjectionAsync(projection);
 
         }
 

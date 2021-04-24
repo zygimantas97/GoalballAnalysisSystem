@@ -8,6 +8,7 @@ using GoalballAnalysisSystem.GameProcessing.ObjectDetection.Color;
 using GoalballAnalysisSystem.GameProcessing.ObjectDetection;
 using GoalballAnalysisSystem.GameProcessing.ObjectTracking;
 using GoalballAnalysisSystem.API.Contracts.V1.Requests;
+using GoalballAnalysisSystem.API.Contracts.V1.Responses;
 using GoalballAnalysisSystem.GameProcessing.ObjectTracking.SOT;
 using GoalballAnalysisSystem.GameProcessing.Geometry.Equation;
 using Emgu.CV.Structure;
@@ -61,6 +62,7 @@ namespace GoalballAnalysisSystem.WPF.View
         public ProcessingView()
         {
             InitializeComponent();
+
             _playgroundImageBoxBackground = Playground();
             PlaygroundImageBox.Image = _playgroundImageBoxBackground;
         }
@@ -222,7 +224,6 @@ namespace GoalballAnalysisSystem.WPF.View
             _objectDetector = new ColorObjectDetector("ball");
             _mot = new SOTBasedMOT<TeamPlayerResponse>();
             _selector = new ProjectionSelector<TeamPlayerResponse>(SELECTION_ZONE_TOP, SELECTION_ZONE_BOTTOM, MAX_SELECTION_DISTANCE);
-
             _gameAnalyzer = new GameAnalyzer<TeamPlayerResponse>(openFileDialog.FileName,
                 _gameAnalyzerConfigurator, _objectDetector, _mot, _selector);
 
@@ -280,13 +281,13 @@ namespace GoalballAnalysisSystem.WPF.View
                gameAnalyzerConfigurator.TopRight.X != 0 && gameAnalyzerConfigurator.TopRight.Y != 0 &&
                gameAnalyzerConfigurator.BottomLeft.X != 0 && gameAnalyzerConfigurator.BottomLeft.Y != 0 &&
                gameAnalyzerConfigurator.BottomRight.X != 0 && gameAnalyzerConfigurator.BottomRight.Y != 0)
-                return true;
+                 return true;
             else return false;
         }
 
         private void _selector_Selected(object sender, SelectionEventArgs<TeamPlayerResponse> e)
         {
-            
+            var viewModel = (ProcessingViewModel)this.DataContext;
             var playground = _playgroundImageBoxBackground.Clone();
 
             double startY = e.SelectionStart.Y < e.SelectionEnd.Y ? 0 : PLAYGROUND_HEIGHT;
@@ -297,6 +298,8 @@ namespace GoalballAnalysisSystem.WPF.View
 
             var startPoint = new System.Drawing.Point((int)Math.Round(startX), (int)Math.Round(startY));
             var endPoint = new System.Drawing.Point((int)Math.Round(endX), (int)Math.Round(endY));
+
+            viewModel.CreateProjection(e.SelectionStartObject, e.SelectionEndObject, (int)startX, (int)endX, (int)startY, (int)endY);
 
             CvInvoke.Line(playground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5);
             PlaygroundImageBox.Image = playground;
@@ -330,7 +333,7 @@ namespace GoalballAnalysisSystem.WPF.View
         {
             if (_selectedROI != Rectangle.Empty)
             {
-                
+                var viewModel = (ProcessingViewModel)this.DataContext;
                 double horizontalScale;
                 double verticalScale;
                 if (_gameAnalyzer.CurrentFrame != null)
@@ -350,15 +353,15 @@ namespace GoalballAnalysisSystem.WPF.View
                                                     (int)(_selectedROI.Height * verticalScale));
                 if (_gameAnalyzer.CurrentFrame != null)
                 {
-                    _mot.Add(new TeamPlayerResponse(), _gameAnalyzer.CurrentFrame.Mat, rectangle);
+                    _mot.Add(viewModel.SelectedTeamPlayer, _gameAnalyzer.CurrentFrame.Mat, rectangle);
                 }
                 else
                 {
-                    _mot.Add(new TeamPlayerResponse(), _frame, rectangle);
+                    _mot.Add(viewModel.SelectedTeamPlayer, _frame, rectangle);
                 }
 
-                var viewModel = (ProcessingViewModel)this.DataContext;
                 viewModel.CanBePlayerSelected = false;
+                viewModel.CreateGamePlayer();
 
                 _selectedROI = Rectangle.Empty;
                 VideoImageBox.Invalidate();

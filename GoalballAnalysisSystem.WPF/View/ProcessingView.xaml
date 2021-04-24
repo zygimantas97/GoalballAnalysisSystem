@@ -258,15 +258,15 @@
                                       HorizontalAlignment="Left"
                                       VerticalAlignment="Center"
                                       Style="{StaticResource SelectionComboBox}"
-                                      ItemsSource="{Binding ListOfAvailablePlayers}"
-                                      SelectedItem="{Binding SelectedPlayer}"
+                                      ItemsSource="{Binding ListOfAvailableTeamPlayers}"
+                                      SelectedItem="{Binding SelectedTeamPlayer}"
                                       IsEnabled="{Binding CanBePlayerSelected}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Path=Name}" />
+                                            <TextBlock Text="{Binding Path=Player.Name}" />
                                             <TextBlock Text=" " />
-                                            <TextBlock Text="{Binding Path=Surname}" />
+                                            <TextBlock Text="{Binding Path=Player.Surname}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>

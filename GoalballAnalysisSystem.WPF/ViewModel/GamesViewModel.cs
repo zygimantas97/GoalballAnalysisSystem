@@ -199,7 +199,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             _teamPlayersService = teamPlayersService;
             _playersService = playersService;
 
-            
+
             _listOfGames = new ObservableCollection<GameResponse>();
             _listOfProjections = new ObservableCollection<ProjectionResponse>();
             _listOfHomeTeamPlayers = new ObservableCollection<TeamPlayerResponse>();
@@ -211,8 +211,8 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             ChangeSelectedObjectCommand = new SelectObjectCommand(this);
             DeleteSelectedObjectCommand = new DeleteObjectCommand(this);
             EditSelectedObjectCommand = new TurnEditModeCommand(this);
-           // PreviousProjectionCommand = new PreviousProjection(this);
-           // NextProjectionCommand = new NextProjection(this);
+            // PreviousProjectionCommand = new PreviousProjection(this);
+            // NextProjectionCommand = new NextProjection(this);
 
             EditModeOff = true;
             _currentProjectionIndex = -1;
@@ -264,7 +264,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
         public ProjectionResponse FirstProjection()
         {
-            if(ListOfProjections.Count > 0)
+            if (ListOfProjections.Count > 0)
             {
                 _currentProjectionIndex = 0;
                 SelectedProjection = ListOfProjections[_currentProjectionIndex];
@@ -276,7 +276,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
         public ProjectionResponse NextProjection()
         {
-            if(_currentProjectionIndex < ListOfProjections.Count-1 && ListOfProjections.Count>0)
+            if (_currentProjectionIndex < ListOfProjections.Count - 1 && ListOfProjections.Count > 0)
             {
                 _currentProjectionIndex++;
                 SelectedProjection = ListOfProjections[_currentProjectionIndex];
@@ -287,7 +287,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         }
         public ProjectionResponse PreviousProjection()
         {
-            if (_currentProjectionIndex > 0 && ListOfProjections.Count>0)
+            if (_currentProjectionIndex > 0 && ListOfProjections.Count > 0)
             {
                 _currentProjectionIndex--;
                 SelectedProjection = ListOfProjections[_currentProjectionIndex];
@@ -368,33 +368,53 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             if (EditModeOff) //edit has been finished
             {
 
-                var availableTeams = await _teamsService.GetTeamsAsync(); //butina tureti dvi sukurtas komandas
+                var allTeams = await _teamsService.GetTeamsAsync(); //butina tureti dvi sukurtas komandas
+                var homeTeam = allTeams[allTeams.Count - 2];
+                var guestTeam = allTeams[allTeams.Count - 1];
 
                 var newGame = new GameRequest
                 {
                     Title = SelectedGame.Title,
-                    GuestTeamId = availableTeams[0].Id,
-                    HomeTeamId = availableTeams[1].Id
+                    HomeTeamId = homeTeam.Id,
+                    GuestTeamId = guestTeam.Id
                 };
 
                 var createdGame = await _gamesService.CreateGameAsync(newGame);
 
-                var guestPlayers = await _teamPlayersService.GetTeamPlayersByTeamAsync(availableTeams[0].Id);
-                var homePlayers = await _teamPlayersService.GetTeamPlayersByTeamAsync(availableTeams[1].Id);
+                var homeTeamPlayers = await _teamPlayersService.GetTeamPlayersByTeamAsync(homeTeam.Id);
+                var guestTeamPlayers = await _teamPlayersService.GetTeamPlayersByTeamAsync(guestTeam.Id);
 
+                var homeGamePlayers = new List<GamePlayerResponse>();
+                var guestGamePlayers = new List<GamePlayerResponse>();
 
-                for (int i = 0; i<3; i++)
+                foreach (var teamPlayer in homeTeamPlayers)
                 {
                     var gamePlayerRequest = new CreateGamePlayerRequest
                     {
                         GameId = createdGame.Id,
-                        PlayerId = guestPlayers[i].PlayerId,
-                        TeamId = availableTeams[0].Id
+                        TeamId = teamPlayer.TeamId,
+                        PlayerId = teamPlayer.PlayerId
                     };
 
                     var gamePlayer = await _gamePlayersService.CreateGamePlayerAsync(gamePlayerRequest);
+                    homeGamePlayers.Add(gamePlayer);
+                }
 
+                foreach (var teamPlayer in guestTeamPlayers)
+                {
+                    var gamePlayerRequest = new CreateGamePlayerRequest
+                    {
+                        GameId = createdGame.Id,
+                        TeamId = teamPlayer.TeamId,
+                        PlayerId = teamPlayer.PlayerId
+                    };
 
+                    var gamePlayer = await _gamePlayersService.CreateGamePlayerAsync(gamePlayerRequest);
+                    guestGamePlayers.Add(gamePlayer);
+                }
+
+                for (int i = 0; i < Math.Min(homeGamePlayers.Count, guestGamePlayers.Count); i++)
+                {
                     var newProjection = new ProjectionRequest
                     {
                         X1 = rnd.Next(1, 900),
@@ -402,43 +422,12 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                         Y1 = rnd.Next(1, 1800),
                         Y2 = rnd.Next(1, 1800),
                         GameId = createdGame.Id,
-                        DefenseGamePlayerId = gamePlayer.Id,
-                        OffenseGamePlayerId = gamePlayer.Id
+                        DefenseGamePlayerId = guestGamePlayers[i].Id,
+                        OffenseGamePlayerId = homeGamePlayers[i].Id
                     };
 
                     var createdProjection = await _projectionsService.CreateProjectionAsync(newProjection);
                 }
-
-                for (int i = 0; i < 3; i++)
-                {
-                    var gamePlayerRequest = new CreateGamePlayerRequest
-                    {
-                        GameId = createdGame.Id,
-                        PlayerId = homePlayers[i].PlayerId,
-                        TeamId = availableTeams[1].Id
-                    };
-
-                    var gamePlayer = await _gamePlayersService.CreateGamePlayerAsync(gamePlayerRequest);
-
-
-                    var newProjection = new ProjectionRequest
-                    {
-                        X1 = rnd.Next(1, 900),
-                        X2 = rnd.Next(1, 900),
-                        Y1 = rnd.Next(1, 1800),
-                        Y2 = rnd.Next(1, 1800),
-                        GameId = createdGame.Id,
-                        DefenseGamePlayerId = gamePlayer.Id,
-                        OffenseGamePlayerId = gamePlayer.Id
-
-                    };
-
-                    var createdProjection = await _projectionsService.CreateProjectionAsync(newProjection);
-                }
-
-
-
-
 
                 SelectedGame = createdGame;
                 RefreshGameList();

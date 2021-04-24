@@ -33,7 +33,7 @@ namespace GoalballAnalysisSystem.WPF.View
         private const int PLAYGROUND_HEIGHT = 1800;
         private const int YZONEHEIGHT = 300;
 
-        int[] xZones = { 0, 50, 275, 325, 575, 625, 850, 900 };
+        private int[] xZones = { 0, 50, 275, 325, 575, 625, 850, 900 };
 
         private GamesViewModel _gamesViewModel;
         private Image<Bgr, byte> _playgroundImageBoxBackground;
@@ -43,6 +43,46 @@ namespace GoalballAnalysisSystem.WPF.View
             InitializeComponent();
             _playgroundImageBoxBackground = Playground();
             PlaygroundImageBox.Image = _playgroundImageBoxBackground;
+
+        }
+
+        private void PlaygroundImageBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (_gamesViewModel == null)
+                _gamesViewModel = (GamesViewModel)this.DataContext;
+
+            if (_gamesViewModel != null)
+            {
+                _playgroundImageBoxBackground = Playground();
+                System.Drawing.Point coordinates = e.Location;
+                double horizontalScale = (double)_playgroundImageBoxBackground.Width / (double)PlaygroundImageBox.Width;
+                double verticalScale = (double)_playgroundImageBoxBackground.Height / (double)PlaygroundImageBox.Height;
+
+                double x = coordinates.X * horizontalScale;
+                double y = coordinates.Y * verticalScale;
+                _gamesViewModel.SelectedGameZone = new System.Drawing.Rectangle();
+
+                //determine where was clicked
+                for (int i = 0; i < xZones.Length - 1; i++)
+                {
+                    if (x >= xZones[i] + XPADDING && x <= xZones[i + 1] + XPADDING)
+                    {
+                        if (y >= YPADDING && y <= YZONEHEIGHT + YPADDING)
+                        {
+                            CvInvoke.Rectangle(_playgroundImageBoxBackground, new System.Drawing.Rectangle(xZones[i] + XPADDING, YPADDING, xZones[i + 1] - xZones[i], YZONEHEIGHT), new MCvScalar(255, 0, 0), 10);
+                            _gamesViewModel.SelectedGameZone = new System.Drawing.Rectangle(xZones[i], 0, xZones[i + 1] - xZones[i], YZONEHEIGHT);
+                        }
+
+                        else if (y >= YPADDING + PLAYGROUND_HEIGHT - YZONEHEIGHT && y <= YPADDING + PLAYGROUND_HEIGHT)
+                        {
+                            CvInvoke.Rectangle(_playgroundImageBoxBackground, new System.Drawing.Rectangle(xZones[i] + XPADDING, YPADDING + PLAYGROUND_HEIGHT - YZONEHEIGHT, xZones[i + 1] - xZones[i], YZONEHEIGHT), new MCvScalar(255, 0, 0), 10);
+                            _gamesViewModel.SelectedGameZone = new System.Drawing.Rectangle(xZones[i], 0 + PLAYGROUND_HEIGHT - YZONEHEIGHT, xZones[i + 1] - xZones[i], YZONEHEIGHT);
+                        }
+                    }
+                }
+                _gamesViewModel.RefreshProjectionsList();
+                PlaygroundImageBox.Image = _playgroundImageBoxBackground;
+            }
 
         }
 
@@ -66,15 +106,13 @@ namespace GoalballAnalysisSystem.WPF.View
 
         private void DrawVector(ProjectionResponse projection)
         {
-            if (_gamesViewModel == null)
-                _gamesViewModel = (GamesViewModel)this.DataContext;
-
             Image<Bgr, byte> playgroundImageBoxBackground = _playgroundImageBoxBackground.Clone();
 
             var startPoint = new System.Drawing.Point(projection.X1 + XPADDING, projection.Y1 + YPADDING);
             var endPoint = new System.Drawing.Point(projection.X2 + XPADDING, projection.Y2 + YPADDING);
 
-            CvInvoke.Line(playgroundImageBoxBackground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5);
+            //CvInvoke.Line(playgroundImageBoxBackground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5);
+            CvInvoke.ArrowedLine(playgroundImageBoxBackground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5, Emgu.CV.CvEnum.LineType.Filled, 0, 0.02);
             PlaygroundImageBox.Image = playgroundImageBoxBackground;
 
         }
@@ -122,6 +160,7 @@ namespace GoalballAnalysisSystem.WPF.View
 
             return playgroundImageBoxBackground;
         }
+
 
     }
 }

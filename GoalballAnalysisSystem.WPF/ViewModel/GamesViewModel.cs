@@ -7,6 +7,7 @@ using GoalballAnalysisSystem.WPF.ViewModel.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -93,6 +94,21 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
         }
 
+        private Rectangle _selectedGameZone;
+        public Rectangle SelectedGameZone
+        {
+            get
+            {
+                return _selectedGameZone;
+            }
+            set
+            {
+                _selectedGameZone = value;
+                OnPropertyChanged(nameof(SelectedGameZone));
+
+            }
+        }
+
         private ProjectionResponse _selectedProjection;
         public ProjectionResponse SelectedProjection
         {
@@ -104,6 +120,37 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 _selectedProjection = value;
                 OnPropertyChanged(nameof(SelectedProjection));
+                RefreshProjectionPlayers();
+
+            }
+        }
+
+        private PlayerResponse _topPlayer;
+        public PlayerResponse TopPlayer
+        {
+            get
+            {
+                return _topPlayer;
+            }
+            set
+            {
+                _topPlayer = value;
+                OnPropertyChanged(nameof(TopPlayer));
+
+            }
+        }
+
+        private PlayerResponse _bottomPlayer;
+        public PlayerResponse BottomPlayer
+        {
+            get
+            {
+                return _bottomPlayer;
+            }
+            set
+            {
+                _bottomPlayer = value;
+                OnPropertyChanged(nameof(BottomPlayer));
 
             }
         }
@@ -207,6 +254,8 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             _listOfHomePlayers = new ObservableCollection<PlayerResponse>();
             _listOfGuestPlayers = new ObservableCollection<PlayerResponse>();
 
+            SelectedGameZone = new Rectangle();
+
             CreateNewObjectCommand = new CreateObjectCommand(this);
             ChangeSelectedObjectCommand = new SelectObjectCommand(this);
             DeleteSelectedObjectCommand = new DeleteObjectCommand(this);
@@ -297,6 +346,37 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             return null;
         }
 
+        private async void RefreshProjectionPlayers()
+        {
+            if (SelectedProjection != null)
+            {
+                GamePlayerResponse topPlayer = null;
+                GamePlayerResponse bottomPlayer = null;
+                TopPlayer = null;
+                BottomPlayer = null;
+
+                if (SelectedProjection.Y1 > 900)
+                {
+                    if(SelectedProjection.DefenseGamePlayerId != null)
+                        topPlayer = await _gamePlayersService.GetGamePlayerAsync(Convert.ToInt64(SelectedProjection.DefenseGamePlayerId));
+                    if (SelectedProjection.OffenseGamePlayerId != null)
+                        bottomPlayer = await _gamePlayersService.GetGamePlayerAsync(Convert.ToInt64(SelectedProjection.OffenseGamePlayerId));
+                }
+                else
+                {
+                    if (SelectedProjection.DefenseGamePlayerId != null)
+                        bottomPlayer = await _gamePlayersService.GetGamePlayerAsync(Convert.ToInt64(SelectedProjection.DefenseGamePlayerId));
+                    if (SelectedProjection.OffenseGamePlayerId != null)
+                        topPlayer = await _gamePlayersService.GetGamePlayerAsync(Convert.ToInt64(SelectedProjection.OffenseGamePlayerId));
+                }
+
+                if (topPlayer != null)
+                    TopPlayer = topPlayer.TeamPlayer.Player;
+                if (bottomPlayer != null)
+                    BottomPlayer = bottomPlayer.TeamPlayer.Player;
+            }
+        }
+
         public async void RefreshGameList()
         {
             var gamesList = await _gamesService.GetGamesAsync();
@@ -311,18 +391,30 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
         public async void RefreshProjectionsList()
         {
-
             _uiContext.Send(x => _listOfProjections.Clear(), null);
 
             if (SelectedGame != null)
             {
                 var projectionsList = await _projectionsService.GetProjectionsByGameAsync(SelectedGame.Id);
 
-                foreach (var projection in projectionsList)
+                if (SelectedGameZone == null || SelectedGameZone == new Rectangle())
                 {
-                    _uiContext.Send(x => _listOfProjections.Add(projection), null);
-                }
 
+                    foreach (var projection in projectionsList)
+                    {
+                        _uiContext.Send(x => _listOfProjections.Add(projection), null);
+                    }
+                }
+                else
+                {
+                    foreach (var projection in projectionsList)
+                    {
+                        if ((projection.X1 >= SelectedGameZone.X && projection.X1 <= SelectedGameZone.X+SelectedGameZone.Width && projection.Y1 >= SelectedGameZone.Y && projection.Y1 <= SelectedGameZone.Y + SelectedGameZone.Height) || (projection.X2 >= SelectedGameZone.X && projection.X2 <= SelectedGameZone.X + SelectedGameZone.Width && projection.Y2 >= SelectedGameZone.Y && projection.Y2 <= SelectedGameZone.Y + SelectedGameZone.Height))
+                        {
+                            _uiContext.Send(x => _listOfProjections.Add(projection), null);
+                        }
+                    }
+                }
                 _currentProjectionIndex = -1;
                 SelectedProjection = null;
             }

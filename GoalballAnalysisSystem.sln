@@ -3,29 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.Domain", "GoalballAnalysisSystem.Domain\GoalballAnalysisSystem.Domain.csproj", "{86A67310-7873-42EE-99F7-9A4705C701DA}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.EntityFramework", "GoalballAnalysisSystem.EntityFramework\GoalballAnalysisSystem.EntityFramework.csproj", "{050A04E4-52EA-4B76-8469-E2439518FF2E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.WPF", "GoalballAnalysisSystem.WPF\GoalballAnalysisSystem.WPF.csproj", "{B61037A3-E0AE-4291-A98D-AAA1B0D69A1E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.Domain.Tests", "GoalballAnalysisSystem.Domain.Tests\GoalballAnalysisSystem.Domain.Tests.csproj", "{92BF8584-9361-4681-9A21-38DF13A879D5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.API", "GoalballAnalysisSystem.API\GoalballAnalysisSystem.API.csproj", "{95E256F5-EFDE-40C4-80BC-2D61C1C1DCB6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.API.Tests", "GoalballAnalysisSystem.API.Tests\GoalballAnalysisSystem.API.Tests.csproj", "{275DC6A7-2CFA-4C2B-9F6B-13CBF461FCE6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.Tracking", "GoalballAnalysisSystem.Tracking\GoalballAnalysisSystem.Tracking.csproj", "{37FE3248-4A89-4590-8D67-76BB5D6661F1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.Tracking.Tests", "GoalballAnalysisSystem.Tracking.Tests\GoalballAnalysisSystem.Tracking.Tests.csproj", "{F9F78ADC-01AF-4EDA-A1C3-E84194CFD7A6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.GameProcessing", "GoalballAnalysisSystem.GameProcessing\GoalballAnalysisSystem.GameProcessing.csproj", "{94F5E4A3-A23B-4309-B34C-D1F607B88157}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.GameProcessing.Developer.WPF", "GoalballAnalysisSystem.GameProcessing.Developer.WPF\GoalballAnalysisSystem.GameProcessing.Developer.WPF.csproj", "{19A5EAA9-CFBE-433D-96DF-482A68E236F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoalballAnalysisSystem.API.Contracts", "GoalballAnalysisSystem.API.Contracts\GoalballAnalysisSystem.API.Contracts.csproj", "{92C3C586-A2BF-4DCA-A2C4-12F78181E1D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.API.Contracts", "GoalballAnalysisSystem.API.Contracts\GoalballAnalysisSystem.API.Contracts.csproj", "{92C3C586-A2BF-4DCA-A2C4-12F78181E1D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiServiceTest", "ApiServiceTest\ApiServiceTest.csproj", "{2899C7B5-BE73-4584-A35D-CE4C05376CB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.WPF.Tests", "GoalballAnalysisSystem.WPF.Tests\GoalballAnalysisSystem.WPF.Tests.csproj", "{38DBCD0C-DDE5-4D81-A873-A906D7F045F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,22 +23,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{86A67310-7873-42EE-99F7-9A4705C701DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{86A67310-7873-42EE-99F7-9A4705C701DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{86A67310-7873-42EE-99F7-9A4705C701DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{86A67310-7873-42EE-99F7-9A4705C701DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{050A04E4-52EA-4B76-8469-E2439518FF2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{050A04E4-52EA-4B76-8469-E2439518FF2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{050A04E4-52EA-4B76-8469-E2439518FF2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{050A04E4-52EA-4B76-8469-E2439518FF2E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B61037A3-E0AE-4291-A98D-AAA1B0D69A1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B61037A3-E0AE-4291-A98D-AAA1B0D69A1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B61037A3-E0AE-4291-A98D-AAA1B0D69A1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B61037A3-E0AE-4291-A98D-AAA1B0D69A1E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{92BF8584-9361-4681-9A21-38DF13A879D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{92BF8584-9361-4681-9A21-38DF13A879D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{92BF8584-9361-4681-9A21-38DF13A879D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{92BF8584-9361-4681-9A21-38DF13A879D5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{95E256F5-EFDE-40C4-80BC-2D61C1C1DCB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{95E256F5-EFDE-40C4-80BC-2D61C1C1DCB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95E256F5-EFDE-40C4-80BC-2D61C1C1DCB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -57,14 +35,6 @@ Global
 		{275DC6A7-2CFA-4C2B-9F6B-13CBF461FCE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{275DC6A7-2CFA-4C2B-9F6B-13CBF461FCE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{275DC6A7-2CFA-4C2B-9F6B-13CBF461FCE6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{37FE3248-4A89-4590-8D67-76BB5D6661F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{37FE3248-4A89-4590-8D67-76BB5D6661F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{37FE3248-4A89-4590-8D67-76BB5D6661F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{37FE3248-4A89-4590-8D67-76BB5D6661F1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F9F78ADC-01AF-4EDA-A1C3-E84194CFD7A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F9F78ADC-01AF-4EDA-A1C3-E84194CFD7A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F9F78ADC-01AF-4EDA-A1C3-E84194CFD7A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F9F78ADC-01AF-4EDA-A1C3-E84194CFD7A6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{94F5E4A3-A23B-4309-B34C-D1F607B88157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{94F5E4A3-A23B-4309-B34C-D1F607B88157}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94F5E4A3-A23B-4309-B34C-D1F607B88157}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -77,10 +47,10 @@ Global
 		{92C3C586-A2BF-4DCA-A2C4-12F78181E1D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92C3C586-A2BF-4DCA-A2C4-12F78181E1D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92C3C586-A2BF-4DCA-A2C4-12F78181E1D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2899C7B5-BE73-4584-A35D-CE4C05376CB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2899C7B5-BE73-4584-A35D-CE4C05376CB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2899C7B5-BE73-4584-A35D-CE4C05376CB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2899C7B5-BE73-4584-A35D-CE4C05376CB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38DBCD0C-DDE5-4D81-A873-A906D7F045F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38DBCD0C-DDE5-4D81-A873-A906D7F045F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38DBCD0C-DDE5-4D81-A873-A906D7F045F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38DBCD0C-DDE5-4D81-A873-A906D7F045F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

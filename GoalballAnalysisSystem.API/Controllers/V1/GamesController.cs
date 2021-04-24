@@ -178,19 +178,31 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             var userId = HttpContext.GetUserId();
             var game = await _context.Games
                 .Include(g => g.GamePlayers)
-                .Include(g => g.HomeTeam).ThenInclude(ht => ht.TeamPlayers).ThenInclude(htp => htp.Player)
-                .Include(g => g.HomeTeam).ThenInclude(ht => ht.TeamPlayers).ThenInclude(htp => htp.Role)
-                .Include(g => g.GuestTeam).ThenInclude(gt => gt.TeamPlayers).ThenInclude(gtp => gtp.Player)
-                .Include(g => g.GuestTeam).ThenInclude(gt => gt.TeamPlayers).ThenInclude(gtp => gtp.Role)
-                .AsNoTracking()
-                .SingleOrDefaultAsync(g => g.Id == gameId && g.IdentityUserId == userId);
+                .Include(g => g.Projections)
+               .Include(g => g.HomeTeam).ThenInclude(ht => ht.TeamPlayers).ThenInclude(htp => htp.Player)
+               .Include(g => g.GuestTeam).ThenInclude(gt => gt.TeamPlayers).ThenInclude(gtp => gtp.Player)
+               .AsNoTracking()
+               .SingleOrDefaultAsync(g => g.Id == gameId);
             if (game == null)
             {
                 return NotFound(new ErrorResponse { Errors = new List<Error> { new Error { Message = "Unable to find game by given Id" } } });
             }
 
+            _context.Projections.RemoveRange(game.Projections);
+
             _context.Games.Remove(game);
             await _context.SaveChangesAsync();
+
+            var roles = await _context.PlayerRoles.AsNoTracking().ToListAsync();
+            foreach(var htp in game.HomeTeam.TeamPlayers)
+            {
+                htp.Role = roles.SingleOrDefault(r => r.Id == htp.RoleId);
+            }
+            foreach(var gtp in game.GuestTeam.TeamPlayers)
+            {
+                gtp.Role = roles.SingleOrDefault(r => r.Id == gtp.RoleId);
+            }
+
             return Ok(_mapper.Map<GameResponse>(game));
         }
     }

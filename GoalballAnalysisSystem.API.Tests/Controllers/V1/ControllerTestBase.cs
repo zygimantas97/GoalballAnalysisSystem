@@ -18,13 +18,10 @@ namespace GoalballAnalysisSystem.API.Tests.Controllers.V1
     {
         protected DataContext _context;
         protected IMapper _mapper;
-        protected MockRepository mockRepository;
 
         [SetUp]
         public void SetUp()
         {
-            mockRepository = new MockRepository(MockBehavior.Strict);
-
             var options = new DbContextOptionsBuilder<DataContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;

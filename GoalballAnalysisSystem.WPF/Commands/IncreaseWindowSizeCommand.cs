@@ -9,8 +9,8 @@ namespace GoalballAnalysisSystem.WPF.Commands
     class IncreaseWindowSizeCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
-        CalibrationViewModel _calibrationViewModel;
-        public IncreaseWindowSizeCommand(CalibrationViewModel calibrationViewModel)
+        ProcessingViewModel _calibrationViewModel;
+        public IncreaseWindowSizeCommand(ProcessingViewModel calibrationViewModel)
         {
             _calibrationViewModel = calibrationViewModel;
         }

@@ -12,10 +12,10 @@ namespace GoalballAnalysisSystem.WPF.Commands
     {
         public event EventHandler CanExecuteChanged;
         
-        private CalibrationViewModel _calibrationViewModel;
+        private ProcessingViewModel _calibrationViewModel;
         private GamesService _gamesService;
 
-        public CreateGameCommand(CalibrationViewModel gamesViewModel, GamesService gameService)
+        public CreateGameCommand(ProcessingViewModel gamesViewModel, GamesService gameService)
         {
             _calibrationViewModel = gamesViewModel;
             _gamesService = gameService;

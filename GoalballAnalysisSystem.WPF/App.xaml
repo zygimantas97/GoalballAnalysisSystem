@@ -25,8 +25,8 @@
             <DataTemplate DataType="{x:Type viewmodel:PlayersViewModel}">
                 <view:PlayersView/>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewmodel:CalibrationViewModel}">
-                <view:CalibrationView/>
+            <DataTemplate DataType="{x:Type viewmodel:ProcessingViewModel}">
+                <view:ProcessingView/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewmodel:LoginViewModel}">
                 <view:LoginView LoginCommand="{Binding LoginCommand}"/>

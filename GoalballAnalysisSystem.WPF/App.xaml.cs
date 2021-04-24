@@ -39,6 +39,7 @@ namespace GoalballAnalysisSystem.WPF
             services.AddSingleton<GamesService>();
             services.AddSingleton<GamePlayersService>();
             services.AddSingleton<ProjectionsService>();
+            services.AddSingleton<PlayerRolesService>();
 
             // dependencies of view models
             services.AddSingleton<IGoalballAnalysisSystemViewModelFactory, GoalballAnalysisSystemViewModelFactory>();            
@@ -59,7 +60,8 @@ namespace GoalballAnalysisSystem.WPF
                 return () => new TeamsViewModel(
                     s.GetRequiredService<TeamsService>(),
                     s.GetRequiredService<TeamPlayersService>(),
-                    s.GetRequiredService<PlayersService>()); 
+                    s.GetRequiredService<PlayersService>(),
+                    s.GetRequiredService<PlayerRolesService>()); 
             });
             services.AddSingleton<CreateViewModel<PlayersViewModel>>(s => 
             {

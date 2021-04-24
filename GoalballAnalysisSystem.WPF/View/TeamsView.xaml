@@ -4,10 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:GoalballAnalysisSystem.WPF.View"
+             xmlns:converters="clr-namespace:GoalballAnalysisSystem.WPF.Converters"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
-
+    <UserControl.Resources>
+        <converters:BooleanValueConverter x:Key="BooleanValueConverter" />
+        <converters:IndexValueConverter x:Key="IndexValueConverter" />
+    </UserControl.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -303,6 +307,7 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Column="0"
@@ -333,6 +338,13 @@
                                        HorizontalAlignment="Right"
                                        VerticalAlignment="Center"
                                        Style="{StaticResource RegularText}" />
+                            <TextBlock Grid.Column="0"
+                                       Grid.Row="4"
+                                       Margin="5"
+                                       Text="Role "
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       Style="{StaticResource RegularText}" />
 
                             <TextBlock Grid.Column="1"
                                        Grid.Row="0"
@@ -360,6 +372,22 @@
                                      HorizontalAlignment="Left"
                                      Style="{StaticResource HeaderThreeTextBoxEditable}"
                                      IsReadOnly="{Binding TeamPlayerEditModeOff}" />
+                            <ComboBox Grid.Row="4"
+                                      Grid.Column="1"
+                                      Width="170"
+                                      Height="25"
+                                      ItemsSource="{Binding ListOfRoles}"
+                                      SelectedItem="{Binding SelectedRole}"
+                                      SelectedIndex="{Binding SelectedRole.Id, Converter={StaticResource IndexValueConverter}}"
+                                      IsEnabled="{Binding Path=TeamPlayerEditModeOff, Converter={StaticResource BooleanValueConverter}}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Path=Name}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </Grid>
                     </Grid>
 

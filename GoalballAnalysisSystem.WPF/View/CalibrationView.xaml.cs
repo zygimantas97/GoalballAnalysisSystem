@@ -21,6 +21,7 @@ using GoalballAnalysisSystem.GameProcessing.GameAnalysis;
 using GoalballAnalysisSystem.GameProcessing.Selection;
 using GoalballAnalysisSystem.GameProcessing.ObjectTracking.CNN;
 using System.Windows.Controls;
+using GoalballAnalysisSystem.WPF.ViewModel;
 
 namespace GoalballAnalysisSystem.WPF.View
 {
@@ -32,6 +33,7 @@ namespace GoalballAnalysisSystem.WPF.View
         private bool _isSelecting = false;
         private Rectangle _selectedROI = Rectangle.Empty;
         private System.Drawing.Point _selectionStart;
+        OpenFileDialog openFileDialog;
 
         private IGameAnalyzer<TeamPlayerResponse> _gameAnalyzer;
         private IGameAnalyzerConfigurator _gameAnalyzerConfigurator;
@@ -44,16 +46,23 @@ namespace GoalballAnalysisSystem.WPF.View
 
         private const int PLAYGROUND_WIDTH = 900;
         private const int PLAYGROUND_HEIGHT = 1800;
+        private const int YZONEHEIGHT = 300;
+        int[] xZones = { 0, 50, 275, 325, 575, 625, 850, 900 };
         private const int SELECTION_ZONE_TOP = 300;
         private const int SELECTION_ZONE_BOTTOM = 1200;
         private const int MAX_SELECTION_DISTANCE = 100;
 
         private readonly Image<Bgr, byte> _playgroundImageBoxBackground;
 
+        private bool _manualCalibration = false;
+        private List<System.Drawing.Point> _manualCalibrationPoints;
+
 
         public CalibrationView()
         {
             InitializeComponent();
+            _playgroundImageBoxBackground = Playground();
+            PlaygroundImageBox.Image = _playgroundImageBoxBackground;
         }
 
 
@@ -70,6 +79,7 @@ namespace GoalballAnalysisSystem.WPF.View
         private void PauseButton_Click(object sender, RoutedEventArgs e)
         {
             _gameAnalyzer.Pause();
+
         }
 
         private void FinishButton_Click(object sender, RoutedEventArgs e)
@@ -79,11 +89,45 @@ namespace GoalballAnalysisSystem.WPF.View
 
         private void VideoImageBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (_gameAnalyzer.Status == GameAnalyzerStatus.Paused)
+            if (_manualCalibration && _manualCalibrationPoints.Count() < 4)
             {
-                _isSelecting = true;
-                _selectionStart = e.Location;
+                System.Drawing.Point coordinates = e.Location;
+
+                double horizontalScale = (double)_frame.Width / (double)VideoImageBox.Width;
+                double verticalScale = (double)_frame.Height / (double)VideoImageBox.Height;
+
+                System.Drawing.Point scaledCoordinate = new System.Drawing.Point((int)((coordinates.X) * horizontalScale), (int)((coordinates.Y) * verticalScale));
+
+                Rectangle rectangle = new Rectangle(scaledCoordinate.X-(int)(7* horizontalScale),
+                                                    scaledCoordinate.Y- (int)(7 * horizontalScale),
+                                                    (int)(14 * horizontalScale),
+                                                    (int)(14 * verticalScale));
+
+                _manualCalibrationPoints.Add(scaledCoordinate);
+                CvInvoke.Rectangle(_frame, rectangle, new MCvScalar(200, 0, 0), 6);
+                VideoImageBox.Image = _frame;
+
+                if(_manualCalibrationPoints.Count == 4)
+                {
+                    var viewModel = (CalibrationViewModel)this.DataContext;
+                    viewModel.CalibrationSuccessful = true;
+                    _gameAnalyzerConfigurator = GameAnalyzerConfigurator.Create(_manualCalibrationPoints, _frame.Width, _frame.Height, PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT);
+                    DrawSelectedZoneOfInterest(_gameAnalyzerConfigurator);
+                }
+
             }
+            else
+            {
+                if (_gameAnalyzer.Status == GameAnalyzerStatus.Paused)
+                {
+                    var viewModel = (CalibrationViewModel)this.DataContext;
+                    viewModel.CanBePlayerSelected = false;
+
+                    _isSelecting = true;
+                    _selectionStart = e.Location;
+                }
+            }
+            
         }
 
         private void VideoImageBox_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -102,6 +146,8 @@ namespace GoalballAnalysisSystem.WPF.View
             if (_isSelecting)
             {
                 _isSelecting = false;
+                var viewModel = (CalibrationViewModel)this.DataContext;
+                viewModel.CanBePlayerSelected = true;
             }
         }
 
@@ -118,14 +164,20 @@ namespace GoalballAnalysisSystem.WPF.View
 
         private async void SelectVideoButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog = new OpenFileDialog();
             bool? result = openFileDialog.ShowDialog();
             if (result == true)
             {
+                /** VIEW MODEL CALL */
+                var viewModel = (CalibrationViewModel)this.DataContext;
+                viewModel.VideoIsSelected = true;
+                viewModel.CanBeVideoSelected = false;
+                /** VIEW MODEL CALL */
+
                 var capture = new VideoCapture(openFileDialog.FileName);
                 capture.Read(_frame);
                 VideoImageBox.Image = _frame;
-
+              
                 var playgroundDetector = new CustomVisionObjectDetector(new List<string>() { "TopLeft", "TopRight", "BottomLeft", "BottomRight" });
                 var playgroundDetections = await playgroundDetector.Detect(_frame);
                 var playgroundPoints = playgroundDetections
@@ -135,20 +187,62 @@ namespace GoalballAnalysisSystem.WPF.View
 
                 _gameAnalyzerConfigurator = GameAnalyzerConfigurator.Create(playgroundPoints, _frame.Width, _frame.Height, PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT);
 
-                if (_gameAnalyzerConfigurator != null)
+                if (_gameAnalyzerConfigurator != null && AutoCalibrationWasSuccessful(_gameAnalyzerConfigurator))
+                {
                     DrawSelectedZoneOfInterest(_gameAnalyzerConfigurator);
+                    viewModel.VideoStatusTitle = "Auto calibration was successful!";
+                    viewModel.AutomaticCalibrationIsFinished = true;
+                    viewModel.CalibrationSuccessful = true;
+                }
+                else
+                {
+                    viewModel.VideoStatusTitle = "Auto calibration is not available";
+                    viewModel.AutomaticCalibrationIsFinished = true;
+                    viewModel.CalibrationSuccessful = false;
+                }
 
-                _objectDetector = new ColorObjectDetector("ball");
-                _mot = new SOTBasedMOT<TeamPlayerResponse>();
-                _selector = new ProjectionSelector<TeamPlayerResponse>(SELECTION_ZONE_TOP, SELECTION_ZONE_BOTTOM, MAX_SELECTION_DISTANCE);
-
-                _gameAnalyzer = new GameAnalyzer<TeamPlayerResponse>(openFileDialog.FileName,
-                    _gameAnalyzerConfigurator, _objectDetector, _mot, _selector);
-
-                _gameAnalyzer.FrameChanged += _gameAnalyzer_FrameChanged;
-                _gameAnalyzer.ProcessingFinished += _gameAnalyzer_ProcessingFinished;
-                _selector.Selected += _selector_Selected;
             }
+        }
+
+        private async void NextButton_Click(object sender, RoutedEventArgs e)
+        {
+            var capture = new VideoCapture(openFileDialog.FileName);
+            capture.Read(_frame);
+            VideoImageBox.Image = _frame;
+
+            _manualCalibration = false;
+
+            var viewModel = (CalibrationViewModel)this.DataContext;
+            viewModel.CalibrationSuccessful = true;
+            viewModel.VideoStatusTitle = "Mark players for tracking";
+            viewModel.AutomaticCalibrationIsFinished = false;
+            viewModel.CalibrationSuccessful = false;
+            viewModel.CanBeTrackingObjectsDeleted = true;
+
+            _objectDetector = new ColorObjectDetector("ball");
+            _mot = new SOTBasedMOT<TeamPlayerResponse>();
+            _selector = new ProjectionSelector<TeamPlayerResponse>(SELECTION_ZONE_TOP, SELECTION_ZONE_BOTTOM, MAX_SELECTION_DISTANCE);
+
+            _gameAnalyzer = new GameAnalyzer<TeamPlayerResponse>(openFileDialog.FileName,
+                _gameAnalyzerConfigurator, _objectDetector, _mot, _selector);
+
+            _gameAnalyzer.FrameChanged += _gameAnalyzer_FrameChanged;
+            _gameAnalyzer.ProcessingFinished += _gameAnalyzer_ProcessingFinished;
+            _selector.Selected += _selector_Selected;
+        }
+
+        private async void ManualCalibrationButton_Click(object sender, RoutedEventArgs e)
+        {
+            var viewModel = (CalibrationViewModel)this.DataContext;
+            viewModel.CalibrationSuccessful = false;
+            viewModel.VideoStatusTitle = "Select four playground corners";
+
+            _manualCalibrationPoints = new List<System.Drawing.Point>();
+            var capture = new VideoCapture(openFileDialog.FileName);
+            capture.Read(_frame);
+            VideoImageBox.Image = _frame;
+            _manualCalibration = true;
+
         }
 
         private void DrawSelectedZoneOfInterest(IGameAnalyzerConfigurator configurator, int diameter = 10)
@@ -180,8 +274,19 @@ namespace GoalballAnalysisSystem.WPF.View
             VideoImageBox.Image = _frame;
         }
 
+        private bool AutoCalibrationWasSuccessful(IGameAnalyzerConfigurator gameAnalyzerConfigurator)
+        {
+            if (gameAnalyzerConfigurator.TopLeft.X != 0 && gameAnalyzerConfigurator.TopLeft.Y != 0 &&
+               gameAnalyzerConfigurator.TopRight.X != 0 && gameAnalyzerConfigurator.TopRight.Y != 0 &&
+               gameAnalyzerConfigurator.BottomLeft.X != 0 && gameAnalyzerConfigurator.BottomLeft.Y != 0 &&
+               gameAnalyzerConfigurator.BottomRight.X != 0 && gameAnalyzerConfigurator.BottomRight.Y != 0)
+                return true;
+            else return false;
+        }
+
         private void _selector_Selected(object sender, SelectionEventArgs<TeamPlayerResponse> e)
         {
+            
             var playground = _playgroundImageBoxBackground.Clone();
 
             double startY = e.SelectionStart.Y < e.SelectionEnd.Y ? 0 : PLAYGROUND_HEIGHT;
@@ -193,8 +298,8 @@ namespace GoalballAnalysisSystem.WPF.View
             var startPoint = new System.Drawing.Point((int)Math.Round(startX), (int)Math.Round(startY));
             var endPoint = new System.Drawing.Point((int)Math.Round(endX), (int)Math.Round(endY));
 
-            CvInvoke.Line(playground, startPoint, endPoint, new MCvScalar(255, 255, 255), 5);
-            //PlaygroundImageBox.Image = playground;
+            CvInvoke.Line(playground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5);
+            PlaygroundImageBox.Image = playground;
         }
 
         private void _gameAnalyzer_ProcessingFinished(object sender, EventArgs e)
@@ -225,6 +330,7 @@ namespace GoalballAnalysisSystem.WPF.View
         {
             if (_selectedROI != Rectangle.Empty)
             {
+                
                 double horizontalScale;
                 double verticalScale;
                 if (_gameAnalyzer.CurrentFrame != null)
@@ -250,6 +356,10 @@ namespace GoalballAnalysisSystem.WPF.View
                 {
                     _mot.Add(new TeamPlayerResponse(), _frame, rectangle);
                 }
+
+                var viewModel = (CalibrationViewModel)this.DataContext;
+                viewModel.CanBePlayerSelected = false;
+
                 _selectedROI = Rectangle.Empty;
                 VideoImageBox.Invalidate();
             }
@@ -301,5 +411,42 @@ namespace GoalballAnalysisSystem.WPF.View
                 VideoImageBox.Image = image;
             }
         }
+
+        private Image<Bgr, byte> Playground()
+        {
+            int XPADDING = 0;
+            int YPADDING = 0;
+            Image<Bgr, byte> playgroundImageBoxBackground = new Image<Bgr, byte>(PLAYGROUND_WIDTH + 2 * XPADDING, PLAYGROUND_HEIGHT + 2 * YPADDING, new Bgr(255, 255, 255)); //two times from both sides
+
+            //top
+            CvInvoke.Line(playgroundImageBoxBackground, new System.Drawing.Point(XPADDING, YPADDING), new System.Drawing.Point(PLAYGROUND_WIDTH + XPADDING, YPADDING), new MCvScalar(255, 160, 160), 10);
+
+            //bottom
+            CvInvoke.Line(playgroundImageBoxBackground, new System.Drawing.Point(XPADDING, PLAYGROUND_HEIGHT + YPADDING), new System.Drawing.Point(PLAYGROUND_WIDTH + XPADDING, PLAYGROUND_HEIGHT + YPADDING), new MCvScalar(255, 160, 160), 10);
+
+            //left
+            CvInvoke.Line(playgroundImageBoxBackground, new System.Drawing.Point(XPADDING, YPADDING), new System.Drawing.Point(XPADDING, PLAYGROUND_HEIGHT + YPADDING), new MCvScalar(255, 160, 160), 10);
+
+            //right
+            CvInvoke.Line(playgroundImageBoxBackground, new System.Drawing.Point(PLAYGROUND_WIDTH + XPADDING, YPADDING), new System.Drawing.Point(PLAYGROUND_WIDTH + XPADDING, PLAYGROUND_HEIGHT + YPADDING), new MCvScalar(255, 160, 160), 10);
+
+            int zonesCount = PLAYGROUND_HEIGHT / YZONEHEIGHT;
+            for (int i = 0; i < zonesCount; i++)
+            {
+                CvInvoke.Line(playgroundImageBoxBackground, new System.Drawing.Point(XPADDING, YPADDING + (i * YZONEHEIGHT)), new System.Drawing.Point(PLAYGROUND_WIDTH + XPADDING, YPADDING + (i * YZONEHEIGHT)), new MCvScalar(255, 160, 160), 4);
+            }
+
+            for (int i = 0; i < xZones.Length; i++)
+            {
+                //top
+                CvInvoke.Line(playgroundImageBoxBackground, new System.Drawing.Point(XPADDING + xZones[i], YPADDING), new System.Drawing.Point(XPADDING + xZones[i], YPADDING + YZONEHEIGHT), new MCvScalar(255, 160, 160), 4);
+
+                //bottom
+                CvInvoke.Line(playgroundImageBoxBackground, new System.Drawing.Point(XPADDING + xZones[i], PLAYGROUND_HEIGHT + YPADDING - YZONEHEIGHT), new System.Drawing.Point(XPADDING + xZones[i], PLAYGROUND_HEIGHT + YPADDING), new MCvScalar(255, 160, 160), 4);
+            }
+
+            return playgroundImageBoxBackground;
+        }
+
     }
 }

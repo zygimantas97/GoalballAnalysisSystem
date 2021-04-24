@@ -12,10 +12,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Done.png" />
     <None Remove="Assets\game.png" />
     <None Remove="Assets\goalball.png" />
+    <None Remove="Assets\pause.png" />
+    <None Remove="Assets\Play.png" />
     <None Remove="Assets\player.png" />
     <None Remove="Assets\team.png" />
+    <None Remove="Assets\zoomIn.png" />
+    <None Remove="Assets\zoomOut.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,6 +73,24 @@
     <Reference Include="WindowsFormsIntegration.Package">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\WindowsFormsIntegration.Package.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Done.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\pause.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Play.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\zoomIn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\zoomOut.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

@@ -19,20 +19,19 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <ScrollViewer HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto"
-                          Grid.Column="0">
+                          Grid.Column="0"
+                          Grid.Row="0">
 
-                <Grid Grid.Row="0"
-                      Grid.Column="0"
-                      Background="{StaticResource ThirdBackgroundBrush}">
+                <Grid Grid.Column="0">
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
@@ -40,152 +39,165 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
 
-                    <StackPanel Margin="10">
+                    <StackPanel>
 
-                        <Grid Grid.Row="0">
+                        <StackPanel Background="{StaticResource ThirdBackgroundBrush}">
 
-                            <StackPanel Orientation="Horizontal"
-                                        Margin="0 0 0 20">
-                                <Border Width="50"
-                                        Height="50"
-                                        CornerRadius="5"
-                                        Margin="5, 5"
-                                        HorizontalAlignment="Right">
+                            <Grid Grid.Row="0">
 
-                                    <Border.Background>
-                                        <ImageBrush ImageSource="../Assets/game.png" />
-                                    </Border.Background>
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0 0 0 20">
+                                    <Border Width="50"
+                                            Height="50"
+                                            CornerRadius="5"
+                                            Margin="5, 5"
+                                            HorizontalAlignment="Right">
 
-                                </Border>
-                                <TextBlock Text="Create a Game"
-                                           Style="{StaticResource HeaderTwoBoldText}"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center" />
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="../Assets/game.png" />
+                                        </Border.Background>
 
-                            </StackPanel>
+                                    </Border>
+                                    <TextBlock Text="Game"
+                                               Style="{StaticResource HeaderTwoBoldText}"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
 
-                        </Grid>
+                                </StackPanel>
 
-                        <Grid Grid.Row="1">
+                            </Grid>
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="1">
 
-                            <TextBlock Grid.Column="0"
-                                       Grid.Row="0"
-                                       Margin="0 10 10 0"
-                                       Text="Title "
-                                       HorizontalAlignment="Right"
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Column="0"
+                                           Grid.Row="0"
+                                           Margin="10"
+                                           Text="Title "
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Center"
+                                           Style="{StaticResource RegularText}" />
+                                <TextBlock Grid.Column="0"
+                                           Grid.Row="1"
+                                           Margin="10"
+                                           Text="Comment"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Center"
+                                           Style="{StaticResource RegularText}" />
+                                <TextBlock Grid.Column="0"
+                                           Grid.Row="2"
+                                           Margin="10"
+                                           Text="Home team"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Center"
+                                           Style="{StaticResource RegularText}" />
+                                <TextBlock Grid.Column="0"
+                                           Grid.Row="3"
+                                           Margin="10"
+                                           Text="Guest team"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Center"
+                                           Style="{StaticResource RegularText}" />
+
+                                <TextBox Grid.Column="1"
+                                         Grid.Row="0"
+                                         Margin="0 10 10 10"
+                                         MinWidth="150"
+                                         Text="{Binding SelectedGame.Title}"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         Style="{StaticResource HeaderThreeTextBoxEditable}"
+                                         IsReadOnly="{Binding EditModeOff}" />
+                                <TextBox Grid.Column="1"
+                                         Grid.Row="1"
+                                         Margin="0 10 10 10"
+                                         MinWidth="150"
+                                         Text="{Binding SelectedGame.Comment}"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Center"
+                                         Style="{StaticResource HeaderThreeTextBoxEditable}"
+                                         IsReadOnly="{Binding EditModeOff}" />
+
+                                <ComboBox Grid.Row="2"
+                                          Grid.Column="1"
+                                          Width="150"
+                                          Height="20"
+                                          Margin="0 10 10 10"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center"
+                                          ItemsSource="{Binding ListOfAvailableHomeTeams}"
+                                          SelectedItem="{Binding SelectedHomeTeam}"
+                                          IsEnabled="{Binding CanBeCreated}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Path=Name}" />
+                                                <TextBlock Text=" " />
+                                                <TextBlock Text="{Binding Path=Country}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <ComboBox Grid.Row="3"
+                                          Grid.Column="1"
+                                          Width="150"
+                                          Height="20"
+                                          Margin="0 10 10 10"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center"
+                                          ItemsSource="{Binding ListOfAvailableHomeTeams}"
+                                          SelectedItem="{Binding SelectedGuestTeam}"
+                                          IsEnabled="{Binding CanBeCreated}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Path=Name}" />
+                                                <TextBlock Text=" " />
+                                                <TextBlock Text="{Binding Path=Country}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+
+                            </Grid>
+
+                            <Grid Grid.Row="2"
+                                  Margin="0 20 0 0">
+                                <Button Content="Create"
+                                        Margin="5"
+                                        HorizontalAlignment="Left"
+                                        Command="{Binding CreateNewGameCommand}"
+                                        IsEnabled="{Binding CanBeCreated}" />
+                                <Button Content="Select video"
+                                        x:Name="SelectVideoButton"
+                                        Click="SelectVideoButton_Click"
+                                        IsEnabled="{Binding CanBeVideoSelected}"/>
+
+                            </Grid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2"
+                                    Background="{StaticResource ThirdBackgroundBrush}"
+                                    Margin="0 10 0 0">
+                            <TextBlock Text="Game info"
+                                       Style="{StaticResource HeaderTwoBoldText}"
+                                       HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
-                                       Style="{StaticResource RegularText}" />
-                            <TextBlock Grid.Column="0"
-                                       Grid.Row="1"
-                                       Margin="0 10 10 0"
-                                       Text="Comment"
-                                       HorizontalAlignment="Right"
-                                       VerticalAlignment="Center"
-                                       Style="{StaticResource RegularText}" />
-                            <TextBlock Grid.Column="0"
-                                       Grid.Row="2"
-                                       Margin="0 10 10 0"
-                                       Text="Home team"
-                                       HorizontalAlignment="Right"
-                                       VerticalAlignment="Center"
-                                       Style="{StaticResource RegularText}" />
-                            <TextBlock Grid.Column="0"
-                                       Grid.Row="3"
-                                       Margin="0 10 10 0"
-                                       Text="Guest team"
-                                       HorizontalAlignment="Right"
-                                       VerticalAlignment="Center"
-                                       Style="{StaticResource RegularText}" />
+                                       Margin="0 10" />
 
-                            <TextBox Grid.Column="1"
-                                     Grid.Row="0"
-                                     Margin="0 10"
-                                     MinWidth="150"
-                                     Text="{Binding SelectedGame.Title}"
-                                     HorizontalAlignment="Left"
-                                     VerticalAlignment="Center"
-                                     Style="{StaticResource HeaderThreeTextBoxEditable}"
-                                     IsReadOnly="{Binding EditModeOff}" />
-                            <TextBox Grid.Column="1"
-                                     Grid.Row="1"
-                                     Margin="0 10"
-                                     MinWidth="150"
-                                     Text="{Binding SelectedGame.Comment}"
-                                     HorizontalAlignment="Left"
-                                     VerticalAlignment="Center"
-                                     Style="{StaticResource HeaderThreeTextBoxEditable}"
-                                     IsReadOnly="{Binding EditModeOff}" />
-
-                            <ComboBox Grid.Row="2"
-                                      Grid.Column="1"
-                                      Width="150"
-                                      Height="20"
-                                      Margin="0 10"
-                                      HorizontalAlignment="Left"
-                                      VerticalAlignment="Center"
-                                      ItemsSource="{Binding ListOfAvailableHomeTeams}"
-                                      SelectedItem="{Binding SelectedHomeTeam}"
-                                      IsEnabled="{Binding CanBeCreated}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Path=Name}" />
-                                            <TextBlock Text=" " />
-                                            <TextBlock Text="{Binding Path=Country}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                            <ComboBox Grid.Row="3"
-                                      Grid.Column="1"
-                                      Width="150"
-                                      Height="20"
-                                      Margin="0 10"
-                                      HorizontalAlignment="Left"
-                                      VerticalAlignment="Center"
-                                      ItemsSource="{Binding ListOfAvailableHomeTeams}"
-                                      SelectedItem="{Binding SelectedGuestTeam}"
-                                      IsEnabled="{Binding CanBeCreated}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Path=Name}" />
-                                            <TextBlock Text=" " />
-                                            <TextBlock Text="{Binding Path=Country}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-
-                        </Grid>
-
-                        <Grid Grid.Row="2"
-                              Margin="0 20 0 0">
-                            <Button Content="Create"
-                                    Margin="5"
-                                    HorizontalAlignment="Left"
-                                    Command="{Binding CreateNewGameCommand}"
-                                    IsEnabled="{Binding CanBeCreated}" />
-                            <Button Content="Select video"
-                                    x:Name="SelectVideoButton"
-                                    Click="SelectVideoButton_Click"
-                                    IsEnabled="{Binding CanBeVideoSelected}" />
-
-                        </Grid>
+                        </StackPanel>
                     </StackPanel>
-                </Grid>
 
+                </Grid>
             </ScrollViewer>
 
             <Grid Grid.Column="1">
@@ -194,26 +206,102 @@
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Background="{StaticResource ThirdBackgroundBrush}"
-                            Grid.Column="0"
+                <StackPanel Grid.Column="0"
                             Margin="10 0"
                             VerticalAlignment="Top">
-                    <StackPanel Orientation="Horizontal"
-                                VerticalAlignment="Top">
-                        <Button Content="+"
-                                x:Name="MakeBiggerButton"
-                                Command="{Binding IncreaseWindowSizeCommand}"
-                                Margin="0 0 5 0" />
-                        <Button Content="-"
-                                x:Name="MakeSmallerButton"
-                                Command="{Binding DecreaseWindowSizeCommand}" />
-                    </StackPanel>
 
                     <StackPanel HorizontalAlignment="Center"
-                                Orientation="Horizontal"
-                                VerticalAlignment="Top">
+                                VerticalAlignment="Top"
+                                Background="{StaticResource SecondBackgroundBrush}">
+                        <StackPanel Orientation="Horizontal">
 
-                        <WindowsFormsHost Name="PlaygroundWindowsFormsHost"
+                            <Button x:Name="MakeBiggerButton"
+                                    Command="{Binding IncreaseWindowSizeCommand}"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    Padding="0"
+                                    Margin="0 0 3 0"
+                                    IsEnabled="{Binding VideoIsSelected}">
+                                <Border Width="30"
+                                        Height="30"
+                                        CornerRadius="5"
+                                        HorizontalAlignment="Right">
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="../Assets/zoomIn.png" />
+                                    </Border.Background>
+
+                                </Border>
+
+                            </Button>
+                            <Button x:Name="MakeSmallerButton"
+                                    Command="{Binding DecreaseWindowSizeCommand}"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    Padding="0"
+                                    IsEnabled="{Binding VideoIsSelected}">
+                                <Border Width="30"
+                                        Height="30"
+                                        CornerRadius="5"
+                                        HorizontalAlignment="Right">
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="../Assets/zoomOut.png" />
+                                    </Border.Background>
+
+                                </Border>
+
+                            </Button>
+                            <ComboBox Grid.Row="2"
+                                      Grid.Column="1"
+                                      Width="150"
+                                      Height="20"
+                                      Margin="20 10 10 10"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Center"
+                                      Style="{StaticResource SelectionComboBox}"
+                                      ItemsSource="{Binding ListOfAvailablePlayers}"
+                                      SelectedItem="{Binding SelectedPlayer}"
+                                      IsEnabled="{Binding CanBePlayerSelected}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Path=Name}" />
+                                            <TextBlock Text=" " />
+                                            <TextBlock Text="{Binding Path=Surname}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <Button Content="Add tracking object"
+                                    x:Name="AddTrackingObjectButton"
+                                    Click="AddTrackingObjectButton_Click"
+                                    IsEnabled="{Binding CanBePlayerSelected}" />
+                            <Button Content="Remove all tracking objects"
+                                    x:Name="RemoveAllTrackingObjectsButton"
+                                    Click="RemoveAllTrackingObjectsButton_Click"
+                                    Background="{StaticResource RichRedButtonBrush}"
+                                    IsEnabled="{Binding CanBeTrackingObjectsDeleted}"/>
+                        </StackPanel>
+
+                        <TextBlock Text="{Binding VideoStatusTitle}"
+                                   Style="{StaticResource HeaderTwoBoldText}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Margin="0 10" />
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    Margin="0 0 0 10">
+                            <Button Content="Manual calibration"
+                                    x:Name="ManualCalibrationButton"
+                                    Margin="0 0 10 0"
+                                    Click="ManualCalibrationButton_Click"
+                                    IsEnabled="{Binding AutomaticCalibrationIsFinished}" />
+                            <Button Content="Next"
+                                    x:Name="NextButton"
+                                    Click="NextButton_Click"
+                                    IsEnabled="{Binding CalibrationSuccessful}" />
+                        </StackPanel>
+
+                        <WindowsFormsHost Name="VideoWindowsFormsHost"
                                           Width="{Binding WindowWidth}"
                                           Height="{Binding WindowHeight}">
                             <WinFormControls1:ImageBox x:Name="VideoImageBox"
@@ -225,53 +313,120 @@
                                                        MouseUp="VideoImageBox_MouseUp"
                                                        FunctionalMode="Minimum"
                                                        Paint="VideoImageBox_Paint" />
-
                         </WindowsFormsHost>
 
                     </StackPanel>
 
-                    <WrapPanel HorizontalAlignment="Center">
-                        <Button Content="Start"
-                                x:Name="StartResumeButton"
-                                Click="StartResumeButton_Click" />
-                        <Button Content="Pause"
-                                x:Name="PauseButton"
-                                Click="PauseButton_Click" />
-                        <Button Content="Finish"
-                                x:Name="FinishButton"
-                                Click="FinishButton_Click" />
+                    <WrapPanel HorizontalAlignment="Center"
+                               Margin="0 10 0 0">
+                        <Button x:Name="StartResumeButton"
+                                Click="StartResumeButton_Click"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                IsEnabled="{Binding VideoIsAfterCalibration}">
+                            <Border Width="30"
+                                    Height="30"
+                                    CornerRadius="5"
+                                    HorizontalAlignment="Right">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="../Assets/Play.png" />
+                                </Border.Background>
+
+                            </Border>
+                        </Button>
+                        <Button x:Name="PauseButton"
+                                Click="PauseButton_Click"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                IsEnabled="{Binding VideoIsAfterCalibration}">
+                            <Border Width="30"
+                                    Height="30"
+                                    CornerRadius="5"
+                                    HorizontalAlignment="Right">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="../Assets/Pause.png" />
+                                </Border.Background>
+
+                            </Border>
+                        </Button>
+                        <Button x:Name="FinishButton"
+                                Click="FinishButton_Click"
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                IsEnabled="{Binding VideoIsAfterCalibration}">
+                            <Border Width="30"
+                                    Height="30"
+                                    CornerRadius="5"
+                                    HorizontalAlignment="Right">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="../Assets/Done.png" />
+                                </Border.Background>
+
+                            </Border>
+                        </Button>
 
                     </WrapPanel>
-                    <WrapPanel>
-
-                    </WrapPanel>
-                    <WrapPanel>
+                    <!--<WrapPanel>
+                        <ComboBox Grid.Row="2"
+                                  Grid.Column="1"
+                                  Width="150"
+                                  Height="20"
+                                  Margin="0 10"
+                                  HorizontalAlignment="Left"
+                                  VerticalAlignment="Center"
+                                  ItemsSource="{Binding ListOfAvailablePlayers}"
+                                  SelectedItem="{Binding SelectedPlayer}"
+                                  IsEnabled="{Binding CanBePlayerSelected}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Path=Name}" />
+                                        <TextBlock Text=" " />
+                                        <TextBlock Text="{Binding Path=Surname}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                         <Button Content="Add tracking object"
                                 x:Name="AddTrackingObjectButton"
-                                Click="AddTrackingObjectButton_Click" />
+                                Click="AddTrackingObjectButton_Click"
+                                IsEnabled="{Binding CanBePlayerSelected}" />
                         <Button Content="Remove all tracking objects"
                                 x:Name="RemoveAllTrackingObjectsButton"
                                 Click="RemoveAllTrackingObjectsButton_Click" />
-                    </WrapPanel>
-                    <WrapPanel>
+                    </WrapPanel>-->
+                    <!--<WrapPanel>
                         <Button Content="Detect objects (API)"
                                 x:Name="DetectObjectsApiButton"
                                 Click="DetectObjectsApiButton_Click" />
                         <Button Content="Detect objects (ONNX)"
                                 x:Name="DetectObjectsOnnxButton"
                                 Click="DetectObjectsOnnxButton_Click" />
-                    </WrapPanel>
+                    </WrapPanel>-->
 
                 </StackPanel>
 
-                <StackPanel Background="{StaticResource ThirdBackgroundBrush}"
-                            Grid.Column="1">
-                    <TextBlock Text="Create a Game"
+            </Grid>
+            <Grid Grid.Column="2">
+                <StackPanel Grid.Row="2"
+                            Background="{StaticResource ThirdBackgroundBrush}">
+                    <TextBlock Text="Video analysis"
                                Style="{StaticResource HeaderTwoBoldText}"
                                HorizontalAlignment="Center"
-                               VerticalAlignment="Center" />
-                </StackPanel>
+                               VerticalAlignment="Center"
+                               Margin="0 10" />
+                    <WindowsFormsHost  Name="PlaygroundWindowsFormsHost"
+                                       Width="250"
+                                       Height="500"
+                                       Margin="20 10 20 20">
+                        <WinFormControls1:ImageBox x:Name="PlaygroundImageBox"
+                                                   Width="250"
+                                                   Height="500"
+                                                   SizeMode="Zoom"
+                                                   FunctionalMode="Minimum" />
+                    </WindowsFormsHost>
 
+                </StackPanel>
             </Grid>
 
         </Grid>

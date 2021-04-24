@@ -18,6 +18,8 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         public ICommand DecreaseWindowSizeCommand { get; set; }
 
         private TeamsService _teamsService;
+        private PlayersService _playersService;
+        private TeamPlayersService _teamplayersService;
 
         SynchronizationContext uiContext;
 
@@ -25,6 +27,12 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         public ObservableCollection<TeamResponse> ListOfAvailableHomeTeams
         {
             get { return _listOfAvailableHomeTeams; }
+        }
+
+        private ObservableCollection<PlayerResponse> _listOfAvailablePlayers;
+        public ObservableCollection<PlayerResponse> ListOfAvailablePlayers
+        {
+            get { return _listOfAvailablePlayers; }
         }
 
         private GameResponse _selectedGame;
@@ -38,6 +46,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 _selectedGame = value;
                 OnPropertyChanged(nameof(SelectedGame));
+                RefreshPlayersList();
             }
         }
 
@@ -100,6 +109,77 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
         }
 
+        private bool _videoIsSelected;
+        public bool VideoIsSelected
+        {
+            get
+            {
+                return _videoIsSelected;
+            }
+            set
+            {
+                _videoIsSelected = value;
+                OnPropertyChanged(nameof(VideoIsSelected));
+            }
+        }
+
+        private bool _automaticCalibrationIsFinished;
+        public bool AutomaticCalibrationIsFinished
+        {
+            get
+            {
+                return _automaticCalibrationIsFinished;
+            }
+            set
+            {
+                _automaticCalibrationIsFinished = value;
+                OnPropertyChanged(nameof(AutomaticCalibrationIsFinished));
+            }
+        }
+
+        private bool _calibrationSuccessful;
+        public bool CalibrationSuccessful
+        {
+            get
+            {
+                return _calibrationSuccessful;
+            }
+            set
+            {
+                _calibrationSuccessful = value;
+                OnPropertyChanged(nameof(CalibrationSuccessful));
+            }
+        }
+
+        private bool _canBePlayerSelected;
+        public bool CanBePlayerSelected
+        {
+            get
+            {
+                return _canBePlayerSelected;
+            }
+            set
+            {
+                _canBePlayerSelected = value;
+                OnPropertyChanged(nameof(CanBePlayerSelected));
+            }
+        }
+
+        private bool _canBeTrackingObjectsDeleted;
+        public bool CanBeTrackingObjectsDeleted
+        {
+            get
+            {
+                return _canBeTrackingObjectsDeleted;
+            }
+            set
+            {
+                _canBeTrackingObjectsDeleted = value;
+                OnPropertyChanged(nameof(CanBeTrackingObjectsDeleted));
+            }
+        }
+
+
         private bool _editModeOff;
         public bool EditModeOff
         {
@@ -142,12 +222,31 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
         }
 
-        public CalibrationViewModel(GamesService gamesService, TeamsService teamService)
+        private string _videoStatusTitle;
+        public string VideoStatusTitle
+        {
+            get
+            {
+                return _videoStatusTitle;
+            }
+            set
+            {
+                _videoStatusTitle = value;
+                OnPropertyChanged(nameof(VideoStatusTitle));
+            }
+        }
+
+
+
+        public CalibrationViewModel(GamesService gamesService, TeamsService teamService, PlayersService playersService, TeamPlayersService teamPlayersService)
         {
             _teamsService = teamService;
+            _playersService = playersService;
+            _teamplayersService = teamPlayersService;
             uiContext = SynchronizationContext.Current;
 
             _listOfAvailableHomeTeams = new ObservableCollection<TeamResponse>();
+            _listOfAvailablePlayers = new ObservableCollection<PlayerResponse>();
             SelectedGame = new GameResponse();
             SelectedHomeTeam = new TeamResponse();
             SelectedGuestTeam = new TeamResponse();
@@ -158,6 +257,12 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             CanBeCreated = true;
             EditModeOff = false;
             CanBeVideoSelected = false;
+            CanBePlayerSelected = false;
+            AutomaticCalibrationIsFinished = false;
+            CalibrationSuccessful = false;
+            CanBeTrackingObjectsDeleted = false;
+
+            VideoStatusTitle = "Video stream is not ready";
 
             WindowWidth = 480;
             WindowHeight = 270;
@@ -174,6 +279,37 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             foreach (var team in teamsList)
             {
                 uiContext.Send(x => _listOfAvailableHomeTeams.Add(team), null);
+            }
+
+        }
+
+        private async void RefreshPlayersList()
+        {
+            uiContext.Send(x => _listOfAvailablePlayers.Clear(), null);
+            if (SelectedGame != null)
+            {
+
+                if(SelectedGame.HomeTeamId != null)
+                {
+                    var teamPlayers = await _teamplayersService.GetTeamPlayersByTeamAsync((long)SelectedGame.HomeTeamId);
+
+                    foreach (var teamPlayer in teamPlayers)
+                    {
+                        var player = await _playersService.GetPlayerAsync(teamPlayer.PlayerId);
+                        uiContext.Send(x => _listOfAvailablePlayers.Add(player), null);
+                    }
+                }
+
+                if (SelectedGame.GuestTeamId != null)
+                {
+                    var teamPlayers = await _teamplayersService.GetTeamPlayersByTeamAsync((long)SelectedGame.GuestTeamId);
+
+                    foreach (var teamPlayer in teamPlayers)
+                    {
+                        var player = await _playersService.GetPlayerAsync(teamPlayer.PlayerId);
+                        uiContext.Send(x => _listOfAvailablePlayers.Add(player), null);
+                    }
+                }
             }
 
         }

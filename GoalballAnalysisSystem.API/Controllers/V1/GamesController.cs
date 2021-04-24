@@ -194,13 +194,20 @@ namespace GoalballAnalysisSystem.API.Controllers.V1
             await _context.SaveChangesAsync();
 
             var roles = await _context.PlayerRoles.AsNoTracking().ToListAsync();
-            foreach(var htp in game.HomeTeam.TeamPlayers)
+            if(game.HomeTeam != null)
             {
-                htp.Role = roles.SingleOrDefault(r => r.Id == htp.RoleId);
+                foreach (var htp in game.HomeTeam.TeamPlayers)
+                {
+                    htp.Role = roles.SingleOrDefault(r => r.Id == htp.RoleId);
+                }
             }
-            foreach(var gtp in game.GuestTeam.TeamPlayers)
+            
+            if(game.GuestTeam != null)
             {
-                gtp.Role = roles.SingleOrDefault(r => r.Id == gtp.RoleId);
+                foreach (var gtp in game.GuestTeam.TeamPlayers)
+                {
+                    gtp.Role = roles.SingleOrDefault(r => r.Id == gtp.RoleId);
+                }
             }
 
             return Ok(_mapper.Map<GameResponse>(game));

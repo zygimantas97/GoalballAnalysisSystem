@@ -42,6 +42,7 @@ namespace GoalballAnalysisSystem.WPF.View
         private IMOT<TeamPlayerResponse> _mot;
         private ISelector<TeamPlayerResponse> _selector;
         private Mat _frame = new Mat();
+        private double _analysedFrames;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -65,6 +66,7 @@ namespace GoalballAnalysisSystem.WPF.View
 
             _playgroundImageBoxBackground = Playground();
             PlaygroundImageBox.Image = _playgroundImageBoxBackground;
+            _analysedFrames = 0;
         }
 
 
@@ -75,17 +77,23 @@ namespace GoalballAnalysisSystem.WPF.View
 
         private void StartResumeButton_Click(object sender, RoutedEventArgs e)
         {
+            var viewModel = (ProcessingViewModel)this.DataContext;
+            viewModel.VideoStatusTitle = "Analysing video";
             _gameAnalyzer.Process();
         }
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)
         {
+            var viewModel = (ProcessingViewModel)this.DataContext;
+            viewModel.VideoStatusTitle = "Video analysis paused";
             _gameAnalyzer.Pause();
 
         }
 
         private void FinishButton_Click(object sender, RoutedEventArgs e)
         {
+            var viewModel = (ProcessingViewModel)this.DataContext;
+            viewModel.VideoStatusTitle = "Video analysis finished";
             _gameAnalyzer.Finish();
         }
 
@@ -113,6 +121,8 @@ namespace GoalballAnalysisSystem.WPF.View
                 {
                     var viewModel = (ProcessingViewModel)this.DataContext;
                     viewModel.CalibrationSuccessful = true;
+                    viewModel.CalibrationIsFinished = true;
+                    viewModel.VideoStatusTitle = "Calibration was successful!";
                     _gameAnalyzerConfigurator = GameAnalyzerConfigurator.Create(_manualCalibrationPoints, _frame.Width, _frame.Height, PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT);
                     DrawSelectedZoneOfInterest(_gameAnalyzerConfigurator);
                 }
@@ -193,13 +203,13 @@ namespace GoalballAnalysisSystem.WPF.View
                 {
                     DrawSelectedZoneOfInterest(_gameAnalyzerConfigurator);
                     viewModel.VideoStatusTitle = "Auto calibration was successful!";
-                    viewModel.AutomaticCalibrationIsFinished = true;
+                    viewModel.CalibrationIsFinished = true;
                     viewModel.CalibrationSuccessful = true;
                 }
                 else
                 {
                     viewModel.VideoStatusTitle = "Auto calibration is not available";
-                    viewModel.AutomaticCalibrationIsFinished = true;
+                    viewModel.CalibrationIsFinished = true;
                     viewModel.CalibrationSuccessful = false;
                 }
 
@@ -215,11 +225,11 @@ namespace GoalballAnalysisSystem.WPF.View
             _manualCalibration = false;
 
             var viewModel = (ProcessingViewModel)this.DataContext;
-            viewModel.CalibrationSuccessful = true;
+            viewModel.CalibrationSuccessful = false; //to disable next button
             viewModel.VideoStatusTitle = "Mark players for tracking";
-            viewModel.AutomaticCalibrationIsFinished = false;
-            viewModel.CalibrationSuccessful = false;
+            viewModel.CalibrationIsFinished = false;
             viewModel.CanBeTrackingObjectsDeleted = true;
+            viewModel.CanVideoBePlayed = true;
 
             _objectDetector = new ColorObjectDetector("ball");
             _mot = new SOTBasedMOT<TeamPlayerResponse>();
@@ -236,6 +246,8 @@ namespace GoalballAnalysisSystem.WPF.View
         {
             var viewModel = (ProcessingViewModel)this.DataContext;
             viewModel.CalibrationSuccessful = false;
+            viewModel.CalibrationIsFinished = false;
+
             viewModel.VideoStatusTitle = "Select four playground corners";
 
             _manualCalibrationPoints = new List<System.Drawing.Point>();
@@ -312,6 +324,7 @@ namespace GoalballAnalysisSystem.WPF.View
 
         private void _gameAnalyzer_FrameChanged(object sender, EventArgs e)
         {
+            var viewModel = (ProcessingViewModel)this.DataContext;
             try
             {
                 if (_gameAnalyzer.Status == GameAnalyzerStatus.Processing)
@@ -319,7 +332,10 @@ namespace GoalballAnalysisSystem.WPF.View
                     var image = _gameAnalyzer.CurrentFrame;
                     if (image != null && image.Data != null)
                     {
+                        _analysedFrames++;
                         VideoImageBox.Image = image;
+                        viewModel.FPS = _gameAnalyzer.FPS;
+                        viewModel.Progress = _analysedFrames/_gameAnalyzer.FrameCount*100;
                     }
                 }
             }

@@ -28,7 +28,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
         #region Definitions
 
-
         SynchronizationContext uiContext;
 
         private TeamsService _teamsService;
@@ -103,9 +102,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 _selectedPlayer = value;
                 OnPropertyChanged(nameof(SelectedPlayer));
                 Task.Run(() => this.RefreshTeamPlayer()).Wait();
-                
-
-
             }
         }
 
@@ -121,7 +117,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 _selectedTeamPlayer = value;
                 OnPropertyChanged(nameof(SelectedTeamPlayer));
                 Task.Run(() => this.RefreshAvailablePlayersList()).Wait();
-                
 
                 if (value != null)
                 {
@@ -279,28 +274,24 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             _listOfAvailablePlayers = new ObservableCollection<PlayerResponse>();
             _listOfTeams = new ObservableCollection<TeamResponse>();
             _listOfRoles = new ObservableCollection<PlayerRoleResponse>();
+
             ChangeSelectedObjectCommand = new SelectObjectCommand(this);
             DeleteSelectedObjectCommand = new DeleteObjectCommand(this);
             EditSelectedObjectCommand = new TurnEditModeCommand(this);
             CreateNewTeamPlayerCommand = new CreateNewTeamPlayer(this, teamPlayersService);
             CreateSelectedObjectCommand = new CreateObjectCommand(this);
+
             Task.Run(() => this.RefreshTeamsList()).Wait();
             RefreshRolesList();
 
-
-
             TeamEditModeOff = true;
             TeamPlayerEditModeOff = true;
-
             CanBeCreatedTeam = true;
             CanBeEditedTeam = false;
             CanBeDeletedTeam = false;
-
             CanBeEditedTeamPlayer = false;
             CanBeDeletedTeamPlayer = false;
-
         }
-
 
         public async void ChangeEditMode(object parameter)
         {
@@ -313,6 +304,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             if (parameter is TeamResponse)
             {
                 TeamEditModeOff = !TeamEditModeOff;
+
                 if (SelectedTeamPlayer != null)
                     CanBeEditedTeamPlayer = !CanBeEditedTeamPlayer;
 
@@ -326,6 +318,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                             Country = SelectedTeam.Country,
                             Description = SelectedTeam.Description
                         };
+
                         await _teamsService.UpdateTeamAsync(SelectedTeam.Id, teamToEdit);
                     }
                 }
@@ -359,17 +352,15 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 SelectedTeam = (TeamResponse)parameter;
 
             if (parameter is PlayerResponse)
-            {
                 SelectedPlayer = (PlayerResponse)parameter;
-            }
         }
 
         public async void DeleteSelectedObject(object parameter)
         {
-
             if (parameter is TeamResponse)
             {
                 var teamSuccess = await _teamsService.DeleteTeamAsync(SelectedTeam.Id);
+
                 if (teamSuccess != null)
                 {
                     Task.Run(() => this.RefreshTeamsList()).Wait();
@@ -379,12 +370,12 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                     SelectedTeamPlayer = null;
                     SelectedPlayer = null;
                 }
-
             }
 
             if (parameter is TeamPlayerResponse)
             {
                 var success = await _teamPlayersService.DeleteTeamPlayerAsync(SelectedTeam.Id, _selectedPlayer.Id);
+
                 if (success != null)
                 {
                     Task.Run(() => this.RefreshPlayersList()).Wait();
@@ -392,7 +383,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                     SelectedPlayer = null;
                     SelectedRole = null;
                 }
-
             }
         }
 
@@ -402,7 +392,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
             SelectedTeamPlayer = null;
             SelectedPlayer = null;
-
             CanBeDeletedTeamPlayer = false;
             CanBeEditedTeamPlayer = false;
 
@@ -440,7 +429,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 uiContext.Send(x => _listOfTeams.Add(team), null);
             }
-
         }
 
         public async void RefreshPlayersList()
@@ -484,7 +472,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                         uiContext.Send(x => _listOfAvailablePlayers.Add(player), null);
                 }
             }
-
         }
 
         private async void RefreshTeamPlayer()
@@ -499,11 +486,11 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         public async void RefreshRolesList()
         {
             var allRoles = await _playerRolesService.GetPlayerRolesAsync();
+
             foreach (var role in allRoles)
             {
                 uiContext.Send(x => _listOfRoles.Add(role), null);
             }
-            
         }
     }
 }

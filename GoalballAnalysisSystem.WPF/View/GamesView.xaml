@@ -27,7 +27,9 @@
             </Grid.ColumnDefinitions>
 
             <ScrollViewer x:Name="GamesList"
-                          Grid.Column="0">
+                          Grid.Column="0"
+                          HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Auto">
                 <ItemsControl x:Name="ListViewGames"
                               ItemsSource="{Binding ListOfGames}">
                     <ItemsControl.ItemTemplate>
@@ -196,11 +198,11 @@
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center">
 
-                            <ToggleButton Grid.Row="1"
+                            <!--<ToggleButton Grid.Row="1"
                                           Style="{StaticResource ToggleButtonCreate}"
                                           Margin="5"
                                           Background="{StaticResource BlueButtonBrush}"
-                                          Command="{Binding CreateNewObjectCommand}" />
+                                          Command="{Binding CreateNewObjectCommand}" />-->
 
                             <ToggleButton Grid.Row="1"
                                           Style="{StaticResource ToggleButtonEdit}"

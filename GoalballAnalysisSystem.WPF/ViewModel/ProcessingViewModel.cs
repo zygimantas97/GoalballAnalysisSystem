@@ -97,6 +97,34 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
         }
 
+        private int _FPS;
+        public int FPS
+        {
+            get
+            {
+                return _FPS;
+            }
+            set
+            {
+                _FPS = value;
+                OnPropertyChanged(nameof(FPS));
+            }
+        }
+
+        private double _progress;
+        public double Progress
+        {
+            get
+            {
+                return _progress;
+            }
+            set
+            {
+                _progress = Math.Round((double)value, 0);
+                OnPropertyChanged(nameof(Progress));
+            }
+        }
+
         private bool _canBeCreated;
         public bool CanBeCreated
         {
@@ -142,17 +170,17 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
         }
 
-        private bool _automaticCalibrationIsFinished;
-        public bool AutomaticCalibrationIsFinished
+        private bool _calibrationIsFinished;
+        public bool CalibrationIsFinished
         {
             get
             {
-                return _automaticCalibrationIsFinished;
+                return _calibrationIsFinished;
             }
             set
             {
-                _automaticCalibrationIsFinished = value;
-                OnPropertyChanged(nameof(AutomaticCalibrationIsFinished));
+                _calibrationIsFinished = value;
+                OnPropertyChanged(nameof(CalibrationIsFinished));
             }
         }
 
@@ -167,6 +195,19 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 _calibrationSuccessful = value;
                 OnPropertyChanged(nameof(CalibrationSuccessful));
+            }
+        }
+        private bool _canVideoBePlayed;
+        public bool CanVideoBePlayed
+        {
+            get
+            {
+                return _canVideoBePlayed;
+            }
+            set
+            {
+                _canVideoBePlayed = value;
+                OnPropertyChanged(nameof(CanVideoBePlayed));
             }
         }
 
@@ -255,8 +296,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
         }
 
-
-
         public ProcessingViewModel(GamesService gamesService, GamePlayersService gamePlayersService, TeamsService teamService, PlayersService playersService, TeamPlayersService teamPlayersService, ProjectionsService projectionService)
         {
             _gamePlayersService = gamePlayersService;
@@ -280,9 +319,10 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             EditModeOff = false;
             CanBeVideoSelected = false;
             CanBePlayerSelected = false;
-            AutomaticCalibrationIsFinished = false;
+            CalibrationIsFinished = false;
             CalibrationSuccessful = false;
             CanBeTrackingObjectsDeleted = false;
+            CanVideoBePlayed = false;
 
             VideoStatusTitle = "Video stream is not ready";
 

@@ -202,7 +202,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
             if (EditModeOff) //edit has been finished
             {
-
                 var newPlayer = new PlayerRequest
                 {
                     Name = SelectedPlayer.Name,

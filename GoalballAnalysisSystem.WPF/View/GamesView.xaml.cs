@@ -18,6 +18,7 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using GoalballAnalysisSystem.WPF.ViewModel;
 using GoalballAnalysisSystem.API.Contracts.V1.Responses;
+using System.Collections.ObjectModel;
 
 namespace GoalballAnalysisSystem.WPF.View
 {
@@ -81,7 +82,15 @@ namespace GoalballAnalysisSystem.WPF.View
                     }
                 }
                 _gamesViewModel.RefreshProjectionsList();
+                /*
+                for (int i=1; i<_gamesViewModel.ListOfProjections.Count; i++)
+                {
+                    projection = _gamesViewModel.NextProjection();
+                    DrawVector(projection);
+                }*/
+                
                 PlaygroundImageBox.Image = _playgroundImageBoxBackground;
+                DrawAllVectors(_gamesViewModel.ListOfProjections);
             }
 
         }
@@ -116,6 +125,26 @@ namespace GoalballAnalysisSystem.WPF.View
             PlaygroundImageBox.Image = playgroundImageBoxBackground;
 
         }
+
+        private void DrawAllVectors(ObservableCollection<ProjectionResponse> projections)
+        {
+            
+            Image<Bgr, byte> playgroundImageBoxBackground = _playgroundImageBoxBackground.Clone();
+
+            foreach (var projection in projections)
+            {
+                var startPoint = new System.Drawing.Point(projection.X1 + XPADDING, projection.Y1 + YPADDING);
+                var endPoint = new System.Drawing.Point(projection.X2 + XPADDING, projection.Y2 + YPADDING);
+
+                //CvInvoke.Line(playgroundImageBoxBackground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5);
+                CvInvoke.ArrowedLine(playgroundImageBoxBackground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5, Emgu.CV.CvEnum.LineType.Filled, 0, 0.02);
+            }
+
+            PlaygroundImageBox.Image = playgroundImageBoxBackground;
+
+        }
+
+
 
         private void OnSelectGameButtonClick(object sender, RoutedEventArgs e)
         {

@@ -246,7 +246,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             _teamPlayersService = teamPlayersService;
             _playersService = playersService;
 
-
             _listOfGames = new ObservableCollection<GameResponse>();
             _listOfProjections = new ObservableCollection<ProjectionResponse>();
             _listOfHomeTeamPlayers = new ObservableCollection<TeamPlayerResponse>();
@@ -399,7 +398,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
                 if (SelectedGameZone == null || SelectedGameZone == new Rectangle())
                 {
-
                     foreach (var projection in projectionsList)
                     {
                         _uiContext.Send(x => _listOfProjections.Add(projection), null);

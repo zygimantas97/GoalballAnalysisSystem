@@ -63,7 +63,8 @@
                 <ScrollViewer HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Auto">
                     <StackPanel Background="{StaticResource ThirdBackgroundBrush}"
-                                Margin="10 0 0 0">
+                                Margin="10 0 0 0"
+                                MaxWidth="300">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />

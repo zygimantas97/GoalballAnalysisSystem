@@ -42,7 +42,7 @@
                     <Grid Grid.Row="1"
                           Background="{StaticResource ThirdBackgroundBrush}" />
 
-                    <StackPanel>
+                    <StackPanel MaxWidth="300">
 
                         <StackPanel Background="{StaticResource ThirdBackgroundBrush}">
 

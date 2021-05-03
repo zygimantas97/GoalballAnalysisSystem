@@ -23,4 +23,7 @@ namespace GoalballAnalysisSystem.WPF.View
         {
             InitializeComponent();
         }
+
+
+    }
 }

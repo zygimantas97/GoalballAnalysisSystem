@@ -53,7 +53,7 @@
                                     <Border Style="{StaticResource GameIconBorder}"
                                             Margin="5, 5"
                                             HorizontalAlignment="Right" />
-                                    <TextBlock Text="Game"
+                                    <TextBlock Text="Analysis"
                                                Style="{StaticResource HeaderTwoBoldText}"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center" />
@@ -185,7 +185,7 @@
                                     Background="{StaticResource ThirdBackgroundBrush}"
                                     Margin="0 10 0 0">
 
-                            <TextBlock Text="Game info"
+                            <TextBlock Text="Analysis info"
                                        Style="{StaticResource HeaderTwoBoldText}"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"

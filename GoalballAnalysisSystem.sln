@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.API.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.GameProcessing", "GoalballAnalysisSystem.GameProcessing\GoalballAnalysisSystem.GameProcessing.csproj", "{94F5E4A3-A23B-4309-B34C-D1F607B88157}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.GameProcessing.Developer.WPF", "GoalballAnalysisSystem.GameProcessing.Developer.WPF\GoalballAnalysisSystem.GameProcessing.Developer.WPF.csproj", "{19A5EAA9-CFBE-433D-96DF-482A68E236F1}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.API.Contracts", "GoalballAnalysisSystem.API.Contracts\GoalballAnalysisSystem.API.Contracts.csproj", "{92C3C586-A2BF-4DCA-A2C4-12F78181E1D2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoalballAnalysisSystem.WPF.Tests", "GoalballAnalysisSystem.WPF.Tests\GoalballAnalysisSystem.WPF.Tests.csproj", "{38DBCD0C-DDE5-4D81-A873-A906D7F045F9}"
@@ -39,10 +37,6 @@ Global
 		{94F5E4A3-A23B-4309-B34C-D1F607B88157}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94F5E4A3-A23B-4309-B34C-D1F607B88157}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94F5E4A3-A23B-4309-B34C-D1F607B88157}.Release|Any CPU.Build.0 = Release|Any CPU
-		{19A5EAA9-CFBE-433D-96DF-482A68E236F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{19A5EAA9-CFBE-433D-96DF-482A68E236F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{19A5EAA9-CFBE-433D-96DF-482A68E236F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{19A5EAA9-CFBE-433D-96DF-482A68E236F1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{92C3C586-A2BF-4DCA-A2C4-12F78181E1D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{92C3C586-A2BF-4DCA-A2C4-12F78181E1D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92C3C586-A2BF-4DCA-A2C4-12F78181E1D2}.Release|Any CPU.ActiveCfg = Release|Any CPU

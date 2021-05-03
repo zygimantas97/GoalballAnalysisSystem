@@ -316,7 +316,6 @@ namespace GoalballAnalysisSystem.WPF.View
 
         private void _gameAnalyzer_FrameChanged(object sender, EventArgs e)
         {
-            var viewModel = (ProcessingViewModel)this.DataContext;
             try
             {
                 if (_gameAnalyzer.Status == GameAnalyzerStatus.Processing)
@@ -326,8 +325,8 @@ namespace GoalballAnalysisSystem.WPF.View
                     {
                         _analysedFrames++;
                         VideoImageBox.Image = image;
-                        viewModel.FPS = _gameAnalyzer.FPS;
-                        viewModel.Progress = _analysedFrames/_gameAnalyzer.FrameCount*100;
+                        _dataContext.FPS = _gameAnalyzer.FPS;
+                        _dataContext.Progress = _analysedFrames/_gameAnalyzer.FrameCount*100;
                     }
                 }
             }

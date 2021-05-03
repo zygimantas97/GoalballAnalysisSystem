@@ -161,7 +161,7 @@
     <Style x:Key="BigButtonElement"
            TargetType="Button">
         <Setter Property="Background"
-                Value="{StaticResource DarkButtonBrush}" />
+                Value="{StaticResource BlueButtonBrush}" />
         <Setter Property="Foreground"
                 Value="White" />
         <Setter Property="Cursor"

@@ -136,6 +136,36 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
         }
 
+        private bool _incomingProjectionsChecked;
+        public bool IncomingProjectionsChecked
+        {
+            get
+            {
+                return _incomingProjectionsChecked;
+            }
+            set
+            {
+                _incomingProjectionsChecked = value;
+                OnPropertyChanged(nameof(IncomingProjectionsChecked));
+
+            }
+        }
+
+        private bool _outgoingProjectionsChecked;
+        public bool OutgoingProjectionsChecked
+        {
+            get
+            {
+                return _outgoingProjectionsChecked;
+            }
+            set
+            {
+                _outgoingProjectionsChecked = value;
+                OnPropertyChanged(nameof(OutgoingProjectionsChecked));
+
+            }
+        }
+
         private int _outgoingProjections;
         public int OutgoingProjections
         {
@@ -435,12 +465,12 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 {
                     foreach (var projection in projectionsList)
                     {
-                        if (projection.X1 >= SelectedGameZone.X && projection.X1 <= SelectedGameZone.X+SelectedGameZone.Width && projection.Y1 >= SelectedGameZone.Y && projection.Y1 <= SelectedGameZone.Y + SelectedGameZone.Height)
+                        if (projection.X1 >= SelectedGameZone.X && projection.X1 <= SelectedGameZone.X+SelectedGameZone.Width && projection.Y1 >= SelectedGameZone.Y && projection.Y1 <= SelectedGameZone.Y + SelectedGameZone.Height && OutgoingProjectionsChecked)
                         {
                             _uiContext.Send(x => _listOfProjections.Add(projection), null);
                             OutgoingProjections++;
                         }
-                        else if (projection.X2 >= SelectedGameZone.X && projection.X2 <= SelectedGameZone.X + SelectedGameZone.Width && projection.Y2 >= SelectedGameZone.Y && projection.Y2 <= SelectedGameZone.Y + SelectedGameZone.Height)
+                        else if (projection.X2 >= SelectedGameZone.X && projection.X2 <= SelectedGameZone.X + SelectedGameZone.Width && projection.Y2 >= SelectedGameZone.Y && projection.Y2 <= SelectedGameZone.Y + SelectedGameZone.Height && IncomingProjectionsChecked)
                         {
                             _uiContext.Send(x => _listOfProjections.Add(projection), null);
                             IncomingProjections++;

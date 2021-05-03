@@ -22,7 +22,7 @@
             </Grid.RowDefinitions>
             <TextBlock x:Name="TitleTextBlock"
                            Style="{StaticResource HeaderOneText}"
-                           Text="GoallBall Analysis System"
+                           Text="Goallball Analysis System"
                            Grid.Row="0"
                            HorizontalAlignment="Center" />
 

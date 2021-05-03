@@ -110,23 +110,22 @@ namespace GoalballAnalysisSystem.WPF.View
             var endPoint = new System.Drawing.Point(projection.X2 + XPADDING, projection.Y2 + YPADDING);
             CvInvoke.ArrowedLine(playgroundImageBoxBackground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5, Emgu.CV.CvEnum.LineType.Filled, 0, 0.02);
             PlaygroundImageBox.Image = playgroundImageBoxBackground;
-
         }
 
         private void DrawAllVectors(ObservableCollection<ProjectionResponse> projections)
         {
             Image<Bgr, byte> playgroundImageBoxBackground = _playgroundImageBoxBackground.Clone();
-            foreach (var projection in projections)
+            if(_dataContext.SelectedGameZone != new System.Drawing.Rectangle())
             {
-                var startPoint = new System.Drawing.Point(projection.X1 + XPADDING, projection.Y1 + YPADDING);
-                var endPoint = new System.Drawing.Point(projection.X2 + XPADDING, projection.Y2 + YPADDING);
-                CvInvoke.ArrowedLine(playgroundImageBoxBackground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5, Emgu.CV.CvEnum.LineType.Filled, 0, 0.02);
+                foreach (var projection in projections)
+                {
+                    var startPoint = new System.Drawing.Point(projection.X1 + XPADDING, projection.Y1 + YPADDING);
+                    var endPoint = new System.Drawing.Point(projection.X2 + XPADDING, projection.Y2 + YPADDING);
+                    CvInvoke.ArrowedLine(playgroundImageBoxBackground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5, Emgu.CV.CvEnum.LineType.Filled, 0, 0.02);
+                }
             }
             PlaygroundImageBox.Image = playgroundImageBoxBackground;
         }
-
-
-
         private void OnSelectGameButtonClick(object sender, RoutedEventArgs e)
         {
             _playgroundImageBoxBackground = Playground();
@@ -135,7 +134,47 @@ namespace GoalballAnalysisSystem.WPF.View
 
         private void OnSelectPlayerButtonClick(object sender, RoutedEventArgs e)
         {
-            ;
+            
+        }
+
+        private async void IncomingChecked(object sender, RoutedEventArgs e)
+        {
+            if (_dataContext != null)
+            {
+                _dataContext.IncomingProjectionsChecked = true;
+                await _dataContext.RefreshProjectionsList();
+                DrawAllVectors(_dataContext.ListOfProjections);
+            }
+        }
+
+        private async void IncomingUnchecked(object sender, RoutedEventArgs e)
+        {
+            if (_dataContext != null)
+            {
+                _dataContext.IncomingProjectionsChecked = false;
+                await _dataContext.RefreshProjectionsList();
+                DrawAllVectors(_dataContext.ListOfProjections);
+            }
+        }
+
+        private async void OutgoingChecked(object sender, RoutedEventArgs e)
+        {
+            if (_dataContext != null)
+            {
+                _dataContext.OutgoingProjectionsChecked = true;
+                await _dataContext.RefreshProjectionsList();
+                DrawAllVectors(_dataContext.ListOfProjections);
+            }
+        }
+
+        private async void OutgoingUnchecked(object sender, RoutedEventArgs e)
+        {
+            if (_dataContext != null)
+            {
+                _dataContext.OutgoingProjectionsChecked = false;
+                await _dataContext.RefreshProjectionsList();
+                DrawAllVectors(_dataContext.ListOfProjections);
+            }
         }
 
         private Image<Bgr, byte> Playground()

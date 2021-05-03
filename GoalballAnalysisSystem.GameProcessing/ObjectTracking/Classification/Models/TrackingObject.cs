@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace GoalballAnalysisSystem.GameProcessing.ObjectTracking.CNN.Models
+namespace GoalballAnalysisSystem.GameProcessing.ObjectTracking.Classification.Models
 {
     public class TrackingObject<T> where T : class
     {

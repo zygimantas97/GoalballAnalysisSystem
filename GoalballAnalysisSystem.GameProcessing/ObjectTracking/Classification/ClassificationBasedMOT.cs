@@ -1,7 +1,8 @@
 ﻿using Emgu.CV;
+using GoalballAnalysisSystem.GameProcessing.Geometry;
 using GoalballAnalysisSystem.GameProcessing.ObjectDetection;
 using GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNX;
-using GoalballAnalysisSystem.GameProcessing.ObjectTracking.CNN.Models;
+using GoalballAnalysisSystem.GameProcessing.ObjectTracking.Classification.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,14 +10,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoalballAnalysisSystem.GameProcessing.ObjectTracking.CNN
+namespace GoalballAnalysisSystem.GameProcessing.ObjectTracking.Classification
 {
-    public class CNNBasedMOT<T> : IMOT<T> where T : class
+    public class ClassificationBasedMOT<T> : IMOT<T> where T : class
     {
         private readonly List<TrackingObject<T>> _trackingObjects = new List<TrackingObject<T>>();
         private readonly IObjectDetector _objectDetector;
 
-        public CNNBasedMOT(IObjectDetector objectDetector)
+        public ClassificationBasedMOT(IObjectDetector objectDetector)
         {
             _objectDetector = objectDetector;
         }
@@ -59,12 +60,6 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectTracking.CNN
             _trackingObjects.Add(trackingObject);
         }
 
-        /// <summary>
-        /// Determine the player, which best fits the given prediction boundary
-        /// </summary>
-        /// <param name="trackedObjects">all tracked players</param>
-        /// <param name="boundary">prediction boundary that needs to be determined for one of the players</param>
-        /// <returns>index of player in the list</returns>
         private int DetermineTrackingObject(List<TrackingObject<T>> trackedObjects, Rectangle boundary)
         {
             Dictionary<int, double> distances = new Dictionary<int, double>();
@@ -93,17 +88,31 @@ namespace GoalballAnalysisSystem.GameProcessing.ObjectTracking.CNN
 
         public void Remove(T obj)
         {
-            throw new NotImplementedException();
+            _trackingObjects.RemoveAll(to => to.Object == obj);
         }
 
         public void RemoveAt(Point location)
         {
-            throw new NotImplementedException();
+            if (_trackingObjects.Count > 0)
+            {
+                double minDistance = Calculations.GetDistanceBetweenPoints(location, Calculations.GetMiddlePoint(_trackingObjects[0].BoundingBox));
+                int index = 0;
+                for (int i = 1; i < _trackingObjects.Count; i++)
+                {
+                    double distance = Calculations.GetDistanceBetweenPoints(location, Calculations.GetMiddlePoint(_trackingObjects[i].BoundingBox));
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        index = i;
+                    }
+                }
+                _trackingObjects.RemoveAt(index);
+            }
         }
 
         public void RemoveAll()
         {
-            throw new NotImplementedException();
+            _trackingObjects.Clear();
         }
     }
 }

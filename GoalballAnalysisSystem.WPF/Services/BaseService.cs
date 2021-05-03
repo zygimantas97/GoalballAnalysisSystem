@@ -6,6 +6,6 @@ namespace GoalballAnalysisSystem.WPF.Services
 {
     public abstract class BaseService
     {
-        public readonly string ApiUrl = "https://localhost:44383/api/v1/";
+        public readonly string ApiUrl = "https://goalballanalysissystemapi.azurewebsites.net/api/v1/";
     }
 }

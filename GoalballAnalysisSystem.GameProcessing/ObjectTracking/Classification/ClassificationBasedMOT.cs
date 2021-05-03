@@ -1,7 +1,7 @@
 ﻿using Emgu.CV;
 using GoalballAnalysisSystem.GameProcessing.ObjectDetection;
 using GoalballAnalysisSystem.GameProcessing.ObjectDetection.ONNX;
-using GoalballAnalysisSystem.GameProcessing.ObjectTracking.CNN.Models;
+using GoalballAnalysisSystem.GameProcessing.ObjectTracking.Classification.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,14 +9,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoalballAnalysisSystem.GameProcessing.ObjectTracking.CNN
+namespace GoalballAnalysisSystem.GameProcessing.ObjectTracking.Classification
 {
-    public class CNNBasedMOT<T> : IMOT<T> where T : class
+    public class ClassificationBasedMOT<T> : IMOT<T> where T : class
     {
         private readonly List<TrackingObject<T>> _trackingObjects = new List<TrackingObject<T>>();
         private readonly IObjectDetector _objectDetector;
 
-        public CNNBasedMOT(IObjectDetector objectDetector)
+        public ClassificationBasedMOT(IObjectDetector objectDetector)
         {
             _objectDetector = objectDetector;
         }

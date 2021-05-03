@@ -19,7 +19,7 @@ using System.Linq;
 using GoalballAnalysisSystem.GameProcessing.Geometry;
 using GoalballAnalysisSystem.GameProcessing.GameAnalysis;
 using GoalballAnalysisSystem.GameProcessing.Selection;
-using GoalballAnalysisSystem.GameProcessing.ObjectTracking.CNN;
+using GoalballAnalysisSystem.GameProcessing.ObjectTracking.Classification;
 
 namespace GoalballAnalysisSystem.GameProcessing.Developer.WPF
 {

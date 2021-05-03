@@ -138,8 +138,7 @@
                                                  HorizontalAlignment="Left"
                                                  BorderBrush="Transparent"
                                                  Background="Transparent"
-                                                 x:Name="passwordBox"
-                                                 Password="Julius123+" />
+                                                 x:Name="passwordBox"/>
                                 </Grid>
                             </Grid>
 

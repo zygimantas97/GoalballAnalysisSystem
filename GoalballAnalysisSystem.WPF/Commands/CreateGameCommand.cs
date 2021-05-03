@@ -28,19 +28,23 @@ namespace GoalballAnalysisSystem.WPF.Commands
 
         public async void Execute(object parameter)
         {
-            GameRequest gameToCreate = new GameRequest
+            if(_calibrationViewModel.SelectedGuestTeam.Id != null && _calibrationViewModel.SelectedHomeTeam.Id != null && _calibrationViewModel.SelectedGuestTeam.Id != _calibrationViewModel.SelectedHomeTeam.Id)
             {
-                Title = _calibrationViewModel.SelectedGame.Title,
-                Comment = _calibrationViewModel.SelectedGame.Comment,
-                GuestTeamId = _calibrationViewModel.SelectedGuestTeam.Id,
-                HomeTeamId = _calibrationViewModel.SelectedHomeTeam.Id
-            };
+                GameRequest gameToCreate = new GameRequest
+                {
+                    Title = _calibrationViewModel.SelectedGame.Title,
+                    Comment = _calibrationViewModel.SelectedGame.Comment,
+                    GuestTeamId = _calibrationViewModel.SelectedGuestTeam.Id,
+                    HomeTeamId = _calibrationViewModel.SelectedHomeTeam.Id
+                };
 
-            var createdGame = await _gamesService.CreateGameAsync(gameToCreate);
-            _calibrationViewModel.SelectedGame = createdGame; //sets id
+                var createdGame = await _gamesService.CreateGameAsync(gameToCreate);
+                _calibrationViewModel.SelectedGame = createdGame; //sets id
 
-            _calibrationViewModel.CanBeCreated = false;
-            _calibrationViewModel.EditModeOff = true;
+                _calibrationViewModel.CanBeCreated = false;
+                _calibrationViewModel.CanBeVideoSelected = true;
+                _calibrationViewModel.EditModeOff = true;
+            }
         }
     }
 }

@@ -25,7 +25,7 @@ namespace GoalballAnalysisSystem.WPF.View
     /// <summary>
     /// Interaction logic for GamesView.xaml
     /// </summary>
-    public partial class GamesView : UserControl
+    public partial class AnalysisView : UserControl
     {
         private const int XPADDING = 50;
         private const int YPADDING = 50;
@@ -36,10 +36,10 @@ namespace GoalballAnalysisSystem.WPF.View
 
         private int[] xZones = { 0, 50, 275, 325, 575, 625, 850, 900 };
 
-        private GamesViewModel _gamesViewModel;
+        private AnalysisViewModel _dataContext;
         private Image<Bgr, byte> _playgroundImageBoxBackground;
 
-        public GamesView()
+        public AnalysisView()
         {
             InitializeComponent();
             _playgroundImageBoxBackground = Playground();
@@ -47,12 +47,12 @@ namespace GoalballAnalysisSystem.WPF.View
 
         }
 
-        private void PlaygroundImageBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        private async void PlaygroundImageBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (_gamesViewModel == null)
-                _gamesViewModel = (GamesViewModel)this.DataContext;
+            if (_dataContext == null)
+                _dataContext = (AnalysisViewModel)this.DataContext;
 
-            if (_gamesViewModel != null)
+            if (_dataContext != null)
             {
                 _playgroundImageBoxBackground = Playground();
                 System.Drawing.Point coordinates = e.Location;
@@ -61,7 +61,7 @@ namespace GoalballAnalysisSystem.WPF.View
 
                 double x = coordinates.X * horizontalScale;
                 double y = coordinates.Y * verticalScale;
-                _gamesViewModel.SelectedGameZone = new System.Drawing.Rectangle();
+                _dataContext.SelectedGameZone = new System.Drawing.Rectangle();
 
                 //determine where was clicked
                 for (int i = 0; i < xZones.Length - 1; i++)
@@ -71,44 +71,34 @@ namespace GoalballAnalysisSystem.WPF.View
                         if (y >= YPADDING && y <= YZONEHEIGHT + YPADDING)
                         {
                             CvInvoke.Rectangle(_playgroundImageBoxBackground, new System.Drawing.Rectangle(xZones[i] + XPADDING, YPADDING, xZones[i + 1] - xZones[i], YZONEHEIGHT), new MCvScalar(255, 0, 0), 10);
-                            _gamesViewModel.SelectedGameZone = new System.Drawing.Rectangle(xZones[i], 0, xZones[i + 1] - xZones[i], YZONEHEIGHT);
+                            _dataContext.SelectedGameZone = new System.Drawing.Rectangle(xZones[i], 0, xZones[i + 1] - xZones[i], YZONEHEIGHT);
                         }
-
                         else if (y >= YPADDING + PLAYGROUND_HEIGHT - YZONEHEIGHT && y <= YPADDING + PLAYGROUND_HEIGHT)
                         {
                             CvInvoke.Rectangle(_playgroundImageBoxBackground, new System.Drawing.Rectangle(xZones[i] + XPADDING, YPADDING + PLAYGROUND_HEIGHT - YZONEHEIGHT, xZones[i + 1] - xZones[i], YZONEHEIGHT), new MCvScalar(255, 0, 0), 10);
-                            _gamesViewModel.SelectedGameZone = new System.Drawing.Rectangle(xZones[i], 0 + PLAYGROUND_HEIGHT - YZONEHEIGHT, xZones[i + 1] - xZones[i], YZONEHEIGHT);
+                            _dataContext.SelectedGameZone = new System.Drawing.Rectangle(xZones[i], 0 + PLAYGROUND_HEIGHT - YZONEHEIGHT, xZones[i + 1] - xZones[i], YZONEHEIGHT);
                         }
                     }
                 }
-                _gamesViewModel.RefreshProjectionsList();
-                /*
-                for (int i=1; i<_gamesViewModel.ListOfProjections.Count; i++)
-                {
-                    projection = _gamesViewModel.NextProjection();
-                    DrawVector(projection);
-                }*/
-                
-                PlaygroundImageBox.Image = _playgroundImageBoxBackground;
-                DrawAllVectors(_gamesViewModel.ListOfProjections);
+                await _dataContext.RefreshProjectionsList();
+                DrawAllVectors(_dataContext.ListOfProjections);
             }
-
         }
 
         private void OnPreviousProjectionButtonClick(object sender, RoutedEventArgs e)
         {
-            if (_gamesViewModel == null)
-                _gamesViewModel = (GamesViewModel)this.DataContext;
-            var projection = _gamesViewModel.PreviousProjection();
+            if (_dataContext == null)
+                _dataContext = (AnalysisViewModel)this.DataContext;
+            var projection = _dataContext.PreviousProjection();
             if (projection != null)
                 DrawVector(projection);
         }
 
         private void OnNextProjectionButtonClick(object sender, RoutedEventArgs e)
         {
-            if (_gamesViewModel == null)
-                _gamesViewModel = (GamesViewModel)this.DataContext;
-            var projection = _gamesViewModel.NextProjection();
+            if (_dataContext == null)
+                _dataContext = (AnalysisViewModel)this.DataContext;
+            var projection = _dataContext.NextProjection();
             if (projection != null)
                 DrawVector(projection);
         }
@@ -116,11 +106,8 @@ namespace GoalballAnalysisSystem.WPF.View
         private void DrawVector(ProjectionResponse projection)
         {
             Image<Bgr, byte> playgroundImageBoxBackground = _playgroundImageBoxBackground.Clone();
-
             var startPoint = new System.Drawing.Point(projection.X1 + XPADDING, projection.Y1 + YPADDING);
             var endPoint = new System.Drawing.Point(projection.X2 + XPADDING, projection.Y2 + YPADDING);
-
-            //CvInvoke.Line(playgroundImageBoxBackground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5);
             CvInvoke.ArrowedLine(playgroundImageBoxBackground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5, Emgu.CV.CvEnum.LineType.Filled, 0, 0.02);
             PlaygroundImageBox.Image = playgroundImageBoxBackground;
 
@@ -128,26 +115,21 @@ namespace GoalballAnalysisSystem.WPF.View
 
         private void DrawAllVectors(ObservableCollection<ProjectionResponse> projections)
         {
-            
             Image<Bgr, byte> playgroundImageBoxBackground = _playgroundImageBoxBackground.Clone();
-
             foreach (var projection in projections)
             {
                 var startPoint = new System.Drawing.Point(projection.X1 + XPADDING, projection.Y1 + YPADDING);
                 var endPoint = new System.Drawing.Point(projection.X2 + XPADDING, projection.Y2 + YPADDING);
-
-                //CvInvoke.Line(playgroundImageBoxBackground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5);
                 CvInvoke.ArrowedLine(playgroundImageBoxBackground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5, Emgu.CV.CvEnum.LineType.Filled, 0, 0.02);
             }
-
             PlaygroundImageBox.Image = playgroundImageBoxBackground;
-
         }
 
 
 
         private void OnSelectGameButtonClick(object sender, RoutedEventArgs e)
         {
+            _playgroundImageBoxBackground = Playground();
             PlaygroundImageBox.Image = _playgroundImageBoxBackground;
         }
 

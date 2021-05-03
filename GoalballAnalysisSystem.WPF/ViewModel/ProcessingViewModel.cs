@@ -13,23 +13,24 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     public class ProcessingViewModel : BaseViewModel
     {
-
+        #region Commands
         public ICommand CreateNewGameCommand { get; set; }
         public ICommand IncreaseWindowSizeCommand { get; set; }
         public ICommand DecreaseWindowSizeCommand { get; set; }
+        #endregion
 
+        #region definitions
         private TeamsService _teamsService;
-        private PlayersService _playersService;
         private TeamPlayersService _teamplayersService;
         private GamePlayersService _gamePlayersService;
         private ProjectionsService _projectionService;
 
         SynchronizationContext uiContext;
 
-        private ObservableCollection<TeamResponse> _listOfAvailableHomeTeams;
-        public ObservableCollection<TeamResponse> ListOfAvailableHomeTeams
+        private ObservableCollection<TeamResponse> _listOfAvailableTeams;
+        public ObservableCollection<TeamResponse> ListOfAvailableTeams
         {
-            get { return _listOfAvailableHomeTeams; }
+            get { return _listOfAvailableTeams; }
         }
 
         private ObservableCollection<TeamPlayerResponse> _listOfAvailableTeamPlayers;
@@ -134,10 +135,9 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
             set
             {
+
                 _canBeCreated = value;
                 OnPropertyChanged(nameof(CanBeCreated));
-                if (!_canBeCreated)
-                    CanBeVideoSelected = true;
 
             }
         }
@@ -295,17 +295,17 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 OnPropertyChanged(nameof(VideoStatusTitle));
             }
         }
+        #endregion
 
-        public ProcessingViewModel(GamesService gamesService, GamePlayersService gamePlayersService, TeamsService teamService, PlayersService playersService, TeamPlayersService teamPlayersService, ProjectionsService projectionService)
+        public ProcessingViewModel(GamesService gamesService, GamePlayersService gamePlayersService, TeamsService teamService,TeamPlayersService teamPlayersService, ProjectionsService projectionService)
         {
             _gamePlayersService = gamePlayersService;
             _teamsService = teamService;
-            _playersService = playersService;
             _teamplayersService = teamPlayersService;
             _projectionService = projectionService;
             uiContext = SynchronizationContext.Current;
 
-            _listOfAvailableHomeTeams = new ObservableCollection<TeamResponse>();
+            _listOfAvailableTeams = new ObservableCollection<TeamResponse>();
             _listOfAvailableTeamPlayers = new ObservableCollection<TeamPlayerResponse>();
             _gamePlayers = new List<GamePlayerResponse>();
             SelectedGame = new GameResponse();
@@ -336,16 +336,16 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         {
             var teamsList = await _teamsService.GetTeamsAsync();
 
-            uiContext.Send(x => _listOfAvailableHomeTeams.Clear(), null);
+            uiContext.Send(x => _listOfAvailableTeams.Clear(), null);
 
             foreach (var team in teamsList)
             {
-                uiContext.Send(x => _listOfAvailableHomeTeams.Add(team), null);
+                uiContext.Send(x => _listOfAvailableTeams.Add(team), null);
             }
 
         }
 
-        private async void RefreshPlayersList()
+        public async void RefreshPlayersList()
         {
             uiContext.Send(x => _listOfAvailableTeamPlayers.Clear(), null);
             if (SelectedGame != null)
@@ -381,7 +381,8 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 PlayerId = SelectedTeamPlayer.PlayerId,
                 GameId = SelectedGame.Id
             };
-            
+
+            ListOfAvailableTeamPlayers.Remove(SelectedTeamPlayer);
 
             var createdGamePlayer = await _gamePlayersService.CreateGamePlayerAsync(gamePlayer);
             _gamePlayers.Add(createdGamePlayer);

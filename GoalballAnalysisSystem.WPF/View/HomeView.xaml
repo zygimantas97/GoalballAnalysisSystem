@@ -48,17 +48,9 @@
                                    VerticalAlignment="Center"
                                    Margin="10 0 0 0" />
 
-                        <Border Width="50"
-                                Height="50"
-                                CornerRadius="5"
-                                Margin="15, 5"
-                                HorizontalAlignment="Right">
+                        <Border Style="{StaticResource TeamIconBorder}"
+                                HorizontalAlignment="Right" />
 
-                            <Border.Background>
-                                <ImageBrush ImageSource="../Assets/team.png" />
-                            </Border.Background>
-
-                        </Border>
                     </StackPanel>
                 </Border>
 
@@ -76,17 +68,8 @@
                                    VerticalAlignment="Center"
                                    Margin="10 0 0 0" />
 
-                        <Border Width="50"
-                                Height="50"
-                                CornerRadius="5"
-                                Margin="15, 5"
-                                HorizontalAlignment="Right">
-
-                            <Border.Background>
-                                <ImageBrush ImageSource="../Assets/game.png" />
-                            </Border.Background>
-
-                        </Border>
+                        <Border Style="{StaticResource GameIconBorder}"
+                                HorizontalAlignment="Right" />
                     </StackPanel>
                 </Border>
 
@@ -104,17 +87,8 @@
                                    VerticalAlignment="Center"
                                    Margin="10 0 0 0" />
 
-                        <Border Width="50"
-                                Height="50"
-                                CornerRadius="5"
-                                Margin="15, 5"
-                                HorizontalAlignment="Right">
-
-                            <Border.Background>
-                                <ImageBrush ImageSource="../Assets/player.png" />
-                            </Border.Background>
-
-                        </Border>
+                        <Border Style="{StaticResource PlayerIconBorder}"
+                                HorizontalAlignment="Right" />
                     </StackPanel>
                 </Border>
 

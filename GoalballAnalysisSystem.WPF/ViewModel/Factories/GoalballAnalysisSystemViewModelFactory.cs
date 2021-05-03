@@ -8,7 +8,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel.Factories
     public class GoalballAnalysisSystemViewModelFactory : IGoalballAnalysisSystemViewModelFactory
     {
         private readonly CreateViewModel<HomeViewModel> _createHomeViewModel;
-        private readonly CreateViewModel<GamesViewModel> _createGamesViewModel;
+        private readonly CreateViewModel<AnalysisViewModel> _createGamesViewModel;
         private readonly CreateViewModel<TeamsViewModel> _createTeamsViewModel;
         private readonly CreateViewModel<PlayersViewModel> _createPlayersViewModel;
         private readonly CreateViewModel<LoginViewModel> _createLoginViewModel;
@@ -16,7 +16,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel.Factories
         private readonly CreateViewModel<ProcessingViewModel> _createCalibrationViewModel;
 
         public GoalballAnalysisSystemViewModelFactory(CreateViewModel<HomeViewModel> createHomeViewModel,
-            CreateViewModel<GamesViewModel> createGamesViewModel,
+            CreateViewModel<AnalysisViewModel> createGamesViewModel,
             CreateViewModel<TeamsViewModel> createTeamsViewModel,
             CreateViewModel<PlayersViewModel> createPlayersViewModel,
             CreateViewModel<LoginViewModel> createLoginViewModel,
@@ -42,7 +42,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel.Factories
                     return _createRegistrationViewModel();
                 case ViewType.Home:
                     return _createHomeViewModel();
-                case ViewType.Games:
+                case ViewType.Analysis:
                     return _createGamesViewModel();
                 case ViewType.Teams:
                     return _createTeamsViewModel();

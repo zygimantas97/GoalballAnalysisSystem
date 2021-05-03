@@ -43,6 +43,7 @@ namespace GoalballAnalysisSystem.WPF.View
         private ISelector<TeamPlayerResponse> _selector;
         private Mat _frame = new Mat();
         private double _analysedFrames;
+        private ProcessingViewModel _dataContext;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -77,23 +78,20 @@ namespace GoalballAnalysisSystem.WPF.View
 
         private void StartResumeButton_Click(object sender, RoutedEventArgs e)
         {
-            var viewModel = (ProcessingViewModel)this.DataContext;
-            viewModel.VideoStatusTitle = "Analysing video";
+            _dataContext.VideoStatusTitle = "Analysing video";
             _gameAnalyzer.Process();
         }
 
         private void PauseButton_Click(object sender, RoutedEventArgs e)
         {
-            var viewModel = (ProcessingViewModel)this.DataContext;
-            viewModel.VideoStatusTitle = "Video analysis paused";
+            _dataContext.VideoStatusTitle = "Video analysis paused";
             _gameAnalyzer.Pause();
 
         }
 
         private void FinishButton_Click(object sender, RoutedEventArgs e)
         {
-            var viewModel = (ProcessingViewModel)this.DataContext;
-            viewModel.VideoStatusTitle = "Video analysis finished";
+            _dataContext.VideoStatusTitle = "Video analysis finished";
             _gameAnalyzer.Finish();
         }
 
@@ -119,10 +117,9 @@ namespace GoalballAnalysisSystem.WPF.View
 
                 if(_manualCalibrationPoints.Count == 4)
                 {
-                    var viewModel = (ProcessingViewModel)this.DataContext;
-                    viewModel.CalibrationSuccessful = true;
-                    viewModel.CalibrationIsFinished = true;
-                    viewModel.VideoStatusTitle = "Calibration was successful!";
+                    _dataContext.CalibrationSuccessful = true;
+                    _dataContext.CalibrationIsFinished = true;
+                    _dataContext.VideoStatusTitle = "Calibration was successful!";
                     _gameAnalyzerConfigurator = GameAnalyzerConfigurator.Create(_manualCalibrationPoints, _frame.Width, _frame.Height, PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT);
                     DrawSelectedZoneOfInterest(_gameAnalyzerConfigurator);
                 }
@@ -132,8 +129,7 @@ namespace GoalballAnalysisSystem.WPF.View
             {
                 if (_gameAnalyzer.Status == GameAnalyzerStatus.Paused)
                 {
-                    var viewModel = (ProcessingViewModel)this.DataContext;
-                    viewModel.CanBePlayerSelected = false;
+                    _dataContext.CanBePlayerSelected = false;
 
                     _isSelecting = true;
                     _selectionStart = e.Location;
@@ -158,8 +154,7 @@ namespace GoalballAnalysisSystem.WPF.View
             if (_isSelecting)
             {
                 _isSelecting = false;
-                var viewModel = (ProcessingViewModel)this.DataContext;
-                viewModel.CanBePlayerSelected = true;
+                _dataContext.CanBePlayerSelected = true;
             }
         }
 
@@ -176,15 +171,14 @@ namespace GoalballAnalysisSystem.WPF.View
 
         private async void SelectVideoButton_Click(object sender, RoutedEventArgs e)
         {
+            _dataContext = (ProcessingViewModel)this.DataContext;
+
             openFileDialog = new OpenFileDialog();
             bool? result = openFileDialog.ShowDialog();
             if (result == true)
             {
-                /** VIEW MODEL CALL */
-                var viewModel = (ProcessingViewModel)this.DataContext;
-                viewModel.VideoIsSelected = true;
-                viewModel.CanBeVideoSelected = false;
-                /** VIEW MODEL CALL */
+                _dataContext.VideoIsSelected = true;
+                _dataContext.CanBeVideoSelected = false;
 
                 var capture = new VideoCapture(openFileDialog.FileName);
                 capture.Read(_frame);
@@ -202,15 +196,15 @@ namespace GoalballAnalysisSystem.WPF.View
                 if (_gameAnalyzerConfigurator != null && AutoCalibrationWasSuccessful(_gameAnalyzerConfigurator))
                 {
                     DrawSelectedZoneOfInterest(_gameAnalyzerConfigurator);
-                    viewModel.VideoStatusTitle = "Auto calibration was successful!";
-                    viewModel.CalibrationIsFinished = true;
-                    viewModel.CalibrationSuccessful = true;
+                    _dataContext.VideoStatusTitle = "Auto calibration was successful!";
+                    _dataContext.CalibrationIsFinished = true;
+                    _dataContext.CalibrationSuccessful = true;
                 }
                 else
                 {
-                    viewModel.VideoStatusTitle = "Auto calibration is not available";
-                    viewModel.CalibrationIsFinished = true;
-                    viewModel.CalibrationSuccessful = false;
+                    _dataContext.VideoStatusTitle = "Auto calibration is not available";
+                    _dataContext.CalibrationIsFinished = true;
+                    _dataContext.CalibrationSuccessful = false;
                 }
 
             }
@@ -223,13 +217,11 @@ namespace GoalballAnalysisSystem.WPF.View
             VideoImageBox.Image = _frame;
 
             _manualCalibration = false;
-
-            var viewModel = (ProcessingViewModel)this.DataContext;
-            viewModel.CalibrationSuccessful = false; //to disable next button
-            viewModel.VideoStatusTitle = "Mark players for tracking";
-            viewModel.CalibrationIsFinished = false;
-            viewModel.CanBeTrackingObjectsDeleted = true;
-            viewModel.CanVideoBePlayed = true;
+            _dataContext.CalibrationSuccessful = false; //to disable next button
+            _dataContext.VideoStatusTitle = "Mark players for tracking";
+            _dataContext.CalibrationIsFinished = false;
+            _dataContext.CanBeTrackingObjectsDeleted = true;
+            _dataContext.CanVideoBePlayed = true;
 
             _objectDetector = new ColorObjectDetector("ball");
             _mot = new SOTBasedMOT<TeamPlayerResponse>();
@@ -349,7 +341,6 @@ namespace GoalballAnalysisSystem.WPF.View
         {
             if (_selectedROI != Rectangle.Empty)
             {
-                var viewModel = (ProcessingViewModel)this.DataContext;
                 double horizontalScale;
                 double verticalScale;
                 if (_gameAnalyzer.CurrentFrame != null)
@@ -369,15 +360,15 @@ namespace GoalballAnalysisSystem.WPF.View
                                                     (int)(_selectedROI.Height * verticalScale));
                 if (_gameAnalyzer.CurrentFrame != null)
                 {
-                    _mot.Add(viewModel.SelectedTeamPlayer, _gameAnalyzer.CurrentFrame.Mat, rectangle);
+                    _mot.Add(_dataContext.SelectedTeamPlayer, _gameAnalyzer.CurrentFrame.Mat, rectangle);
                 }
                 else
                 {
-                    _mot.Add(viewModel.SelectedTeamPlayer, _frame, rectangle);
+                    _mot.Add(_dataContext.SelectedTeamPlayer, _frame, rectangle);
                 }
 
-                viewModel.CanBePlayerSelected = false;
-                viewModel.CreateGamePlayer();
+                _dataContext.CanBePlayerSelected = false;
+                _dataContext.CreateGamePlayer();
 
                 _selectedROI = Rectangle.Empty;
                 VideoImageBox.Invalidate();
@@ -387,6 +378,8 @@ namespace GoalballAnalysisSystem.WPF.View
         private void RemoveAllTrackingObjectsButton_Click(object sender, RoutedEventArgs e)
         {
             _mot.RemoveAll();
+            var viewModel = (ProcessingViewModel)this.DataContext;
+            viewModel.RefreshPlayersList();
         }
 
         private async void DetectObjectsApiButton_Click(object sender, RoutedEventArgs e)

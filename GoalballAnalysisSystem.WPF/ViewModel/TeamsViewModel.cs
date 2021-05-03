@@ -23,13 +23,11 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         public ICommand DeleteSelectedObjectCommand { get; }
         public ICommand CreateSelectedObjectCommand { get; }
         public ICommand CreateNewTeamPlayerCommand { get; set; }
-        public ICommand AddNewTeam { get; }
         #endregion
 
         #region Definitions
 
         SynchronizationContext uiContext;
-
         private TeamsService _teamsService;
         private TeamPlayersService _teamPlayersService;
         private PlayersService _playersService;
@@ -74,8 +72,8 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 _selectedTeam = value;
                 OnPropertyChanged(nameof(SelectedTeam));
 
-                Task.Run(() => this.RefreshPlayersList()).Wait();
-                Task.Run(() => this.RefreshAvailablePlayersList()).Wait();
+                RefreshPlayersList();
+                RefreshAvailablePlayersList();
 
                 if(value != null)
                 {
@@ -101,7 +99,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 _selectedPlayer = value;
                 OnPropertyChanged(nameof(SelectedPlayer));
-                Task.Run(() => this.RefreshTeamPlayer()).Wait();
+                RefreshTeamPlayer();
             }
         }
 
@@ -116,7 +114,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 _selectedTeamPlayer = value;
                 OnPropertyChanged(nameof(SelectedTeamPlayer));
-                Task.Run(() => this.RefreshAvailablePlayersList()).Wait();
+                RefreshAvailablePlayersList();
 
                 if (value != null)
                 {
@@ -281,7 +279,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             CreateNewTeamPlayerCommand = new CreateNewTeamPlayer(this, teamPlayersService);
             CreateSelectedObjectCommand = new CreateObjectCommand(this);
 
-            Task.Run(() => this.RefreshTeamsList()).Wait();
+            RefreshTeamsList();
             RefreshRolesList();
 
             TeamEditModeOff = true;
@@ -324,7 +322,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 }
             }
 
-            if (parameter is TeamPlayerResponse)
+            else if (parameter is TeamPlayerResponse)
             {
                 TeamPlayerEditModeOff = !TeamPlayerEditModeOff;
                 CanBeEditedTeam = !CanBeEditedTeam;
@@ -340,7 +338,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                         };
 
                         await _teamPlayersService.UpdateTeamPlayerAsync(SelectedTeam.Id, SelectedPlayer.Id, teamPlayerToEdit);
-
                     }
                 }
             }
@@ -351,7 +348,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             if (parameter is TeamResponse)
                 SelectedTeam = (TeamResponse)parameter;
 
-            if (parameter is PlayerResponse)
+            else if (parameter is PlayerResponse)
                 SelectedPlayer = (PlayerResponse)parameter;
         }
 
@@ -363,8 +360,8 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
                 if (teamSuccess != null)
                 {
-                    Task.Run(() => this.RefreshTeamsList()).Wait();
-                    Task.Run(() => this.RefreshPlayersList()).Wait();
+                    RefreshTeamsList();
+                    RefreshPlayersList();
 
                     SelectedTeam = null;
                     SelectedTeamPlayer = null;
@@ -372,13 +369,12 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 }
             }
 
-            if (parameter is TeamPlayerResponse)
+            else if (parameter is TeamPlayerResponse)
             {
                 var success = await _teamPlayersService.DeleteTeamPlayerAsync(SelectedTeam.Id, _selectedPlayer.Id);
-
                 if (success != null)
                 {
-                    Task.Run(() => this.RefreshPlayersList()).Wait();
+                    RefreshPlayersList();
                     SelectedTeamPlayer = null;
                     SelectedPlayer = null;
                     SelectedRole = null;

@@ -10,14 +10,15 @@
                 <ResourceDictionary Source="/Styles/Common.xaml"/>
                 <ResourceDictionary Source="/Styles/NavigationBar.xaml"/>
                 <ResourceDictionary Source="/Styles/Elements.xaml"/>
+                <ResourceDictionary Source="/Styles/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             
             <DataTemplate DataType="{x:Type viewmodel:HomeViewModel}">
                 <view:HomeView/>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewmodel:GamesViewModel}">
-                <view:GamesView/>
+            <DataTemplate DataType="{x:Type viewmodel:AnalysisViewModel}">
+                <view:AnalysisView/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewmodel:TeamsViewModel}">
                 <view:TeamsView/>

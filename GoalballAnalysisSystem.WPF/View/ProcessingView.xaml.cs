@@ -31,6 +31,14 @@ namespace GoalballAnalysisSystem.WPF.View
     /// </summary>
     public partial class ProcessingView : UserControl
     {
+        private const int PLAYGROUND_WIDTH = 900;
+        private const int PLAYGROUND_HEIGHT = 1800;
+        private const int YZONEHEIGHT = 300;
+        private const int SELECTION_ZONE_TOP = 300;
+        private const int SELECTION_ZONE_BOTTOM = 1200;
+        private const int MAX_SELECTION_DISTANCE = 200;
+        private int[] xZones = { 0, 50, 275, 325, 575, 625, 850, 900 };
+
         private bool _isSelecting = false;
         private Rectangle _selectedROI = Rectangle.Empty;
         private System.Drawing.Point _selectionStart;
@@ -47,13 +55,6 @@ namespace GoalballAnalysisSystem.WPF.View
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private const int PLAYGROUND_WIDTH = 900;
-        private const int PLAYGROUND_HEIGHT = 1800;
-        private const int YZONEHEIGHT = 300;
-        int[] xZones = { 0, 50, 275, 325, 575, 625, 850, 900 };
-        private const int SELECTION_ZONE_TOP = 300;
-        private const int SELECTION_ZONE_BOTTOM = 1200;
-        private const int MAX_SELECTION_DISTANCE = 100;
 
         private readonly Image<Bgr, byte> _playgroundImageBoxBackground;
 
@@ -123,7 +124,6 @@ namespace GoalballAnalysisSystem.WPF.View
                     _gameAnalyzerConfigurator = GameAnalyzerConfigurator.Create(_manualCalibrationPoints, _frame.Width, _frame.Height, PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT);
                     DrawSelectedZoneOfInterest(_gameAnalyzerConfigurator);
                 }
-
             }
             else
             {
@@ -206,7 +206,6 @@ namespace GoalballAnalysisSystem.WPF.View
                     _dataContext.CalibrationIsFinished = true;
                     _dataContext.CalibrationSuccessful = false;
                 }
-
             }
         }
 
@@ -227,7 +226,7 @@ namespace GoalballAnalysisSystem.WPF.View
             _mot = new SOTBasedMOT<TeamPlayerResponse>();
             _selector = new ProjectionSelector<TeamPlayerResponse>(SELECTION_ZONE_TOP, SELECTION_ZONE_BOTTOM, MAX_SELECTION_DISTANCE);
             _gameAnalyzer = new GameAnalyzer<TeamPlayerResponse>(openFileDialog.FileName,
-                _gameAnalyzerConfigurator, _objectDetector, _mot, _selector);
+            _gameAnalyzerConfigurator, _objectDetector, _mot, _selector);
 
             _gameAnalyzer.FrameChanged += _gameAnalyzer_FrameChanged;
             _gameAnalyzer.ProcessingFinished += _gameAnalyzer_ProcessingFinished;

@@ -29,7 +29,8 @@
                             <DataTemplate>
                                 <Button Style="{StaticResource TransparentButtonElement}"
                                         Command="{Binding Path=DataContext.ChangeSelectedObjectCommand, ElementName=ListViewPlayers}"
-                                        CommandParameter="{Binding Path=.}">
+                                        CommandParameter="{Binding Path=.}"
+                                        Click="SelectButton_Click">
                                     <StackPanel Style="{StaticResource DarkerStackPanel}">
                                         <Border Width="60"
                                                 Height="60"

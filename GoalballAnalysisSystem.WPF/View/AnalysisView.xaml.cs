@@ -37,6 +37,7 @@ namespace GoalballAnalysisSystem.WPF.View
         private int[] xZones = { 0, 50, 275, 325, 575, 625, 850, 900 };
 
         private AnalysisViewModel _dataContext;
+        /*private StackPanel previousMarked;*/
         private Image<Bgr, byte> _playgroundImageBoxBackground;
 
         public AnalysisView()
@@ -115,7 +116,7 @@ namespace GoalballAnalysisSystem.WPF.View
         private void DrawAllVectors(ObservableCollection<ProjectionResponse> projections)
         {
             Image<Bgr, byte> playgroundImageBoxBackground = _playgroundImageBoxBackground.Clone();
-            if(_dataContext.SelectedGameZone != new System.Drawing.Rectangle())
+            if(_dataContext.SelectedGameZone != new System.Drawing.Rectangle() || _dataContext.SelectedPlayer != null)
             {
                 foreach (var projection in projections)
                 {
@@ -134,7 +135,21 @@ namespace GoalballAnalysisSystem.WPF.View
 
         private void OnSelectPlayerButtonClick(object sender, RoutedEventArgs e)
         {
-            
+            if (_dataContext == null)
+                _dataContext = (AnalysisViewModel)this.DataContext;
+            /*
+            Button button = sender as Button;
+            StackPanel stack = button.Content as StackPanel;
+
+            if (previousMarked != null)
+                previousMarked.Background = GetColorFromHexa("#D9E1E2");
+
+            stack.Background = GetColorFromHexa("#edebe1");
+            previousMarked = stack;*/
+
+            _dataContext.RefreshProjectionsList();
+            DrawAllVectors(_dataContext.ListOfProjections);
+
         }
 
         private async void IncomingChecked(object sender, RoutedEventArgs e)
@@ -209,6 +224,15 @@ namespace GoalballAnalysisSystem.WPF.View
             }
 
             return playgroundImageBoxBackground;
+        }
+
+        private SolidColorBrush GetColorFromHexa(string hexaColor)
+        {
+            byte R = Convert.ToByte(hexaColor.Substring(1, 2), 16);
+            byte G = Convert.ToByte(hexaColor.Substring(3, 2), 16);
+            byte B = Convert.ToByte(hexaColor.Substring(5, 2), 16);
+            SolidColorBrush scb = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0xFF, R, G, B));
+            return scb;
         }
 
 

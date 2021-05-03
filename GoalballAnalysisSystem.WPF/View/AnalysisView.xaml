@@ -38,7 +38,7 @@
                                     Command="{Binding Path=DataContext.ChangeSelectedObjectCommand, ElementName=ListViewGames}"
                                     CommandParameter="{Binding Path=.}"
                                     Click="OnSelectGameButtonClick">
-                                <StackPanel Style="{StaticResource DarkerStackPanel}">
+                                <StackPanel Style="{StaticResource DarkerStackPanel}" >
                                     <Border Width="60"
                                             Height="60"
                                             Style="{StaticResource GameIconBorder}"
@@ -239,6 +239,7 @@
                                                         Command="{Binding Path=DataContext.ChangeSelectedObjectCommand, ElementName=ListViewHomePlayers}"
                                                         CommandParameter="{Binding Path=.}"
                                                         Click="OnSelectPlayerButtonClick">
+
                                                     <StackPanel Style="{StaticResource DarkerStackPanel}"
                                                                 Width="100"
                                                                 Height="50">
@@ -304,7 +305,13 @@
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                     </ItemsControl>
+                                    <Button Content="Remove selection"
+                                            Margin="5"
+                                            Background="{StaticResource RichRedButtonBrush}"
+                                            Command="{Binding DeleteSelectedObjectCommand}"
+                                            CommandParameter="{Binding SelectedPlayer}"/>
                                 </StackPanel>
+                                
                             </ScrollViewer>
 
                         </Grid>

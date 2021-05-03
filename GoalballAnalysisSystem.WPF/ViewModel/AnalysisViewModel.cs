@@ -48,6 +48,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 OnPropertyChanged(nameof(SelectedGame));
                 RefreshProjectionsList();
                 RefreshPlayersList();
+                SelectedPlayer = null;
 
                 if (value != null)
                 {
@@ -118,6 +119,20 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 OnPropertyChanged(nameof(SelectedProjection));
                 RefreshProjectionPlayers();
 
+            }
+        }
+
+        private PlayerResponse _selectedPlayer;
+        public PlayerResponse SelectedPlayer
+        {
+            get
+            {
+                return _selectedPlayer;
+            }
+            set
+            {
+                _selectedPlayer = value;
+                OnPropertyChanged(nameof(SelectedPlayer));
             }
         }
 
@@ -225,18 +240,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             get { return _listOfProjections; }
         }
 
-        private ObservableCollection<TeamPlayerResponse> _listOfHomeTeamPlayers;
-        public ObservableCollection<TeamPlayerResponse> ListOfHomeTeamPlayers
-        {
-            get { return _listOfHomeTeamPlayers; }
-        }
-
-        private ObservableCollection<TeamPlayerResponse> _listOfGuestTeamPlayers;
-        public ObservableCollection<TeamPlayerResponse> ListOfGuestTeamPlayers
-        {
-            get { return _listOfGuestTeamPlayers; }
-        }
-
         private ObservableCollection<PlayerResponse> _listOfHomePlayers;
         public ObservableCollection<PlayerResponse> ListOfHomePlayers
         {
@@ -248,6 +251,8 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         {
             get { return _listOfGuestPlayers; }
         }
+
+        private Dictionary<long, GamePlayerResponse> _listOfGamePlayers;
 
         private bool _editModeOff;
         public bool EditModeOff
@@ -304,10 +309,9 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
             _listOfGames = new ObservableCollection<GameResponse>();
             _listOfProjections = new ObservableCollection<ProjectionResponse>();
-            _listOfHomeTeamPlayers = new ObservableCollection<TeamPlayerResponse>();
-            _listOfGuestTeamPlayers = new ObservableCollection<TeamPlayerResponse>();
             _listOfHomePlayers = new ObservableCollection<PlayerResponse>();
             _listOfGuestPlayers = new ObservableCollection<PlayerResponse>();
+            _listOfGamePlayers = new Dictionary<long, GamePlayerResponse>();
 
             SelectedGameZone = new Rectangle();
 
@@ -349,6 +353,8 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         {
             if (parameter is GameResponse)
                 SelectedGame = (GameResponse)parameter;
+            else if (parameter is PlayerResponse)
+                SelectedPlayer = (PlayerResponse)parameter;
         }
 
         public async void DeleteSelectedObject(object parameter)
@@ -362,6 +368,11 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                     RefreshGameList();
 
                 }
+            }
+            else if (parameter is PlayerResponse)
+            {
+                SelectedPlayer = null;
+                RefreshProjectionsList();
             }
         }
 
@@ -458,22 +469,62 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 {
                     foreach (var projection in projectionsList)
                     {
-                        _uiContext.Send(x => _listOfProjections.Add(projection), null);
+                        if(SelectedPlayer == null)
+                        {
+                            _uiContext.Send(x => _listOfProjections.Add(projection), null);
+                        }
+                        else
+                        {
+                            if (_listOfGamePlayers.ContainsKey(Convert.ToInt64(projection.OffenseGamePlayerId)))
+                            {
+                                var offenseGamePlayer = _listOfGamePlayers[Convert.ToInt64(projection.OffenseGamePlayerId)];
+                                if(offenseGamePlayer.TeamPlayer.Player.Id == SelectedPlayer.Id)
+                                    _uiContext.Send(x => _listOfProjections.Add(projection), null);
+                            }
+                            else if (_listOfGamePlayers.ContainsKey(Convert.ToInt64(projection.DefenseGamePlayerId)))
+                            {
+                                var defenseeGamePlayer = _listOfGamePlayers[Convert.ToInt64(projection.DefenseGamePlayerId)];
+                                if (defenseeGamePlayer.TeamPlayer.Player.Id == SelectedPlayer.Id)
+                                    _uiContext.Send(x => _listOfProjections.Add(projection), null);
+                            }
+                        }
+
                     }
                 }
                 else
                 {
                     foreach (var projection in projectionsList)
                     {
-                        if (projection.X1 >= SelectedGameZone.X && projection.X1 <= SelectedGameZone.X+SelectedGameZone.Width && projection.Y1 >= SelectedGameZone.Y && projection.Y1 <= SelectedGameZone.Y + SelectedGameZone.Height && OutgoingProjectionsChecked)
+                        bool playerFound = false;
+                        if (SelectedPlayer != null)
                         {
-                            _uiContext.Send(x => _listOfProjections.Add(projection), null);
-                            OutgoingProjections++;
+                            if (_listOfGamePlayers.ContainsKey(Convert.ToInt64(projection.OffenseGamePlayerId)))
+                            {
+                                var gamePlayer = _listOfGamePlayers[Convert.ToInt64(projection.OffenseGamePlayerId)];
+                                if (gamePlayer.TeamPlayer.Player.Id == SelectedPlayer.Id)
+                                    playerFound = true;
+
+                            }
+                            else if (_listOfGamePlayers.ContainsKey(Convert.ToInt64(projection.DefenseGamePlayerId)))
+                            {
+                                var gamePlayer = _listOfGamePlayers[Convert.ToInt64(projection.DefenseGamePlayerId)];
+                                if (gamePlayer.TeamPlayer.Player.Id == SelectedPlayer.Id)
+                                    playerFound = true;
+                            }
                         }
-                        else if (projection.X2 >= SelectedGameZone.X && projection.X2 <= SelectedGameZone.X + SelectedGameZone.Width && projection.Y2 >= SelectedGameZone.Y && projection.Y2 <= SelectedGameZone.Y + SelectedGameZone.Height && IncomingProjectionsChecked)
+
+                        if (SelectedPlayer!= null && playerFound || SelectedPlayer == null)
                         {
-                            _uiContext.Send(x => _listOfProjections.Add(projection), null);
-                            IncomingProjections++;
+                            if (projection.X1 >= SelectedGameZone.X && projection.X1 <= SelectedGameZone.X + SelectedGameZone.Width && projection.Y1 >= SelectedGameZone.Y && projection.Y1 <= SelectedGameZone.Y + SelectedGameZone.Height && OutgoingProjectionsChecked)
+                            {
+                                _uiContext.Send(x => _listOfProjections.Add(projection), null);
+                                OutgoingProjections++;
+                            }
+                            else if (projection.X2 >= SelectedGameZone.X && projection.X2 <= SelectedGameZone.X + SelectedGameZone.Width && projection.Y2 >= SelectedGameZone.Y && projection.Y2 <= SelectedGameZone.Y + SelectedGameZone.Height && IncomingProjectionsChecked)
+                            {
+                                _uiContext.Send(x => _listOfProjections.Add(projection), null);
+                                IncomingProjections++;
+                            }
                         }
                     }
                 }
@@ -486,6 +537,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         {
             _uiContext.Send(x => _listOfHomePlayers.Clear(), null);
             _uiContext.Send(x => _listOfGuestPlayers.Clear(), null);
+            _uiContext.Send(x => _listOfGamePlayers.Clear(), null);
 
             if (SelectedGame != null)
             {
@@ -497,6 +549,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 {
                     var player = gamePlayer.TeamPlayer.Player;
                     var teamId = gamePlayer.TeamPlayer.TeamId;
+                    _listOfGamePlayers.Add(gamePlayer.Id, gamePlayer);
                     if (teamId == homeTeamId)
                     {
                         _listOfHomePlayers.Add(player);

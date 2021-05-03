@@ -9,7 +9,7 @@ namespace GoalballAnalysisSystem.WPF.State.Navigators
         Login,
         Registration,
         Home,
-        Games,
+        Analysis,
         Teams,
         Players,
         Calibration

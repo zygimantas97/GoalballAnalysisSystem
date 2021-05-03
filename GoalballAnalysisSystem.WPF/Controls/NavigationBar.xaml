@@ -53,10 +53,10 @@
                          Command="{Binding UpdateCurrentViewModelCommand}"
                          CommandParameter="{x:Static nav:ViewType.Home}"/>
                 <RadioButton Grid.Column="1"
-                         Content="Games"
-                         IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource EqualValueToParameterConverter}, ConverterParameter={x:Type vm:GamesViewModel}}"
+                         Content="Analysis"
+                         IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource EqualValueToParameterConverter}, ConverterParameter={x:Type vm:AnalysisViewModel}}"
                          Command="{Binding UpdateCurrentViewModelCommand}"
-                         CommandParameter="{x:Static nav:ViewType.Games}"/>
+                         CommandParameter="{x:Static nav:ViewType.Analysis}"/>
                 <RadioButton Grid.Column="2"
                          Content="Teams"
                          IsChecked="{Binding CurrentViewModel, Mode=OneWay, Converter={StaticResource EqualValueToParameterConverter}, ConverterParameter={x:Type vm:TeamsViewModel}}"

@@ -4,10 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:GoalballAnalysisSystem.WPF.View"
+             xmlns:converters="clr-namespace:GoalballAnalysisSystem.WPF.Converters"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
-
+    <UserControl.Resources>
+        <converters:BooleanValueConverter x:Key="BooleanValueConverter" />
+        <converters:IndexValueConverter x:Key="IndexValueConverter" />
+    </UserControl.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -22,7 +26,9 @@
 
         <ScrollViewer x:Name="TeamsList"
                       Grid.Row="0"
-                      Grid.Column="0">
+                      Grid.Column="0"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
             <ItemsControl x:Name="ListViewTeams"
                           ItemsSource="{Binding ListOfTeams}">
                 <ItemsControl.ItemTemplate>
@@ -35,12 +41,9 @@
                                         Width="300">
                                 <Border Width="60"
                                         Height="60"
-                                        CornerRadius="5"
-                                        Margin="20, 20, 50, 20">
-                                    <Border.Background>
-                                        <ImageBrush ImageSource="../Assets/team.png" />
-                                    </Border.Background>
-                                </Border>
+                                        Style="{StaticResource TeamIconBorder}"
+                                        Margin="20, 20, 50, 20" />
+
                                 <StackPanel Orientation="Vertical"
                                             Margin="10">
                                     <TextBlock Margin="5"
@@ -66,7 +69,9 @@
 
         <ScrollViewer x:Name="PlayersList"
                       Grid.Row="0"
-                      Grid.Column="1">
+                      Grid.Column="1"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Button Grid.Row="1"
@@ -115,12 +120,9 @@
                                                 Width="300">
                                         <Border Width="60"
                                                 Height="60"
-                                                CornerRadius="5"
-                                                Margin="20, 20, 50, 20">
-                                            <Border.Background>
-                                                <ImageBrush ImageSource="../Assets/player.png" />
-                                            </Border.Background>
-                                        </Border>
+                                                Style="{StaticResource PlayerIconBorder}"
+                                                Margin="20, 20, 50, 20" />
+
                                         <StackPanel Orientation="Vertical"
                                                     Margin="10">
                                             <TextBlock Margin="5"
@@ -157,7 +159,8 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0"
                             Background="{StaticResource ThirdBackgroundBrush}"
-                            Margin="10, 0, 0, 10">
+                            Margin="10, 0, 0, 10"
+                            MaxWidth="300">
 
                     <Grid Margin="10">
                         <Grid.RowDefinitions>
@@ -165,15 +168,9 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
-                            <Border Width="50"
-                                    Height="50"
-                                    CornerRadius="5"
-                                    Margin="15, 5"
-                                    HorizontalAlignment="Right">
-                                <Border.Background>
-                                    <ImageBrush ImageSource="../Assets/team.png" />
-                                </Border.Background>
-                            </Border>
+                            <Border Style="{StaticResource TeamIconBorder}"
+                                    HorizontalAlignment="Right" />
+
                             <TextBlock Text="Team"
                                        Style="{StaticResource HeaderTwoBoldText}"
                                        HorizontalAlignment="Center"
@@ -277,15 +274,8 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
-                            <Border Width="50"
-                                    Height="50"
-                                    CornerRadius="5"
-                                    Margin="15, 5"
-                                    HorizontalAlignment="Right">
-                                <Border.Background>
-                                    <ImageBrush ImageSource="../Assets/player.png" />
-                                </Border.Background>
-                            </Border>
+                            <Border Style="{StaticResource PlayerIconBorder}"
+                                    HorizontalAlignment="Right" />
                             <TextBlock Text="Player"
                                        Style="{StaticResource HeaderTwoBoldText}"
                                        HorizontalAlignment="Center"
@@ -299,6 +289,7 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
@@ -333,6 +324,13 @@
                                        HorizontalAlignment="Right"
                                        VerticalAlignment="Center"
                                        Style="{StaticResource RegularText}" />
+                            <TextBlock Grid.Column="0"
+                                       Grid.Row="4"
+                                       Margin="5"
+                                       Text="Role "
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       Style="{StaticResource RegularText}" />
 
                             <TextBlock Grid.Column="1"
                                        Grid.Row="0"
@@ -360,6 +358,22 @@
                                      HorizontalAlignment="Left"
                                      Style="{StaticResource HeaderThreeTextBoxEditable}"
                                      IsReadOnly="{Binding TeamPlayerEditModeOff}" />
+                            <ComboBox Grid.Row="4"
+                                      Grid.Column="1"
+                                      Width="170"
+                                      Height="25"
+                                      ItemsSource="{Binding ListOfRoles}"
+                                      SelectedItem="{Binding SelectedRole}"
+                                      SelectedIndex="{Binding SelectedRole.Id, Converter={StaticResource IndexValueConverter}}"
+                                      IsEnabled="{Binding Path=TeamPlayerEditModeOff, Converter={StaticResource BooleanValueConverter}}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Path=Name}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </Grid>
                     </Grid>
 

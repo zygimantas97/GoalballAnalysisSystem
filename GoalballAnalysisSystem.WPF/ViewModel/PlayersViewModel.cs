@@ -19,8 +19,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
     public class PlayersViewModel : BaseViewModel, ISelectableProperties
     {
         #region Commands
-        public ICommand LoginCommand { get; }
-        public ICommand UpdateCurrentViewModelCommand { get; }
         public ICommand ChangeSelectedObjectCommand { get; }
         public ICommand EditSelectedObjectCommand { get; }
         public ICommand DeleteSelectedObjectCommand { get; }
@@ -125,7 +123,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             _playersService = playersService;
             _listOfPlayers = new ObservableCollection<PlayerResponse>();
 
-            Task.Run(() => this.RefreshPlayersList()).Wait();
+            RefreshPlayersList();
 
             ChangeSelectedObjectCommand = new SelectObjectCommand(this);
             DeleteSelectedObjectCommand = new DeleteObjectCommand(this);
@@ -171,7 +169,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 var success = await _playersService.DeletePlayerAsync(SelectedPlayer.Id);
                 if (success != null)
                 {
-                    Task.Run(() => this.RefreshPlayersList()).Wait();
+                    RefreshPlayersList();
                     SelectedPlayer = null;
                 }
             }
@@ -202,7 +200,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
             if (EditModeOff) //edit has been finished
             {
-
                 var newPlayer = new PlayerRequest
                 {
                     Name = SelectedPlayer.Name,

@@ -13,10 +13,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Done.png" />
     <None Remove="Assets\game.png" />
     <None Remove="Assets\goalball.png" />
+    <None Remove="Assets\pause.png" />
+    <None Remove="Assets\Play.png" />
     <None Remove="Assets\player.png" />
     <None Remove="Assets\team.png" />
+    <None Remove="Assets\zoomIn.png" />
+    <None Remove="Assets\zoomOut.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,10 +40,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Emgu.CV" Version="4.4.0.4061" />
-    <PackageReference Include="Emgu.CV.Bitmap" Version="4.4.0.4061" />
-    <PackageReference Include="Emgu.CV.runtime.windows" Version="4.4.0.4061" />
-    <PackageReference Include="Emgu.CV.UI" Version="4.4.0.4061" />
+    <PackageReference Include="Emgu.CV" Version="4.4.0.4099" />
+    <PackageReference Include="Emgu.CV.Bitmap" Version="4.4.0.4099" />
+    <PackageReference Include="Emgu.CV.runtime.windows" Version="4.4.0.4099" />
+    <PackageReference Include="Emgu.CV.UI" Version="4.4.0.4099" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -50,6 +55,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GoalballAnalysisSystem.API.Contracts\GoalballAnalysisSystem.API.Contracts.csproj" />
+    <ProjectReference Include="..\GoalballAnalysisSystem.GameProcessing\GoalballAnalysisSystem.GameProcessing.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,6 +74,24 @@
     <Reference Include="WindowsFormsIntegration.Package">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\WindowsFormsIntegration.Package.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Done.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\pause.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\Play.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\zoomIn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\zoomOut.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

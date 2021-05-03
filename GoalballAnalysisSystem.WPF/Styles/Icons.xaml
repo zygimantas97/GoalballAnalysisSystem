@@ -1,0 +1,49 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style x:Key="GameIconBorder"
+           TargetType="Border">
+        <Setter Property="Width"
+                Value="50" />
+        <Setter Property="Height"
+                Value="50" />
+        <Setter Property="Margin"
+                Value="15, 5" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <ImageBrush ImageSource="../Assets/game.png" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PlayerIconBorder"
+           TargetType="Border">
+        <Setter Property="Width"
+                Value="50" />
+        <Setter Property="Height"
+                Value="50" />
+        <Setter Property="Margin"
+                Value="15, 5" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <ImageBrush ImageSource="../Assets/player.png" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="TeamIconBorder"
+           TargetType="Border">
+        <Setter Property="Width"
+                Value="50" />
+        <Setter Property="Height"
+                Value="50" />
+        <Setter Property="Margin"
+                Value="15, 5" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <ImageBrush ImageSource="../Assets/team.png" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

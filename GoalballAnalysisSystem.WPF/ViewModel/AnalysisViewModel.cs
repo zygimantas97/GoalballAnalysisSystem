@@ -7,6 +7,7 @@ using GoalballAnalysisSystem.WPF.ViewModel.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,17 +16,13 @@ using System.Windows.Input;
 
 namespace GoalballAnalysisSystem.WPF.ViewModel
 {
-    public class GamesViewModel : BaseViewModel, ISelectableProperties
+    public class AnalysisViewModel : BaseViewModel, ISelectableProperties
     {
         #region Commands
-        public ICommand LoginCommand { get; }
-        public ICommand UpdateCurrentViewModelCommand { get; }
         public ICommand ChangeSelectedObjectCommand { get; }
         public ICommand EditSelectedObjectCommand { get; }
         public ICommand DeleteSelectedObjectCommand { get; }
-        public ICommand PreviousProjectionCommand { get; }
         public ICommand CreateNewObjectCommand { get; }
-        public ICommand NextProjectionCommand { get; }
         #endregion
 
         #region Definitions
@@ -51,6 +48,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 OnPropertyChanged(nameof(SelectedGame));
                 RefreshProjectionsList();
                 RefreshPlayersList();
+                SelectedPlayer = null;
 
                 if (value != null)
                 {
@@ -93,6 +91,21 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
         }
 
+        private Rectangle _selectedGameZone;
+        public Rectangle SelectedGameZone
+        {
+            get
+            {
+                return _selectedGameZone;
+            }
+            set
+            {
+                _selectedGameZone = value;
+                OnPropertyChanged(nameof(SelectedGameZone));
+
+            }
+        }
+
         private ProjectionResponse _selectedProjection;
         public ProjectionResponse SelectedProjection
         {
@@ -104,6 +117,111 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 _selectedProjection = value;
                 OnPropertyChanged(nameof(SelectedProjection));
+                RefreshProjectionPlayers();
+
+            }
+        }
+
+        private PlayerResponse _selectedPlayer;
+        public PlayerResponse SelectedPlayer
+        {
+            get
+            {
+                return _selectedPlayer;
+            }
+            set
+            {
+                _selectedPlayer = value;
+                OnPropertyChanged(nameof(SelectedPlayer));
+            }
+        }
+
+        private int _incomingProjections;
+        public int IncomingProjections
+        {
+            get
+            {
+                return _incomingProjections;
+            }
+            set
+            {
+                _incomingProjections = value;
+                OnPropertyChanged(nameof(IncomingProjections));
+
+            }
+        }
+
+        private bool _incomingProjectionsChecked;
+        public bool IncomingProjectionsChecked
+        {
+            get
+            {
+                return _incomingProjectionsChecked;
+            }
+            set
+            {
+                _incomingProjectionsChecked = value;
+                OnPropertyChanged(nameof(IncomingProjectionsChecked));
+
+            }
+        }
+
+        private bool _outgoingProjectionsChecked;
+        public bool OutgoingProjectionsChecked
+        {
+            get
+            {
+                return _outgoingProjectionsChecked;
+            }
+            set
+            {
+                _outgoingProjectionsChecked = value;
+                OnPropertyChanged(nameof(OutgoingProjectionsChecked));
+
+            }
+        }
+
+        private int _outgoingProjections;
+        public int OutgoingProjections
+        {
+            get
+            {
+                return _outgoingProjections;
+            }
+            set
+            {
+                _outgoingProjections = value;
+                OnPropertyChanged(nameof(OutgoingProjections));
+
+            }
+        }
+
+        private PlayerResponse _topPlayer;
+        public PlayerResponse TopPlayer
+        {
+            get
+            {
+                return _topPlayer;
+            }
+            set
+            {
+                _topPlayer = value;
+                OnPropertyChanged(nameof(TopPlayer));
+
+            }
+        }
+
+        private PlayerResponse _bottomPlayer;
+        public PlayerResponse BottomPlayer
+        {
+            get
+            {
+                return _bottomPlayer;
+            }
+            set
+            {
+                _bottomPlayer = value;
+                OnPropertyChanged(nameof(BottomPlayer));
 
             }
         }
@@ -122,18 +240,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             get { return _listOfProjections; }
         }
 
-        private ObservableCollection<TeamPlayerResponse> _listOfHomeTeamPlayers;
-        public ObservableCollection<TeamPlayerResponse> ListOfHomeTeamPlayers
-        {
-            get { return _listOfHomeTeamPlayers; }
-        }
-
-        private ObservableCollection<TeamPlayerResponse> _listOfGuestTeamPlayers;
-        public ObservableCollection<TeamPlayerResponse> ListOfGuestTeamPlayers
-        {
-            get { return _listOfGuestTeamPlayers; }
-        }
-
         private ObservableCollection<PlayerResponse> _listOfHomePlayers;
         public ObservableCollection<PlayerResponse> ListOfHomePlayers
         {
@@ -145,6 +251,8 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         {
             get { return _listOfGuestPlayers; }
         }
+
+        private Dictionary<long, GamePlayerResponse> _listOfGamePlayers;
 
         private bool _editModeOff;
         public bool EditModeOff
@@ -189,7 +297,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         }
         #endregion
 
-        public GamesViewModel(GamesService gameService, ProjectionsService projectionService, GamePlayersService gamePlayersService, TeamsService teamsService, TeamPlayersService teamPlayersService, PlayersService playersService)
+        public AnalysisViewModel(GamesService gameService, ProjectionsService projectionService, GamePlayersService gamePlayersService, TeamsService teamsService, TeamPlayersService teamPlayersService, PlayersService playersService)
         {
             _uiContext = SynchronizationContext.Current;
             _gamesService = gameService;
@@ -199,21 +307,20 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             _teamPlayersService = teamPlayersService;
             _playersService = playersService;
 
-
             _listOfGames = new ObservableCollection<GameResponse>();
             _listOfProjections = new ObservableCollection<ProjectionResponse>();
-            _listOfHomeTeamPlayers = new ObservableCollection<TeamPlayerResponse>();
-            _listOfGuestTeamPlayers = new ObservableCollection<TeamPlayerResponse>();
             _listOfHomePlayers = new ObservableCollection<PlayerResponse>();
             _listOfGuestPlayers = new ObservableCollection<PlayerResponse>();
+            _listOfGamePlayers = new Dictionary<long, GamePlayerResponse>();
+
+            SelectedGameZone = new Rectangle();
 
             CreateNewObjectCommand = new CreateObjectCommand(this);
             ChangeSelectedObjectCommand = new SelectObjectCommand(this);
             DeleteSelectedObjectCommand = new DeleteObjectCommand(this);
             EditSelectedObjectCommand = new TurnEditModeCommand(this);
-            // PreviousProjectionCommand = new PreviousProjection(this);
-            // NextProjectionCommand = new NextProjection(this);
-
+            IncomingProjections = 0;
+            OutgoingProjections = 0;
             EditModeOff = true;
             _currentProjectionIndex = -1;
             RefreshGameList();
@@ -246,6 +353,8 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         {
             if (parameter is GameResponse)
                 SelectedGame = (GameResponse)parameter;
+            else if (parameter is PlayerResponse)
+                SelectedPlayer = (PlayerResponse)parameter;
         }
 
         public async void DeleteSelectedObject(object parameter)
@@ -256,9 +365,14 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 if (success != null)
                 {
                     SelectedGame = null;
-                    Task.Run(() => this.RefreshGameList()).Wait();
+                    RefreshGameList();
 
                 }
+            }
+            else if (parameter is PlayerResponse)
+            {
+                SelectedPlayer = null;
+                RefreshProjectionsList();
             }
         }
 
@@ -297,6 +411,37 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             return null;
         }
 
+        private async void RefreshProjectionPlayers()
+        {
+            if (SelectedProjection != null)
+            {
+                GamePlayerResponse topPlayer = null;
+                GamePlayerResponse bottomPlayer = null;
+                TopPlayer = null;
+                BottomPlayer = null;
+
+                if (SelectedProjection.Y1 > 900)
+                {
+                    if(SelectedProjection.DefenseGamePlayerId != null)
+                        topPlayer = await _gamePlayersService.GetGamePlayerAsync(Convert.ToInt64(SelectedProjection.DefenseGamePlayerId));
+                    if (SelectedProjection.OffenseGamePlayerId != null)
+                        bottomPlayer = await _gamePlayersService.GetGamePlayerAsync(Convert.ToInt64(SelectedProjection.OffenseGamePlayerId));
+                }
+                else
+                {
+                    if (SelectedProjection.DefenseGamePlayerId != null)
+                        bottomPlayer = await _gamePlayersService.GetGamePlayerAsync(Convert.ToInt64(SelectedProjection.DefenseGamePlayerId));
+                    if (SelectedProjection.OffenseGamePlayerId != null)
+                        topPlayer = await _gamePlayersService.GetGamePlayerAsync(Convert.ToInt64(SelectedProjection.OffenseGamePlayerId));
+                }
+
+                if (topPlayer != null)
+                    TopPlayer = topPlayer.TeamPlayer.Player;
+                if (bottomPlayer != null)
+                    BottomPlayer = bottomPlayer.TeamPlayer.Player;
+            }
+        }
+
         public async void RefreshGameList()
         {
             var gamesList = await _gamesService.GetGamesAsync();
@@ -309,8 +454,10 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
         }
 
-        public async void RefreshProjectionsList()
+        public async Task RefreshProjectionsList()
         {
+            IncomingProjections = 0;
+            OutgoingProjections = 0;
 
             _uiContext.Send(x => _listOfProjections.Clear(), null);
 
@@ -318,11 +465,69 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 var projectionsList = await _projectionsService.GetProjectionsByGameAsync(SelectedGame.Id);
 
-                foreach (var projection in projectionsList)
+                if (SelectedGameZone == null || SelectedGameZone == new Rectangle())
                 {
-                    _uiContext.Send(x => _listOfProjections.Add(projection), null);
-                }
+                    foreach (var projection in projectionsList)
+                    {
+                        if(SelectedPlayer == null)
+                        {
+                            _uiContext.Send(x => _listOfProjections.Add(projection), null);
+                        }
+                        else
+                        {
+                            if (_listOfGamePlayers.ContainsKey(Convert.ToInt64(projection.OffenseGamePlayerId)))
+                            {
+                                var offenseGamePlayer = _listOfGamePlayers[Convert.ToInt64(projection.OffenseGamePlayerId)];
+                                if(offenseGamePlayer.TeamPlayer.Player.Id == SelectedPlayer.Id)
+                                    _uiContext.Send(x => _listOfProjections.Add(projection), null);
+                            }
+                            else if (_listOfGamePlayers.ContainsKey(Convert.ToInt64(projection.DefenseGamePlayerId)))
+                            {
+                                var defenseeGamePlayer = _listOfGamePlayers[Convert.ToInt64(projection.DefenseGamePlayerId)];
+                                if (defenseeGamePlayer.TeamPlayer.Player.Id == SelectedPlayer.Id)
+                                    _uiContext.Send(x => _listOfProjections.Add(projection), null);
+                            }
+                        }
 
+                    }
+                }
+                else
+                {
+                    foreach (var projection in projectionsList)
+                    {
+                        bool playerFound = false;
+                        if (SelectedPlayer != null)
+                        {
+                            if (_listOfGamePlayers.ContainsKey(Convert.ToInt64(projection.OffenseGamePlayerId)))
+                            {
+                                var gamePlayer = _listOfGamePlayers[Convert.ToInt64(projection.OffenseGamePlayerId)];
+                                if (gamePlayer.TeamPlayer.Player.Id == SelectedPlayer.Id)
+                                    playerFound = true;
+
+                            }
+                            else if (_listOfGamePlayers.ContainsKey(Convert.ToInt64(projection.DefenseGamePlayerId)))
+                            {
+                                var gamePlayer = _listOfGamePlayers[Convert.ToInt64(projection.DefenseGamePlayerId)];
+                                if (gamePlayer.TeamPlayer.Player.Id == SelectedPlayer.Id)
+                                    playerFound = true;
+                            }
+                        }
+
+                        if (SelectedPlayer!= null && playerFound || SelectedPlayer == null)
+                        {
+                            if (projection.X1 >= SelectedGameZone.X && projection.X1 <= SelectedGameZone.X + SelectedGameZone.Width && projection.Y1 >= SelectedGameZone.Y && projection.Y1 <= SelectedGameZone.Y + SelectedGameZone.Height && OutgoingProjectionsChecked)
+                            {
+                                _uiContext.Send(x => _listOfProjections.Add(projection), null);
+                                OutgoingProjections++;
+                            }
+                            else if (projection.X2 >= SelectedGameZone.X && projection.X2 <= SelectedGameZone.X + SelectedGameZone.Width && projection.Y2 >= SelectedGameZone.Y && projection.Y2 <= SelectedGameZone.Y + SelectedGameZone.Height && IncomingProjectionsChecked)
+                            {
+                                _uiContext.Send(x => _listOfProjections.Add(projection), null);
+                                IncomingProjections++;
+                            }
+                        }
+                    }
+                }
                 _currentProjectionIndex = -1;
                 SelectedProjection = null;
             }
@@ -332,6 +537,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         {
             _uiContext.Send(x => _listOfHomePlayers.Clear(), null);
             _uiContext.Send(x => _listOfGuestPlayers.Clear(), null);
+            _uiContext.Send(x => _listOfGamePlayers.Clear(), null);
 
             if (SelectedGame != null)
             {
@@ -343,6 +549,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 {
                     var player = gamePlayer.TeamPlayer.Player;
                     var teamId = gamePlayer.TeamPlayer.TeamId;
+                    _listOfGamePlayers.Add(gamePlayer.Id, gamePlayer);
                     if (teamId == homeTeamId)
                     {
                         _listOfHomePlayers.Add(player);
@@ -355,83 +562,9 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
         }
 
-        public async void CreateNewObject()
+        public void CreateNewObject()
         {
-            EditModeOff = !EditModeOff;
-            Random rnd = new Random();
-
-            if (!EditModeOff)
-            {
-                SelectedGame = new GameResponse();
-            }
-
-            if (EditModeOff) //edit has been finished
-            {
-
-                var allTeams = await _teamsService.GetTeamsAsync(); //butina tureti dvi sukurtas komandas
-                var homeTeam = allTeams[allTeams.Count - 2];
-                var guestTeam = allTeams[allTeams.Count - 1];
-
-                var newGame = new GameRequest
-                {
-                    Title = SelectedGame.Title,
-                    HomeTeamId = homeTeam.Id,
-                    GuestTeamId = guestTeam.Id
-                };
-
-                var createdGame = await _gamesService.CreateGameAsync(newGame);
-
-                var homeTeamPlayers = await _teamPlayersService.GetTeamPlayersByTeamAsync(homeTeam.Id);
-                var guestTeamPlayers = await _teamPlayersService.GetTeamPlayersByTeamAsync(guestTeam.Id);
-
-                var homeGamePlayers = new List<GamePlayerResponse>();
-                var guestGamePlayers = new List<GamePlayerResponse>();
-
-                foreach (var teamPlayer in homeTeamPlayers)
-                {
-                    var gamePlayerRequest = new CreateGamePlayerRequest
-                    {
-                        GameId = createdGame.Id,
-                        TeamId = teamPlayer.TeamId,
-                        PlayerId = teamPlayer.PlayerId
-                    };
-
-                    var gamePlayer = await _gamePlayersService.CreateGamePlayerAsync(gamePlayerRequest);
-                    homeGamePlayers.Add(gamePlayer);
-                }
-
-                foreach (var teamPlayer in guestTeamPlayers)
-                {
-                    var gamePlayerRequest = new CreateGamePlayerRequest
-                    {
-                        GameId = createdGame.Id,
-                        TeamId = teamPlayer.TeamId,
-                        PlayerId = teamPlayer.PlayerId
-                    };
-
-                    var gamePlayer = await _gamePlayersService.CreateGamePlayerAsync(gamePlayerRequest);
-                    guestGamePlayers.Add(gamePlayer);
-                }
-
-                for (int i = 0; i < Math.Min(homeGamePlayers.Count, guestGamePlayers.Count); i++)
-                {
-                    var newProjection = new ProjectionRequest
-                    {
-                        X1 = rnd.Next(1, 900),
-                        X2 = rnd.Next(1, 900),
-                        Y1 = rnd.Next(1, 1800),
-                        Y2 = rnd.Next(1, 1800),
-                        GameId = createdGame.Id,
-                        DefenseGamePlayerId = guestGamePlayers[i].Id,
-                        OffenseGamePlayerId = homeGamePlayers[i].Id
-                    };
-
-                    var createdProjection = await _projectionsService.CreateProjectionAsync(newProjection);
-                }
-
-                SelectedGame = createdGame;
-                RefreshGameList();
-            }
+            throw new NotImplementedException();//create a new analysis is not available
         }
     }
 }

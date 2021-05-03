@@ -39,14 +39,15 @@ namespace GoalballAnalysisSystem.WPF
             services.AddSingleton<GamesService>();
             services.AddSingleton<GamePlayersService>();
             services.AddSingleton<ProjectionsService>();
+            services.AddSingleton<PlayerRolesService>();
 
             // dependencies of view models
             services.AddSingleton<IGoalballAnalysisSystemViewModelFactory, GoalballAnalysisSystemViewModelFactory>();            
 
             services.AddSingleton<CreateViewModel<HomeViewModel>>(s => { return () => new HomeViewModel(s.GetRequiredService<IRenavigator>()); });
-            services.AddSingleton<CreateViewModel<GamesViewModel>>(s => 
+            services.AddSingleton<CreateViewModel<AnalysisViewModel>>(s => 
             { 
-                return () => new GamesViewModel(
+                return () => new AnalysisViewModel(
                     s.GetRequiredService<GamesService>(),
                     s.GetRequiredService<ProjectionsService>(),
                     s.GetRequiredService<GamePlayersService>(),
@@ -59,14 +60,23 @@ namespace GoalballAnalysisSystem.WPF
                 return () => new TeamsViewModel(
                     s.GetRequiredService<TeamsService>(),
                     s.GetRequiredService<TeamPlayersService>(),
-                    s.GetRequiredService<PlayersService>()); 
+                    s.GetRequiredService<PlayersService>(),
+                    s.GetRequiredService<PlayerRolesService>()); 
             });
             services.AddSingleton<CreateViewModel<PlayersViewModel>>(s => 
             {
                 return () => new PlayersViewModel(
                     s.GetRequiredService<PlayersService>());
             });
-            services.AddSingleton<CreateViewModel<CalibrationViewModel>>(s => { return () => new CalibrationViewModel(); });
+            services.AddSingleton<CreateViewModel<ProcessingViewModel>>(s => 
+            { 
+                return () => new ProcessingViewModel(
+                    s.GetRequiredService<GamesService>(),
+                    s.GetRequiredService<GamePlayersService>(),
+                    s.GetRequiredService<TeamsService>(),
+                    s.GetRequiredService<TeamPlayersService>(),
+                    s.GetRequiredService<ProjectionsService>()); 
+            });
             services.AddSingleton<CreateViewModel<LoginViewModel>>(s =>
             {
                 return () => new LoginViewModel(

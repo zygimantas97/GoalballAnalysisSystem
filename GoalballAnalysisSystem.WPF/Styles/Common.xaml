@@ -57,7 +57,7 @@
 
     <!--Buttons-->
     <Style TargetType="Button">
-        <Setter Property="Background" Value="{StaticResource DarkButtonBrush}"/>
+        <Setter Property="Background" Value="{StaticResource BlueButtonBrush}"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Padding" Value="10 5"/>

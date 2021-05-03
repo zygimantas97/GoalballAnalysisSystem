@@ -22,7 +22,7 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
-                <ScrollViewer x:Name="PlayersList">
+                <ScrollViewer x:Name="PlayersList" VerticalScrollBarVisibility="Auto">
                     <ItemsControl x:Name="ListViewPlayers"
                                   ItemsSource="{Binding ListOfPlayers}">
                         <ItemsControl.ItemTemplate>
@@ -33,12 +33,9 @@
                                     <StackPanel Style="{StaticResource DarkerStackPanel}">
                                         <Border Width="60"
                                                 Height="60"
-                                                CornerRadius="5"
-                                                Margin="35, 20">
-                                            <Border.Background>
-                                                <ImageBrush ImageSource="../Assets/player.png" />
-                                            </Border.Background>
-                                        </Border>
+                                                Style="{StaticResource PlayerIconBorder}"
+                                                Margin="35, 20" />
+
                                         <TextBlock Margin="5"
                                                    Text="{Binding Path=Name}"
                                                    HorizontalAlignment="Center"
@@ -63,7 +60,8 @@
                 <ScrollViewer HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Auto">
                     <StackPanel Background="{StaticResource ThirdBackgroundBrush}"
-                                Margin="10 0 0 0">
+                                Margin="10 0 0 0"
+                                MaxWidth="300">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />
@@ -73,12 +71,9 @@
                                 <StackPanel Orientation="Vertical">
                                     <Border Width="130"
                                             Height="130"
-                                            CornerRadius="5"
-                                            Margin="15, 15">
-                                        <Border.Background>
-                                            <ImageBrush ImageSource="../Assets/player.png" />
-                                        </Border.Background>
-                                    </Border>
+                                            Style="{StaticResource PlayerIconBorder}"
+                                            Margin="15, 15" />
+
                                     <TextBlock Text="Player"
                                                Style="{StaticResource HeaderTwoBoldText}"
                                                HorizontalAlignment="Center"

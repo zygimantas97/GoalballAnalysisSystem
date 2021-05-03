@@ -18,9 +18,12 @@ namespace GoalballAnalysisSystem.WPF.View
     /// </summary>
     public partial class PlayersView : UserControl
     {
+
         public PlayersView()
         {
             InitializeComponent();
         }
+
+
     }
 }

@@ -86,7 +86,7 @@
                                 <Border Style="{StaticResource GameIconBorder}"
                                         HorizontalAlignment="Right" />
 
-                                <TextBlock Text="Game"
+                                <TextBlock Text="Analysis"
                                            Style="{StaticResource HeaderTwoBoldText}"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"

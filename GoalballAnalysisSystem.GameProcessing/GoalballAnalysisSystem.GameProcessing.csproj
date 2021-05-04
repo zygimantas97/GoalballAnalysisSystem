@@ -22,15 +22,10 @@
     <PackageReference Include="Emgu.CV" Version="4.4.0.4099" />
     <PackageReference Include="Emgu.CV.Bitmap" Version="4.4.0.4099" />
     <PackageReference Include="Emgu.CV.runtime.windows" Version="4.4.0.4099" />
-    <PackageReference Include="Microsoft.AI.MachineLearning" Version="1.6.0" />
     <PackageReference Include="Microsoft.ML" Version="1.5.4" />
     <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.5.4" />
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.6.0" />
     <PackageReference Include="Microsoft.ML.OnnxTransformer" Version="1.5.4" />
-    <PackageReference Include="Microsoft.ML.TensorFlow" Version="1.5.4" />
-    <PackageReference Include="Microsoft.ML.TensorFlow.Redist" Version="0.14.0" />
-    <PackageReference Include="TensorFlow.NET" Version="0.33.0" />
-    <PackageReference Include="TensorFlowSharp" Version="1.15.1" />
   </ItemGroup>
 
   <ItemGroup>

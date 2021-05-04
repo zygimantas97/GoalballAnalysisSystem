@@ -17,7 +17,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
     {
         private readonly INavigator _navigator;
         private readonly IAuthenticator _authenticator;
-
         public bool IsLoggedIn => _authenticator.IsLoggedIn;
         public BaseViewModel CurrentViewModel => _navigator.CurrentViewModel;
 

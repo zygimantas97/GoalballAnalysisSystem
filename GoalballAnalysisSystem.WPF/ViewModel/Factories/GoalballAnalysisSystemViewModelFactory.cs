@@ -48,7 +48,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel.Factories
                     return _createTeamsViewModel();
                 case ViewType.Players:
                     return _createPlayersViewModel();
-                case ViewType.Calibration:
+                case ViewType.Processing:
                     return _createCalibrationViewModel();
                 default:
                     throw new ArgumentException("The ViewType does not have a ViewModel.", "viewType");

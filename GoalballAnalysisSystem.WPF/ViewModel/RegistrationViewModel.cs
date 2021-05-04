@@ -52,7 +52,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
         public ICommand RegisterCommand { get; }
         public ICommand UpdateCurrentViewModelCommand { get; }
-
         public RegistrationViewModel(IAuthenticator authenticator, IRenavigator renavigator)
         {
             RegisterCommand = new RegisterCommand(this, authenticator, renavigator);

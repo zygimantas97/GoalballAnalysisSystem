@@ -342,7 +342,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             {
                 uiContext.Send(x => _listOfAvailableTeams.Add(team), null);
             }
-
         }
 
         public async void RefreshPlayersList()
@@ -371,7 +370,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                     }
                 }
             }
-
         }
         public async void CreateGamePlayer()
         {
@@ -386,9 +384,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
             var createdGamePlayer = await _gamePlayersService.CreateGamePlayerAsync(gamePlayer);
             _gamePlayers.Add(createdGamePlayer);
-
         }
-
         public async void CreateProjection(TeamPlayerResponse offensive, TeamPlayerResponse defensive, int x1, int x2, int y1, int y2)
         {
             GamePlayerResponse offensivePlayer = null;
@@ -408,9 +404,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                     if (gamePlayer.PlayerId == defensive.PlayerId)
                         defensivePlayer = gamePlayer;
                 }
-
             }
-
             var projection = new ProjectionRequest
             {
                 GameId = SelectedGame.Id,
@@ -426,8 +420,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 projection.DefenseGamePlayerId = defensivePlayer.Id;
 
             var createProjection = await _projectionService.CreateProjectionAsync(projection);
-
         }
-
     }
 }

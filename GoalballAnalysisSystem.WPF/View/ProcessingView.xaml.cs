@@ -20,7 +20,7 @@ using System.Linq;
 using GoalballAnalysisSystem.GameProcessing.Geometry;
 using GoalballAnalysisSystem.GameProcessing.GameAnalysis;
 using GoalballAnalysisSystem.GameProcessing.Selection;
-using GoalballAnalysisSystem.GameProcessing.ObjectTracking.CNN;
+using GoalballAnalysisSystem.GameProcessing.ObjectTracking.Classification;
 using System.Windows.Controls;
 using GoalballAnalysisSystem.WPF.ViewModel;
 
@@ -235,11 +235,10 @@ namespace GoalballAnalysisSystem.WPF.View
 
         private async void ManualCalibrationButton_Click(object sender, RoutedEventArgs e)
         {
-            var viewModel = (ProcessingViewModel)this.DataContext;
-            viewModel.CalibrationSuccessful = false;
-            viewModel.CalibrationIsFinished = false;
+            _dataContext.CalibrationSuccessful = false;
+            _dataContext.CalibrationIsFinished = false;
 
-            viewModel.VideoStatusTitle = "Select four playground corners";
+            _dataContext.VideoStatusTitle = "Select four playground corners";
 
             _manualCalibrationPoints = new List<System.Drawing.Point>();
             var capture = new VideoCapture(openFileDialog.FileName);
@@ -290,7 +289,6 @@ namespace GoalballAnalysisSystem.WPF.View
 
         private void _selector_Selected(object sender, SelectionEventArgs<TeamPlayerResponse> e)
         {
-            var viewModel = (ProcessingViewModel)this.DataContext;
             var playground = _playgroundImageBoxBackground.Clone();
 
             double startY = e.SelectionStart.Y < e.SelectionEnd.Y ? 0 : PLAYGROUND_HEIGHT;
@@ -302,9 +300,8 @@ namespace GoalballAnalysisSystem.WPF.View
             var startPoint = new System.Drawing.Point((int)Math.Round(startX), (int)Math.Round(startY));
             var endPoint = new System.Drawing.Point((int)Math.Round(endX), (int)Math.Round(endY));
 
-            viewModel.CreateProjection(e.SelectionStartObject, e.SelectionEndObject, (int)startX, (int)endX, (int)startY, (int)endY);
-
-            CvInvoke.Line(playground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5);
+            _dataContext.CreateProjection(e.SelectionStartObject, e.SelectionEndObject, (int)startX, (int)endX, (int)startY, (int)endY);
+            CvInvoke.ArrowedLine(playground, startPoint, endPoint, new MCvScalar(0, 0, 0), 5, Emgu.CV.CvEnum.LineType.Filled, 0, 0.02);
             PlaygroundImageBox.Image = playground;
         }
 

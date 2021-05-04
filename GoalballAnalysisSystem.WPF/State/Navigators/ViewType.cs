@@ -12,6 +12,6 @@ namespace GoalballAnalysisSystem.WPF.State.Navigators
         Analysis,
         Teams,
         Players,
-        Calibration
+        Processing
     }
 }

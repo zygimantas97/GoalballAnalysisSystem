@@ -48,6 +48,61 @@ namespace GoalballAnalysisSystem.WPF.View
 
         }
 
+        private void OnSelectGameButtonClick(object sender, RoutedEventArgs e)
+        {
+            _playgroundImageBoxBackground = Playground();
+            PlaygroundImageBox.Image = _playgroundImageBoxBackground;
+        }
+
+        private void OnSelectPlayerButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (_dataContext == null)
+                _dataContext = (AnalysisViewModel)this.DataContext;
+            _dataContext.RefreshProjectionsList();
+            DrawAllVectors(_dataContext.ListOfProjections);
+
+        }
+
+        private async void IncomingChecked(object sender, RoutedEventArgs e)
+        {
+            if (_dataContext != null)
+            {
+                _dataContext.IncomingProjectionsChecked = true;
+                await _dataContext.RefreshProjectionsList();
+                DrawAllVectors(_dataContext.ListOfProjections);
+            }
+        }
+
+        private async void IncomingUnchecked(object sender, RoutedEventArgs e)
+        {
+            if (_dataContext != null)
+            {
+                _dataContext.IncomingProjectionsChecked = false;
+                await _dataContext.RefreshProjectionsList();
+                DrawAllVectors(_dataContext.ListOfProjections);
+            }
+        }
+
+        private async void OutgoingChecked(object sender, RoutedEventArgs e)
+        {
+            if (_dataContext != null)
+            {
+                _dataContext.OutgoingProjectionsChecked = true;
+                await _dataContext.RefreshProjectionsList();
+                DrawAllVectors(_dataContext.ListOfProjections);
+            }
+        }
+
+        private async void OutgoingUnchecked(object sender, RoutedEventArgs e)
+        {
+            if (_dataContext != null)
+            {
+                _dataContext.OutgoingProjectionsChecked = false;
+                await _dataContext.RefreshProjectionsList();
+                DrawAllVectors(_dataContext.ListOfProjections);
+            }
+        }
+
         private async void PlaygroundImageBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (_dataContext == null)
@@ -59,7 +114,6 @@ namespace GoalballAnalysisSystem.WPF.View
                 System.Drawing.Point coordinates = e.Location;
                 double horizontalScale = (double)_playgroundImageBoxBackground.Width / (double)PlaygroundImageBox.Width;
                 double verticalScale = (double)_playgroundImageBoxBackground.Height / (double)PlaygroundImageBox.Height;
-
                 double x = coordinates.X * horizontalScale;
                 double y = coordinates.Y * verticalScale;
                 _dataContext.SelectedGameZone = new System.Drawing.Rectangle();
@@ -127,70 +181,7 @@ namespace GoalballAnalysisSystem.WPF.View
             }
             PlaygroundImageBox.Image = playgroundImageBoxBackground;
         }
-        private void OnSelectGameButtonClick(object sender, RoutedEventArgs e)
-        {
-            _playgroundImageBoxBackground = Playground();
-            PlaygroundImageBox.Image = _playgroundImageBoxBackground;
-        }
-
-        private void OnSelectPlayerButtonClick(object sender, RoutedEventArgs e)
-        {
-            if (_dataContext == null)
-                _dataContext = (AnalysisViewModel)this.DataContext;
-            /*
-            Button button = sender as Button;
-            StackPanel stack = button.Content as StackPanel;
-
-            if (previousMarked != null)
-                previousMarked.Background = GetColorFromHexa("#D9E1E2");
-
-            stack.Background = GetColorFromHexa("#edebe1");
-            previousMarked = stack;*/
-
-            _dataContext.RefreshProjectionsList();
-            DrawAllVectors(_dataContext.ListOfProjections);
-
-        }
-
-        private async void IncomingChecked(object sender, RoutedEventArgs e)
-        {
-            if (_dataContext != null)
-            {
-                _dataContext.IncomingProjectionsChecked = true;
-                await _dataContext.RefreshProjectionsList();
-                DrawAllVectors(_dataContext.ListOfProjections);
-            }
-        }
-
-        private async void IncomingUnchecked(object sender, RoutedEventArgs e)
-        {
-            if (_dataContext != null)
-            {
-                _dataContext.IncomingProjectionsChecked = false;
-                await _dataContext.RefreshProjectionsList();
-                DrawAllVectors(_dataContext.ListOfProjections);
-            }
-        }
-
-        private async void OutgoingChecked(object sender, RoutedEventArgs e)
-        {
-            if (_dataContext != null)
-            {
-                _dataContext.OutgoingProjectionsChecked = true;
-                await _dataContext.RefreshProjectionsList();
-                DrawAllVectors(_dataContext.ListOfProjections);
-            }
-        }
-
-        private async void OutgoingUnchecked(object sender, RoutedEventArgs e)
-        {
-            if (_dataContext != null)
-            {
-                _dataContext.OutgoingProjectionsChecked = false;
-                await _dataContext.RefreshProjectionsList();
-                DrawAllVectors(_dataContext.ListOfProjections);
-            }
-        }
+        
 
         private Image<Bgr, byte> Playground()
         {
@@ -225,16 +216,6 @@ namespace GoalballAnalysisSystem.WPF.View
 
             return playgroundImageBoxBackground;
         }
-
-        private SolidColorBrush GetColorFromHexa(string hexaColor)
-        {
-            byte R = Convert.ToByte(hexaColor.Substring(1, 2), 16);
-            byte G = Convert.ToByte(hexaColor.Substring(3, 2), 16);
-            byte B = Convert.ToByte(hexaColor.Substring(5, 2), 16);
-            SolidColorBrush scb = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0xFF, R, G, B));
-            return scb;
-        }
-
 
     }
 }

@@ -7,22 +7,19 @@
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
-
     <Grid Margin="10">
-
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="7*" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-
             <Grid Grid.Column="0">
-                <ScrollViewer x:Name="PlayersList" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer x:Name="PlayersList"
+                              VerticalScrollBarVisibility="Auto">
                     <ItemsControl x:Name="ListViewPlayers"
                                   ItemsSource="{Binding ListOfPlayers}">
                         <ItemsControl.ItemTemplate>
@@ -30,12 +27,13 @@
                                 <Button Style="{StaticResource TransparentButtonElement}"
                                         Command="{Binding Path=DataContext.ChangeSelectedObjectCommand, ElementName=ListViewPlayers}"
                                         CommandParameter="{Binding Path=.}">
-                                    <StackPanel Style="{StaticResource DarkerStackPanel}">
+                                    <StackPanel Style="{StaticResource DarkerStackPanel}"
+                                                Height="170"
+                                                Width="150">
                                         <Border Width="60"
                                                 Height="60"
                                                 Style="{StaticResource PlayerIconBorder}"
                                                 Margin="35, 20" />
-
                                         <TextBlock Margin="5"
                                                    Text="{Binding Path=Name}"
                                                    HorizontalAlignment="Center"
@@ -61,7 +59,7 @@
                               VerticalScrollBarVisibility="Auto">
                     <StackPanel Background="{StaticResource ThirdBackgroundBrush}"
                                 Margin="10 0 0 0"
-                                MaxWidth="300">
+                                Width="300">
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />
@@ -73,14 +71,12 @@
                                             Height="130"
                                             Style="{StaticResource PlayerIconBorder}"
                                             Margin="15, 15" />
-
                                     <TextBlock Text="Player"
                                                Style="{StaticResource HeaderTwoBoldText}"
                                                HorizontalAlignment="Center"
                                                Margin="0 0 0 30" />
                                 </StackPanel>
                             </Grid>
-
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
@@ -91,7 +87,6 @@
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
-
                                 <TextBlock Grid.Column="0"
                                            Grid.Row="0"
                                            Margin="5, 20"
@@ -113,7 +108,6 @@
                                            HorizontalAlignment="Right"
                                            VerticalAlignment="Center"
                                            Style="{StaticResource RegularText}" />
-
                                 <TextBox Grid.Column="1"
                                          Grid.Row="0"
                                          Margin="5"
@@ -145,14 +139,12 @@
                         </Grid>
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center">
-
                             <ToggleButton Grid.Row="1"
                                           Style="{StaticResource ToggleButtonCreate}"
                                           Margin="5"
                                           Background="{StaticResource BlueButtonBrush}"
                                           Command="{Binding CreateNewObjectCommand}"
                                           IsEnabled="{Binding CanBeCreated}" />
-
                             <ToggleButton Grid.Row="1"
                                           Style="{StaticResource ToggleButtonEdit}"
                                           Margin="5"
@@ -160,14 +152,12 @@
                                           Command="{Binding EditSelectedObjectCommand}"
                                           CommandParameter="{Binding SelectedPlayer}"
                                           IsEnabled="{Binding CanBeEdited}" />
-
                             <Button Content="Delete"
                                     Margin="5"
                                     Background="{StaticResource RichRedButtonBrush}"
                                     Command="{Binding DeleteSelectedObjectCommand}"
                                     CommandParameter="{Binding SelectedPlayer}"
                                     IsEnabled="{Binding CanBeDeleted}" />
-
                         </StackPanel>
                     </StackPanel>
                 </ScrollViewer>

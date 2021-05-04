@@ -44,21 +44,26 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
             set
             {
-                _selectedGame = value;
-                OnPropertyChanged(nameof(SelectedGame));
-                RefreshProjectionsList();
-                RefreshPlayersList();
-                SelectedPlayer = null;
+                //value can be selected only when record is not in edit mode
+                if (EditModeOff)
+                {
+                    _selectedGame = value;
+                    OnPropertyChanged(nameof(SelectedGame));
 
-                if (value != null)
-                {
-                    CanBeEditedGame = true;
-                    CanBeDeletedGame = true;
-                }
-                else
-                {
-                    CanBeEditedGame = false;
-                    CanBeDeletedGame = false;
+                    RefreshProjectionsList();
+                    RefreshPlayersList();
+
+                    SelectedPlayer = null;
+                    if (value != null)
+                    {
+                        CanBeEditedGame = true;
+                        CanBeDeletedGame = true;
+                    }
+                    else
+                    {
+                        CanBeEditedGame = false;
+                        CanBeDeletedGame = false;
+                    }
                 }
             }
         }
@@ -422,7 +427,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 
                 if (SelectedProjection.Y1 > 900)
                 {
-                    if(SelectedProjection.DefenseGamePlayerId != null)
+                    if (SelectedProjection.DefenseGamePlayerId != null)
                         topPlayer = await _gamePlayersService.GetGamePlayerAsync(Convert.ToInt64(SelectedProjection.DefenseGamePlayerId));
                     if (SelectedProjection.OffenseGamePlayerId != null)
                         bottomPlayer = await _gamePlayersService.GetGamePlayerAsync(Convert.ToInt64(SelectedProjection.OffenseGamePlayerId));
@@ -469,7 +474,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 {
                     foreach (var projection in projectionsList)
                     {
-                        if(SelectedPlayer == null)
+                        if (SelectedPlayer == null)
                         {
                             _uiContext.Send(x => _listOfProjections.Add(projection), null);
                         }
@@ -478,7 +483,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                             if (_listOfGamePlayers.ContainsKey(Convert.ToInt64(projection.OffenseGamePlayerId)))
                             {
                                 var offenseGamePlayer = _listOfGamePlayers[Convert.ToInt64(projection.OffenseGamePlayerId)];
-                                if(offenseGamePlayer.TeamPlayer.Player.Id == SelectedPlayer.Id)
+                                if (offenseGamePlayer.TeamPlayer.Player.Id == SelectedPlayer.Id)
                                     _uiContext.Send(x => _listOfProjections.Add(projection), null);
                             }
                             else if (_listOfGamePlayers.ContainsKey(Convert.ToInt64(projection.DefenseGamePlayerId)))
@@ -488,7 +493,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                                     _uiContext.Send(x => _listOfProjections.Add(projection), null);
                             }
                         }
-
                     }
                 }
                 else
@@ -513,7 +517,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                             }
                         }
 
-                        if (SelectedPlayer!= null && playerFound || SelectedPlayer == null)
+                        if (SelectedPlayer != null && playerFound || SelectedPlayer == null)
                         {
                             if (projection.X1 >= SelectedGameZone.X && projection.X1 <= SelectedGameZone.X + SelectedGameZone.Width && projection.Y1 >= SelectedGameZone.Y && projection.Y1 <= SelectedGameZone.Y + SelectedGameZone.Height && OutgoingProjectionsChecked)
                             {

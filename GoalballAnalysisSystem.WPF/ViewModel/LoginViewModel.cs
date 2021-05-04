@@ -15,7 +15,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
     public class LoginViewModel : BaseViewModel
     {
         private string _message;
-
         public string Message
         {
             get { return _message; }
@@ -27,7 +26,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
         }
 
         private string _email;
-
         public string Email
         {
             get { return _email; }

@@ -9,14 +9,11 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
 {
     public class HomeViewModel: BaseViewModel
     {
-
         public ICommand UpdateCurrentViewModelCommand { get; }
 
         public HomeViewModel(IRenavigator renavigator)
         {
             UpdateCurrentViewModelCommand = new UpdateCurrentViewModelCommand(renavigator);
         }
-
-
     }
 }

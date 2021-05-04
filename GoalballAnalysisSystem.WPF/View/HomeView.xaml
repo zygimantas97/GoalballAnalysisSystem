@@ -14,26 +14,22 @@
                   VerticalScrollBarVisibility="Auto"
                   Margin="30">
         <Grid>
-
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
             <TextBlock x:Name="TitleTextBlock"
-                           Style="{StaticResource HeaderOneText}"
-                           Text="Goallball Analysis System"
-                           Grid.Row="0"
-                           HorizontalAlignment="Center" />
-
-                <Grid Grid.Row="1">
-
+                       Style="{StaticResource HeaderOneText}"
+                       Text="Goallball Analysis System"
+                       Grid.Row="0"
+                       HorizontalAlignment="Center" />
+            <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-
                 <Border Background="{StaticResource ThirdBackgroundBrush}"
                         Grid.Row="0"
                         Height="100"
@@ -41,19 +37,15 @@
                         CornerRadius="10">
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center">
-
                         <TextBlock Text="Manage your teams and players"
                                    Style="{StaticResource HeaderTwoBoldText}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    Margin="10 0 0 0" />
-
                         <Border Style="{StaticResource TeamIconBorder}"
                                 HorizontalAlignment="Right" />
-
                     </StackPanel>
                 </Border>
-
                 <Border Background="{StaticResource ThirdBackgroundBrush}"
                         CornerRadius="10"
                         Grid.Row="1"
@@ -61,18 +53,15 @@
                         Margin="60 10">
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center">
-
                         <TextBlock Text="Analyse Goalball videos"
                                    Style="{StaticResource HeaderTwoBoldText}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    Margin="10 0 0 0" />
-
                         <Border Style="{StaticResource GameIconBorder}"
                                 HorizontalAlignment="Right" />
                     </StackPanel>
                 </Border>
-
                 <Border Background="{StaticResource ThirdBackgroundBrush}"
                         CornerRadius="10"
                         Grid.Row="2"
@@ -80,20 +69,16 @@
                         Margin="60 10">
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Center">
-
                         <TextBlock Text="Review analysis from previous matches"
                                    Style="{StaticResource HeaderTwoBoldText}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    Margin="10 0 0 0" />
-
                         <Border Style="{StaticResource PlayerIconBorder}"
                                 HorizontalAlignment="Right" />
                     </StackPanel>
                 </Border>
-
             </Grid>
-
             <!--<StackPanel Grid.Row="1">
 
                 <TextBlock Style="{StaticResource HeaderTwoText}"
@@ -108,7 +93,6 @@
                            HorizontalAlignment="Right" />
 
             </StackPanel>-->
-
             <Button x:Name="ProcessVideoButton"
                     Width="200"
                     Height="75"
@@ -117,7 +101,7 @@
                     Grid.Column="1"
                     Grid.Row="2"
                     Command="{Binding UpdateCurrentViewModelCommand}"
-                    CommandParameter="{x:Static nav:ViewType.Calibration}"
+                    CommandParameter="{x:Static nav:ViewType.Processing}"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom">
                 <TextBlock Text="Process a video"
@@ -125,7 +109,6 @@
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center" />
             </Button>
-
         </Grid>
     </ScrollViewer>
 </UserControl>

@@ -15,39 +15,29 @@
     <ScrollViewer HorizontalScrollBarVisibility="Auto"
                   VerticalScrollBarVisibility="Auto">
         <Grid Margin="10">
-
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-
             <ScrollViewer HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto"
                           Grid.Column="0"
                           Grid.Row="0">
-
                 <Grid Grid.Column="0">
-
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-
                     <Grid Grid.Row="1"
                           Background="{StaticResource ThirdBackgroundBrush}" />
-
-                    <StackPanel MaxWidth="300">
-
+                    <StackPanel Width="280">
                         <StackPanel Background="{StaticResource ThirdBackgroundBrush}">
-
                             <Grid Grid.Row="0">
-
                                 <StackPanel Orientation="Horizontal"
                                             Margin="0 0 0 20">
                                     <Border Style="{StaticResource GameIconBorder}"
@@ -57,13 +47,9 @@
                                                Style="{StaticResource HeaderTwoBoldText}"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center" />
-
                                 </StackPanel>
-
                             </Grid>
-
                             <Grid Grid.Row="1">
-
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
                                     <ColumnDefinition Width="*" />
@@ -74,7 +60,6 @@
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
-
                                 <TextBlock Grid.Column="0"
                                            Grid.Row="0"
                                            Margin="10"
@@ -103,7 +88,6 @@
                                            HorizontalAlignment="Right"
                                            VerticalAlignment="Center"
                                            Style="{StaticResource RegularText}" />
-
                                 <TextBox Grid.Column="1"
                                          Grid.Row="0"
                                          Margin="0 10 10 10"
@@ -122,7 +106,6 @@
                                          VerticalAlignment="Center"
                                          Style="{StaticResource HeaderThreeTextBoxEditable}"
                                          IsReadOnly="{Binding EditModeOff}" />
-
                                 <ComboBox Grid.Row="2"
                                           Grid.Column="1"
                                           Width="150"
@@ -163,9 +146,7 @@
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
-
                             </Grid>
-
                             <Grid Grid.Row="2"
                                   Margin="0 20 0 0">
                                 <Button Content="Create"
@@ -177,14 +158,11 @@
                                         x:Name="SelectVideoButton"
                                         Click="SelectVideoButton_Click"
                                         IsEnabled="{Binding CanBeVideoSelected}" />
-
                             </Grid>
                         </StackPanel>
-
                         <StackPanel Grid.Row="2"
                                     Background="{StaticResource ThirdBackgroundBrush}"
                                     Margin="0 10 0 0">
-
                             <TextBlock Text="Analysis info"
                                        Style="{StaticResource HeaderTwoBoldText}"
                                        HorizontalAlignment="Center"
@@ -192,7 +170,6 @@
                                        Margin="0 10"
                                        Grid.Column="0"
                                        Grid.Row="0" />
-
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
@@ -204,20 +181,18 @@
                                     <RowDefinition Height="auto" />
                                     <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
-
                                 <TextBlock Text="FPS"
                                            Style="{StaticResource RegularText}"
                                            Margin="10"
                                            Grid.Row="0"
-                                           Grid.Column="0" 
-                                           HorizontalAlignment="Right"/>
+                                           Grid.Column="0"
+                                           HorizontalAlignment="Right" />
                                 <TextBlock Text="Analysed"
                                            Style="{StaticResource RegularText}"
                                            Margin="10"
                                            Grid.Row="1"
                                            Grid.Column="0"
-                                           HorizontalAlignment="Right"/>
-
+                                           HorizontalAlignment="Right" />
                                 <TextBlock Text="{Binding FPS}"
                                            Style="{StaticResource HeaderThreeText}"
                                            Margin="0 10"
@@ -232,30 +207,23 @@
                                                Style="{StaticResource HeaderThreeText}"
                                                Margin="0 10" />
                                 </WrapPanel>
-
                             </Grid>
-
                         </StackPanel>
                     </StackPanel>
-
                 </Grid>
             </ScrollViewer>
-
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
-
                 <StackPanel Grid.Column="0"
                             Margin="10 0"
                             VerticalAlignment="Top">
-
                     <StackPanel HorizontalAlignment="Center"
                                 VerticalAlignment="Top"
                                 Background="{StaticResource SecondBackgroundBrush}">
                         <StackPanel Orientation="Horizontal">
-
                             <Button x:Name="MakeBiggerButton"
                                     Command="{Binding IncreaseWindowSizeCommand}"
                                     Background="Transparent"
@@ -270,9 +238,7 @@
                                     <Border.Background>
                                         <ImageBrush ImageSource="../Assets/zoomIn.png" />
                                     </Border.Background>
-
                                 </Border>
-
                             </Button>
                             <Button x:Name="MakeSmallerButton"
                                     Command="{Binding DecreaseWindowSizeCommand}"
@@ -287,9 +253,7 @@
                                     <Border.Background>
                                         <ImageBrush ImageSource="../Assets/zoomOut.png" />
                                     </Border.Background>
-
                                 </Border>
-
                             </Button>
                             <ComboBox Grid.Row="2"
                                       Grid.Column="1"
@@ -316,13 +280,7 @@
                                     x:Name="AddTrackingObjectButton"
                                     Click="AddTrackingObjectButton_Click"
                                     IsEnabled="{Binding CanBePlayerSelected}" />
-                            <Button Content="Remove all tracking objects"
-                                    x:Name="RemoveAllTrackingObjectsButton"
-                                    Click="RemoveAllTrackingObjectsButton_Click"
-                                    Background="{StaticResource RichRedButtonBrush}"
-                                    IsEnabled="{Binding CanBeTrackingObjectsDeleted}" />
                         </StackPanel>
-
                         <TextBlock Text="{Binding VideoStatusTitle}"
                                    Style="{StaticResource HeaderTwoBoldText}"
                                    HorizontalAlignment="Center"
@@ -341,7 +299,6 @@
                                     Click="NextButton_Click"
                                     IsEnabled="{Binding CalibrationSuccessful}" />
                         </StackPanel>
-
                         <WindowsFormsHost Name="VideoWindowsFormsHost"
                                           Width="{Binding WindowWidth}"
                                           Height="{Binding WindowHeight}"
@@ -356,9 +313,7 @@
                                                        FunctionalMode="Minimum"
                                                        Paint="VideoImageBox_Paint" />
                         </WindowsFormsHost>
-
                     </StackPanel>
-
                     <WrapPanel HorizontalAlignment="Center"
                                Margin="0 10 0 0">
                         <Button x:Name="StartResumeButton"
@@ -373,7 +328,6 @@
                                 <Border.Background>
                                     <ImageBrush ImageSource="../Assets/Play.png" />
                                 </Border.Background>
-
                             </Border>
                         </Button>
                         <Button x:Name="PauseButton"
@@ -388,7 +342,6 @@
                                 <Border.Background>
                                     <ImageBrush ImageSource="../Assets/Pause.png" />
                                 </Border.Background>
-
                             </Border>
                         </Button>
                         <Button x:Name="FinishButton"
@@ -403,56 +356,15 @@
                                 <Border.Background>
                                     <ImageBrush ImageSource="../Assets/Done.png" />
                                 </Border.Background>
-
                             </Border>
                         </Button>
-
                     </WrapPanel>
-                    <!--<WrapPanel>
-                        <ComboBox Grid.Row="2"
-                                  Grid.Column="1"
-                                  Width="150"
-                                  Height="20"
-                                  Margin="0 10"
-                                  HorizontalAlignment="Left"
-                                  VerticalAlignment="Center"
-                                  ItemsSource="{Binding ListOfAvailablePlayers}"
-                                  SelectedItem="{Binding SelectedPlayer}"
-                                  IsEnabled="{Binding CanBePlayerSelected}">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Path=Name}" />
-                                        <TextBlock Text=" " />
-                                        <TextBlock Text="{Binding Path=Surname}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                        <Button Content="Add tracking object"
-                                x:Name="AddTrackingObjectButton"
-                                Click="AddTrackingObjectButton_Click"
-                                IsEnabled="{Binding CanBePlayerSelected}" />
-                        <Button Content="Remove all tracking objects"
-                                x:Name="RemoveAllTrackingObjectsButton"
-                                Click="RemoveAllTrackingObjectsButton_Click" />
-                    </WrapPanel>-->
-                    <!--<WrapPanel>
-                        <Button Content="Detect objects (API)"
-                                x:Name="DetectObjectsApiButton"
-                                Click="DetectObjectsApiButton_Click" />
-                        <Button Content="Detect objects (ONNX)"
-                                x:Name="DetectObjectsOnnxButton"
-                                Click="DetectObjectsOnnxButton_Click" />
-                    </WrapPanel>-->
-
                 </StackPanel>
-
             </Grid>
             <Grid Grid.Column="2">
                 <StackPanel Grid.Row="2"
                             Background="{StaticResource ThirdBackgroundBrush}">
-                    <TextBlock Text="Video analysis"
+                    <TextBlock Text="Video projections"
                                Style="{StaticResource HeaderTwoBoldText}"
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
@@ -467,11 +379,8 @@
                                                    SizeMode="Zoom"
                                                    FunctionalMode="Minimum" />
                     </WindowsFormsHost>
-
                 </StackPanel>
             </Grid>
-
         </Grid>
     </ScrollViewer>
-
 </UserControl>

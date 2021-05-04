@@ -44,19 +44,23 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
             set
             {
-                _selectedPlayer = value;
-                OnPropertyChanged(nameof(SelectedPlayer));
+                if (EditModeOff)
+                {
+                    _selectedPlayer = value;
+                    OnPropertyChanged(nameof(SelectedPlayer));
 
-                if(value != null)
-                {
-                    CanBeEdited = true;
-                    CanBeDeleted = true;
+                    if (value != null)
+                    {
+                        CanBeEdited = true;
+                        CanBeDeleted = true;
+                    }
+                    else
+                    {
+                        CanBeEdited = false;
+                        CanBeDeleted = false;
+                    }
                 }
-                else
-                {
-                    CanBeEdited = false;
-                    CanBeDeleted = false;
-                }
+
             }
         }
 
@@ -116,7 +120,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             }
         }
         #endregion
-
         public PlayersViewModel(PlayersService playersService)
         {
             _uiContext = SynchronizationContext.Current;
@@ -141,7 +144,7 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
             EditModeOff = !EditModeOff;
             CanBeCreated = !CanBeCreated;
             CanBeDeleted = !CanBeDeleted;
-            
+
             if (parameter is PlayerResponse && EditModeOff && SelectedPlayer != null) //edit has been finished
             {
                 PlayerRequest playerToEdit = new PlayerRequest
@@ -155,7 +158,6 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 await _playersService.UpdatePlayerAsync(SelectedPlayer.Id, playerToEdit);
             }
         }
-
         public void ChangeSelectedObject(object parameter)
         {
             if (parameter is PlayerResponse)
@@ -186,14 +188,15 @@ namespace GoalballAnalysisSystem.WPF.ViewModel
                 _uiContext.Send(x => _listOfPlayers.Add(player), null);
             }
         }
-
         public async void CreateNewObject()
         {
+            if(EditModeOff)
+                SelectedPlayer = new PlayerResponse(); //clear inout fields
+
             EditModeOff = !EditModeOff;
 
             if (!EditModeOff)
             {
-                SelectedPlayer = new PlayerResponse();
                 CanBeEdited = false;
                 CanBeDeleted = false;
             }
